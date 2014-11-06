@@ -1,0 +1,11 @@
+MySQL:
+users full info
+sales full info (include category id)
+categories
+
+Redis:
+sales (id[in mysql] + score[views])
+favorites (user id, list of categories)
+
+SQLite:
+current user info
