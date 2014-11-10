@@ -1,4 +1,4 @@
-package forsale.servlet;
+package forsale.server.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
