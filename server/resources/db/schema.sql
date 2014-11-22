@@ -3,8 +3,10 @@ USE forsale;
 CREATE TABLE users (
   user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_email VARCHAR(50) NOT NULL,
+  user_password CHAR(32) NOT NULL,
   user_name	VARCHAR(50) NOT NULL,
-  user_password CHAR(32) NOT NULL
+  user_gender ENUM('male', 'female'),
+  user_birth_date DATE
 );
 CREATE INDEX users_email ON users(user_email);
 
@@ -49,5 +51,7 @@ CREATE TABLE sales (
   vendor_id INT NOT NULL,
   sale_title VARCHAR(100) NOT NULL,
   sale_extra VARCHAR(255),
+  sale_start DATE,
+  sale_end DATE,
   FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
 );
