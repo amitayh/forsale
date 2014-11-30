@@ -22,8 +22,7 @@ public class JsonResult {
     /**
      * Default constructor
      */
-    public JsonResult() {
-    }
+    public JsonResult() {}
 
     /**
      * Success constructor

@@ -30,6 +30,7 @@ public class Bootstrap {
         container.set("mysql", new ServiceFactory() {
             @Override
             public Object create(Container container) throws Exception {
+                Class.forName("com.mysql.jdbc.Driver");
                 String url = (String) container.get("mysql.url");
                 String user = (String) container.get("mysql.user");
                 String password = (String) container.get("mysql.password");
