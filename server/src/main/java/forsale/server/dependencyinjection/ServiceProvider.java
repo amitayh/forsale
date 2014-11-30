@@ -1,6 +1,6 @@
 package forsale.server.dependencyinjection;
 
-public interface ServiceFactory {
+public interface ServiceProvider {
 
     public Object create(Container container) throws Exception;
 

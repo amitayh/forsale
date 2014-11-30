@@ -30,27 +30,33 @@ public class ContainerTest {
     }
 
     @Test
+    public void testDefaultValues() throws Exception {
+        container.set("key1", "value1");
+        assertEquals("value1", container.get("key1", "default"));
+        assertEquals("default", container.get("key2", "default"));
+    }
+
+    @Test
     public void testRegisterService() throws Exception {
-        container.set("service.hello", new ServiceFactory() {
+        container.set("service.hello", new ServiceProvider() {
             @Override
             public Object create(Container container) {
                 return new HelloService();
             }
         });
-        HelloService service = (HelloService) container.get("service.hello");
-        assertNotNull(service);
+        assertNotNull(container.get("service.hello"));
     }
 
     @Test
     public void testRegisterServiceReturnsSameInstance() throws Exception {
-        container.set("service.hello", new ServiceFactory() {
+        container.set("service.hello", new ServiceProvider() {
             @Override
             public Object create(Container container) {
                 return new HelloService();
             }
         });
-        HelloService service1 = (HelloService) container.get("service.hello");
-        HelloService service2 = (HelloService) container.get("service.hello");
+        Object service1 = container.get("service.hello");
+        Object service2 = container.get("service.hello");
         assertSame(service1, service2);
     }
 
@@ -58,7 +64,7 @@ public class ContainerTest {
     public void testGetServiceParametersFromContainer() throws Exception {
         container.set("hello.prefix", "Message: ");
         container.set("hello.suffix", "!");
-        container.set("service.hello", new ServiceFactory() {
+        container.set("service.hello", new ServiceProvider() {
             @Override
             public Object create(Container container) throws Exception {
                 String prefix = (String) container.get("hello.prefix");
