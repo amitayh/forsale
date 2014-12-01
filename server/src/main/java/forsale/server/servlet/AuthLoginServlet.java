@@ -2,8 +2,6 @@ package forsale.server.servlet;
 
 import forsale.server.domain.Email;
 import forsale.server.domain.User;
-import forsale.server.domain.UserCredentials;
-import forsale.server.service.AuthService;
 import forsale.server.service.AuthServiceInterface;
 
 import javax.servlet.ServletException;
@@ -30,7 +28,7 @@ public class AuthLoginServlet extends BaseServlet {
 
         AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
         Logger logger = (Logger)get("logger");
-        JsonResult json = new JsonResult();
+        JsonResult result = new JsonResult();
 
         Email email = new Email(request.getParameter("email"));
         String password = request.getParameter("password");
@@ -42,17 +40,17 @@ public class AuthLoginServlet extends BaseServlet {
             if (user == null) {
                 // Failed to login user
                 logger.warning("Failed to login for '" + email.toString() + "'");
-                json.fail("Wrong email or password.");
+                result.fail("Wrong email or password.");
             } else {
                 // Succeed login user, return user's id
-                json.success(user.getId());
+                result.success(user.getId());
             }
             // TODO save to session etc.
         } catch (Exception e) {
             logger.severe("Failed to login with exception: " + e.getMessage());
-            json.fail(e.getMessage());
+            result.fail(e.getMessage());
         }
 
-        writeJsonResult(response, json);
+        writeJsonResult(response, result);
     }
 }

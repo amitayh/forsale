@@ -22,7 +22,8 @@ public class LoggerServiceProvider implements ServiceProvider {
         FINER
         FINEST (lowest value)
          */
-        logger.setLevel(Level.FINE);
+        Level level = (Level)container.get("logger.level");
+        logger.setLevel(level);
         return logger;
     }
 

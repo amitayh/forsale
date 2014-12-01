@@ -29,7 +29,7 @@ public class AuthRegisterServlet extends BaseServlet {
 
         AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
         Logger logger = (Logger)get("logger");
-        JsonResult json = new JsonResult();
+        JsonResult result = new JsonResult();
 
         // prepare user object
         User user = new User();
@@ -43,16 +43,16 @@ public class AuthRegisterServlet extends BaseServlet {
             logger.fine("Registering user id: " + userId);
             if (userId < 0) {
                 // invalid user id
-                json.fail("Failed to register.");
+                result.fail("Failed to register.");
             } else {
                 // new user registered :)
-                json.success(userId);
+                result.success(userId);
             }
         } catch (Exception e) {
-            json.fail(e.getMessage());
+            result.fail(e.getMessage());
         }
 
-        writeJsonResult(response, json);
+        writeJsonResult(response, result);
     }
 
 

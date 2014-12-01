@@ -1,6 +1,5 @@
 package forsale.server.servlet;
 
-import java.util.Objects;
 
 public class JsonResult {
 
@@ -28,31 +27,8 @@ public class JsonResult {
      * Default constructor
      */
     public JsonResult() {
-        this.error = "";
+        this.error = null;
         this.response_code = ResponseCode.SUCCESS;
-        this.data = null;
-    }
-
-    /**
-     * Success constructor
-     *
-     * @param data
-     */
-    public JsonResult(Object data) {
-        this.error = "";
-        this.response_code = ResponseCode.SUCCESS;
-        this.data = data;
-    }
-
-    /**
-     * Error constructor
-     *
-     * @param code
-     * @param error
-     */
-    public JsonResult(String code, String error) {
-        this.response_code = code;
-        this.error = error;
         this.data = null;
     }
 
@@ -64,7 +40,7 @@ public class JsonResult {
     public void success(Object data) {
         this.data = data;
         this.response_code = ResponseCode.SUCCESS;
-        this.error = "";
+        this.error = null;
     }
 
     /**

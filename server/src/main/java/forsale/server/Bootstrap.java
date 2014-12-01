@@ -5,6 +5,8 @@ import forsale.server.dependencyinjection.ServiceProvider;
 import forsale.server.service.HelloService;
 import forsale.server.service.provider.*;
 
+import java.util.logging.Level;
+
 public class Bootstrap {
 
     public static Container createDependencyInjectionContainer() {
@@ -41,6 +43,7 @@ public class Bootstrap {
 
         // Logger
         container.set("logger.name", "forsale");
+        container.set("logger.level", Level.FINE);
         container.set("logger", new LoggerServiceProvider());
 
         return container;
