@@ -10,23 +10,4 @@
         This is a simple web application with a source code organization
         based on the recommendations of the Application Developer's Guide.
     </description>
-
-    <servlet>
-        <servlet-name>Test</servlet-name>
-        <servlet-class>forsale.server.servlet.TestServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Test</servlet-name>
-        <url-pattern>/test</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>SalesPopular</servlet-name>
-        <servlet-class>forsale.server.servlet.SalesPopularServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SalesPopular</servlet-name>
-        <url-pattern>/sales/popular</url-pattern>
-    </servlet-mapping>
-
 </web-app>

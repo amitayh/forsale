@@ -2,7 +2,10 @@ package forsale.server.service;
 
 import forsale.server.domain.Sale;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 
 public class SalesService implements SalesServiceInterface {

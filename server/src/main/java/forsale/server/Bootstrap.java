@@ -23,6 +23,7 @@ public class Bootstrap {
         });
 
         // Domain services
+        container.set("service.auth", new AuthServiceProvider());
         container.set("service.vendors", new VendorsServiceProvider());
         container.set("service.sales", new SalesServiceProvider());
 
@@ -37,6 +38,10 @@ public class Bootstrap {
 
         // JSON serializer
         container.set("gson", new GsonServiceProvider());
+
+        // Logger
+        container.set("logger.name", "forsale");
+        container.set("logger", new LoggerServiceProvider());
 
         return container;
     }
