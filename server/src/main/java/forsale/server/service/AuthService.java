@@ -1,7 +1,6 @@
 package forsale.server.service;
 
 import forsale.server.domain.User;
-import forsale.server.domain.UserCredentials;
 
 import java.sql.Connection;
 
@@ -20,7 +19,7 @@ public class AuthService implements AuthServiceInterface {
     }
 
     @Override
-    public User authenticate(UserCredentials credentials) throws Exception {
+    public User authenticate(User.Credentials credentials) throws Exception {
         // TODO
         return null;
     }

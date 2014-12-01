@@ -1,18 +1,23 @@
 package forsale.server.servlet;
 
+import java.util.Objects;
+
 public class JsonResult {
 
-    public static final int ERR_OK = 0;
+    public static final class ResponseCode {
+        public static final String FAIL = "ERR";
+        public static final String SUCCESS = "OK";
+    }
 
     /**
-     * Status code. 0 is OK, use other codes for identifying errors
+     * Status code.
      */
-    public int err = ERR_OK;
+    public String response_code;
 
     /**
      * Error message, if needed
      */
-    public String message;
+    public String error;
 
     /**
      * Result data (assuming no errors occurred)
@@ -22,7 +27,11 @@ public class JsonResult {
     /**
      * Default constructor
      */
-    public JsonResult() {}
+    public JsonResult() {
+        this.error = "";
+        this.response_code = ResponseCode.SUCCESS;
+        this.data = null;
+    }
 
     /**
      * Success constructor
@@ -30,18 +39,44 @@ public class JsonResult {
      * @param data
      */
     public JsonResult(Object data) {
+        this.error = "";
+        this.response_code = ResponseCode.SUCCESS;
         this.data = data;
     }
 
     /**
      * Error constructor
      *
-     * @param err
+     * @param code
+     * @param error
+     */
+    public JsonResult(String code, String error) {
+        this.response_code = code;
+        this.error = error;
+        this.data = null;
+    }
+
+    /**
+     * Success json result
+     *
+     * @param data
+     */
+    public void success(Object data) {
+        this.data = data;
+        this.response_code = ResponseCode.SUCCESS;
+        this.error = "";
+    }
+
+    /**
+     * Fail json result
+     *
      * @param message
      */
-    public JsonResult(int err, String message) {
-        this.err = err;
-        this.message = message;
+    public void fail(String message) {
+        this.data = null;
+        this.response_code = ResponseCode.FAIL;
+        this.error = message;
     }
+
 
 }
