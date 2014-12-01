@@ -56,6 +56,8 @@ public class User {
 
     public void setPassword(String password) { this.credentials.setPassword(password); }
 
+    public Credentials getCredentials() { return this.credentials; }
+
     public String getName() { return name; }
 
     public void setName(String name) { this.name = name; }

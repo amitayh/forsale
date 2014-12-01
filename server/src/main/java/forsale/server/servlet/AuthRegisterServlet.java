@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 @WebServlet(name = "AuthRegisterServlet", urlPatterns = {"/auth/register"})
@@ -37,9 +38,12 @@ public class AuthRegisterServlet extends BaseServlet {
         user.setPassword(request.getParameter("password"));
         user.setName(request.getParameter("name"));
         user.setGender(Gender.valueOf(request.getParameter("gender")));
+        SimpleDateFormat simpleFormat = new SimpleDateFormat("dd-MM-yyyy");
 
         try {
-            int userId = auth.register(user);
+            user.setBirthDath(simpleFormat.parse(request.getParameter("birth")));
+
+            int userId = auth.signup(user);
             logger.fine("Registering user id: " + userId);
             if (userId < 0) {
                 // invalid user id
