@@ -7,15 +7,15 @@ public class Password {
 
     private String originalPassword;
 
-    private String hashPassword;
+    private String hashedPassword;
 
     public Password(String password) {
         this.originalPassword = password;
-        this.hashPassword = toHashPassword(password);
+        this.hashedPassword = toHashPassword(password);
     }
 
-    public String getHashPassword() {
-        return this.hashPassword;
+    public String getHashedPassword() {
+        return this.hashedPassword;
     }
 
     public String getOriginalPassword() {
@@ -52,5 +52,19 @@ public class Password {
         return generatedPassword;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Password pass1 = (Password)o;
+
+        return pass1.hashedPassword.equals(this.hashedPassword) && pass1.originalPassword.equals(this.originalPassword);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.hashedPassword != null ? this.hashedPassword.hashCode() : 0;
+    }
 }

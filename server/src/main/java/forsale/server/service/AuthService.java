@@ -22,7 +22,7 @@ public class AuthService implements AuthServiceInterface {
 
         Email email = user.getEmail();
         statement.setString(1, email.toString());
-        statement.setString(2, user.getPassword().getHashPassword());
+        statement.setString(2, user.getPassword().getHashedPassword());
         statement.setString(3, user.getName());
         statement.setString(4, user.getGender().toString());
         statement.setDate(5, new Date(user.getBirthDath().getTime()));
@@ -52,7 +52,7 @@ public class AuthService implements AuthServiceInterface {
 
         PreparedStatement st = mysql.prepareStatement(sql);
         st.setString(1, credentials.getEmail().toString());
-        st.setString(2, credentials.getPassword().getHashPassword());
+        st.setString(2, credentials.getPassword().getHashedPassword());
         ResultSet rs = st.executeQuery();
 
         if (rs.next()) {
