@@ -1,18 +1,22 @@
 package forsale.server.servlet;
 
+
 public class JsonResult {
 
-    public static final int ERR_OK = 0;
+    public static final class ResponseCode {
+        public static final String FAIL = "ERR";
+        public static final String SUCCESS = "OK";
+    }
 
     /**
-     * Status code. 0 is OK, use other codes for identifying errors
+     * Status code.
      */
-    public int err = ERR_OK;
+    public String response_code;
 
     /**
      * Error message, if needed
      */
-    public String message;
+    public String error;
 
     /**
      * Result data (assuming no errors occurred)
@@ -22,26 +26,33 @@ public class JsonResult {
     /**
      * Default constructor
      */
-    public JsonResult() {}
+    public JsonResult() {
+        this.error = null;
+        this.response_code = ResponseCode.SUCCESS;
+        this.data = null;
+    }
 
     /**
-     * Success constructor
+     * Success json result
      *
      * @param data
      */
-    public JsonResult(Object data) {
+    public void success(Object data) {
         this.data = data;
+        this.response_code = ResponseCode.SUCCESS;
+        this.error = null;
     }
 
     /**
-     * Error constructor
+     * Fail json result
      *
-     * @param err
      * @param message
      */
-    public JsonResult(int err, String message) {
-        this.err = err;
-        this.message = message;
+    public void fail(String message) {
+        this.data = null;
+        this.response_code = ResponseCode.FAIL;
+        this.error = message;
     }
+
 
 }

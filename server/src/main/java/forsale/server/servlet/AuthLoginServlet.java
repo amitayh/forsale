@@ -2,7 +2,6 @@ package forsale.server.servlet;
 
 import forsale.server.domain.Email;
 import forsale.server.domain.User;
-import forsale.server.domain.UserCredentials;
 import forsale.server.service.AuthServiceInterface;
 
 import javax.servlet.ServletException;
@@ -16,24 +15,40 @@ import java.util.logging.Logger;
 public class AuthLoginServlet extends BaseServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        AuthServiceInterface auth = (AuthServiceInterface) get("service.auth");
-        Logger logger = (Logger) get("logger");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        login(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        login(request, response);
+    }
+
+    private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
+        Logger logger = (Logger)get("logger");
         JsonResult result = new JsonResult();
 
         Email email = new Email(request.getParameter("email"));
         String password = request.getParameter("password");
-        UserCredentials credentials = new UserCredentials(email, password);
+        User.Credentials credentials = new User.Credentials(email, password);
 
         try {
-            logger.info("Attempting login for '" + email.getValue() + "'");
+            logger.fine("Attempting login for '" + email.toString() + "'");
             User user = auth.authenticate(credentials);
+            if (user == null) {
+                // Failed to login user
+                logger.warning("Failed to login for '" + email.toString() + "'");
+                result.fail("Wrong email or password.");
+            } else {
+                // Succeed login user, return user's id
+                result.success(user.getId());
+            }
             // TODO save to session etc.
         } catch (Exception e) {
-            logger.info("Login failed!");
-            result.err = 1;
-            result.message = e.getMessage();
+            logger.severe("Failed to login with exception: " + e.getMessage());
+            result.fail(e.getMessage());
         }
 
         writeJsonResult(response, result);

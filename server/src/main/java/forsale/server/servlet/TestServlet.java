@@ -16,7 +16,8 @@ public class TestServlet extends BaseServlet {
             throws ServletException, IOException {
         HelloService service = (HelloService) get("service.hello");
         String name = request.getParameter("name");
-        JsonResult result = new JsonResult(service.hello(name));
+        JsonResult result = new JsonResult();
+        result.success(service.hello(name));
         writeJsonResult(response, result);
     }
 
