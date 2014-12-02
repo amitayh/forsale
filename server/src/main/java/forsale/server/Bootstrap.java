@@ -28,6 +28,7 @@ public class Bootstrap {
         container.set("service.auth", new AuthServiceProvider());
         container.set("service.vendors", new VendorsServiceProvider());
         container.set("service.sales", new SalesServiceProvider());
+        container.set("service.users", new UsersServiceProvider());
 
         // MySQL connection
         container.set("mysql.db", "forsale");

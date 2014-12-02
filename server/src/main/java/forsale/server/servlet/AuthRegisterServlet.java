@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 @WebServlet(name = "AuthRegisterServlet", urlPatterns = {"/auth/register"})
@@ -38,8 +37,8 @@ public class AuthRegisterServlet extends BaseServlet {
         user.setGender(Gender.valueOf(request.getParameter("gender")));
 
         try {
-            SimpleDateFormat simpleFormat = new SimpleDateFormat("dd-MM-yyyy");
-            user.setBirthDath(simpleFormat.parse(request.getParameter("birth")));
+
+            user.setBirthDath(new BirthDate(request.getParameter("birth")));
 
             int userId = auth.signup(user);
             logger.fine("Registering user id: " + userId);

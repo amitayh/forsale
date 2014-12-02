@@ -3,14 +3,12 @@ package forsale.server.typeadapter;
 import com.google.gson.Gson;
 import forsale.server.TestCase;
 import forsale.server.dependencyinjection.Container;
-import forsale.server.domain.Email;
-import forsale.server.domain.Gender;
-import forsale.server.domain.Password;
-import forsale.server.domain.User;
+import forsale.server.domain.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -32,17 +30,22 @@ public class UserTypeAdapterTest extends TestCase {
     }
 
     @Test
-    public void testSerialize() {
+    public void testSerialize() throws Exception {
         User user = new User();
         user.setId(1);
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        Calendar calendar1 = new GregorianCalendar(1940, 10, 9);
-        user.setBirthDath(calendar1.getTime());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-1940").getTime()));
 
-        String expected = "{\"id\":1,\"email\":\"john@beatles.com\",\"name\":\"John Lennon\"}";
+        String expected = "{\"id\":1," +
+                            "\"email\":\"john@beatles.com\"," +
+                            "\"name\":\"John Lennon\"," +
+                            "\"gender\":\"MALE\"," +
+                            "\"birth\":\"09-10-1940\"}";
+
         String actual = gson.toJson(user);
 
         assertEquals(expected, actual);

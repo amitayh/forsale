@@ -1,7 +1,5 @@
 package forsale.server.domain;
 
-import java.util.Date;
-
 public class User {
 
     public static class Credentials {
@@ -45,7 +43,7 @@ public class User {
 
     private Gender gender;
 
-    private Date birthDath;
+    private BirthDate birthDath;
 
     public User() {
         this.credentials = new Credentials();
@@ -71,8 +69,8 @@ public class User {
 
     public void setGender(Gender gender) { this.gender = gender; }
 
-    public Date getBirthDath() { return birthDath; }
+    public BirthDate getBirthDath() { return birthDath; }
 
-    public void setBirthDath(Date birthDath) { this.birthDath = birthDath; }
+    public void setBirthDath(BirthDate birthDath) { this.birthDath = birthDath; }
     
 }

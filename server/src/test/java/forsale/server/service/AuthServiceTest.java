@@ -2,16 +2,14 @@ package forsale.server.service;
 
 import forsale.server.TestCase;
 import forsale.server.dependencyinjection.Container;
-import forsale.server.domain.Email;
-import forsale.server.domain.Gender;
-import forsale.server.domain.Password;
-import forsale.server.domain.User;
+import forsale.server.domain.*;
 import forsale.server.service.exception.DuplicateEmailException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -19,14 +17,14 @@ import static org.junit.Assert.*;
 
 public class AuthServiceTest extends TestCase {
 
-    private AuthService auth;
+    private AuthServiceInterface auth;
 
     @Before
     public void setUp() throws Exception {
         Container container = getTestContainer();
-        flush((Connection) container.get("mysql")); // clear db rows
+        flush((Connection)container.get("mysql")); // clear db rows
 
-        auth = (AuthService) container.get("service.auth");
+        auth = (AuthServiceInterface)container.get("service.auth");
     }
 
     @After
@@ -42,8 +40,8 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email("assafgrim@gmail.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("AD#ri493-220"));
-        Calendar calendar = new GregorianCalendar(1988, 12, 15);
-        user.setBirthDath(calendar.getTime());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        user.setBirthDath(new BirthDate(dateFormat.parse("15-12-1988").getTime()));
 
         // signup
         int userId = auth.signup(user);
@@ -56,14 +54,15 @@ public class AuthServiceTest extends TestCase {
 
     @Test(expected=DuplicateEmailException.class)
     public void testCantSingupTwoUsersWithSameEmail() throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
         // 1st user
         User user1 = new User();
         user1.setName("John Lennon");
         user1.setEmail(new Email("john@beatles.com"));
         user1.setGender(Gender.MALE);
         user1.setPassword(new Password("123"));
-        Calendar calendar1 = new GregorianCalendar(1940, 10, 9);
-        user1.setBirthDath(calendar1.getTime());
+        user1.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
 
         // 2nd user
         User user2 = new User();
@@ -71,8 +70,7 @@ public class AuthServiceTest extends TestCase {
         user2.setEmail(new Email("john@beatles.com"));
         user2.setGender(Gender.MALE);
         user2.setPassword(new Password("456"));
-        Calendar calendar2 = new GregorianCalendar(1940, 10, 9);
-        user2.setBirthDath(calendar2.getTime());
+        user2.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
 
         // Signup users - should throw an exception
         auth.signup(user1);
@@ -81,6 +79,7 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testLoginWithBadCredentials() throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Email email = new Email("john@beatles.com");
         Password goodPassword = new Password("123");
         Password badPassword = new Password("456");
@@ -91,8 +90,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(goodPassword);
-        Calendar calendar1 = new GregorianCalendar(1940, 10, 9);
-        user.setBirthDath(calendar1.getTime());
+        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
         auth.signup(user);
 
         // Try to authenticate
@@ -103,6 +101,7 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testLoginWithGoodCredentials() throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Email email = new Email("john@beatles.com");
         Password password = new Password("123");
 
@@ -112,8 +111,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(password);
-        Calendar calendar1 = new GregorianCalendar(1940, 10, 9);
-        user.setBirthDath(calendar1.getTime());
+        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
         auth.signup(user);
 
         // Try to authenticate
@@ -126,6 +124,7 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testPasswordIsBeingHashedAfterSignup() throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Email email = new Email("john@beatles.com");
         Password password = new Password("AbCd1234#!$&");
 
@@ -138,8 +137,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(password);
-        Calendar calendar1 = new GregorianCalendar(1940, 10, 9);
-        user.setBirthDath(calendar1.getTime());
+        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
         auth.signup(user);
 
         // authenticate user
