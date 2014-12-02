@@ -1,9 +1,6 @@
 package forsale.server.service;
 
-import forsale.server.domain.BirthDate;
-import forsale.server.domain.Email;
-import forsale.server.domain.Gender;
-import forsale.server.domain.User;
+import forsale.server.domain.*;
 import forsale.server.service.exception.DuplicateEmailException;
 
 import java.sql.*;
@@ -49,7 +46,7 @@ public class UsersService implements UsersServiceInterface {
         User user = null;
 
         String sql =
-                "SELECT user_email, user_name, user_gender, user_birth_date " +
+                "SELECT user_email, user_password, user_name, user_gender, user_birth_date " +
                         "FROM users WHERE user_id = ?";
 
         PreparedStatement st = mysql.prepareStatement(sql);
@@ -60,9 +57,12 @@ public class UsersService implements UsersServiceInterface {
             user = new User();
             user.setId(userId);
             user.setEmail(new Email(rs.getString(1)));
-            user.setName(rs.getString(2));
-            user.setGender(Gender.valueOf(rs.getString(3).toUpperCase()));
-            user.setBirthDath(new BirthDate(rs.getDate(4).getTime()));
+            Password password = new Password();
+            password.setHashedPassword(rs.getString(2));
+            user.setPassword(password);
+            user.setName(rs.getString(3));
+            user.setGender(Gender.valueOf(rs.getString(4).toUpperCase()));
+            user.setBirthDath(new BirthDate(rs.getDate(5).getTime()));
         }
 
         return user;

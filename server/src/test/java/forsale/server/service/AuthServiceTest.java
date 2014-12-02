@@ -129,7 +129,7 @@ public class AuthServiceTest extends TestCase {
         Password password = new Password("AbCd1234#!$&");
 
         // compare hash and original passwords
-        assertNotEquals(password.getOriginalPassword(), password.getHashedPassword());
+        assertNotEquals("AbCd1234#!$&", password.getHashedPassword());
 
         // Signup user
         User user = new User();
