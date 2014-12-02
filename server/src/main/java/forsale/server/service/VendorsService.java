@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class VendorsService implements VendorsServiceInterface {
 
-    private Connection mysql;
+    final private Connection mysql;
 
     public VendorsService(Connection mysql) {
         this.mysql = mysql;

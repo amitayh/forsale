@@ -13,14 +13,14 @@ import static org.junit.Assert.*;
 
 public class VendorsServiceTest extends TestCase {
 
-    private VendorsServiceInterface vendors;
+    private VendorsService vendors;
 
     @Before
     public void setUp() throws Exception {
         Container container = getTestContainer();
         flush((Connection) container.get("mysql"));
 
-        vendors = (VendorsServiceInterface) container.get("service.vendors");
+        vendors = (VendorsService) container.get("service.vendors");
     }
 
     @After

@@ -10,4 +10,6 @@ public interface SalesServiceInterface {
 
     public List<Sale> getPopular();
 
+    public double increaseViewCount(Sale sale);
+
 }

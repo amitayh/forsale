@@ -10,6 +10,7 @@ import org.junit.Test;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,9 +18,9 @@ import static org.junit.Assert.assertTrue;
 
 public class SalesServiceTest extends TestCase {
 
-    private VendorsServiceInterface vendors;
+    private SalesService sales;
 
-    private SalesServiceInterface sales;
+    private Vendor vendor;
 
     @Before
     public void setUp() throws Exception {
@@ -27,22 +28,18 @@ public class SalesServiceTest extends TestCase {
         flush((Connection) container.get("mysql"));
         flush((Jedis) container.get("redis"));
 
-        vendors = (VendorsServiceInterface) container.get("service.vendors");
-        sales = (SalesServiceInterface) container.get("service.sales");
+        sales = (SalesService) container.get("service.sales");
+        vendor = createVendor((VendorsServiceInterface) container.get("service.vendors"));
     }
 
     @After
     public void tearDown() {
-        vendors = null;
         sales = null;
+        vendor = null;
     }
 
     @Test
     public void testInsertSale() throws Exception {
-        Vendor vendor = new Vendor();
-        vendor.setName("Vendor #1");
-        vendors.insert(vendor);
-
         Sale sale = new Sale();
         sale.setTitle("Sale #1");
         sale.setVendor(vendor);
@@ -55,10 +52,7 @@ public class SalesServiceTest extends TestCase {
 
     @Test
     public void testGetPopularReturnsSalesSortedByPopularity() throws Exception {
-        Vendor vendor = new Vendor();
-        vendor.setName("Vendor #1");
-        vendors.insert(vendor);
-
+        // Insert sales
         Sale sale1 = new Sale();
         sale1.setTitle("Sale #1");
         sale1.setVendor(vendor);
@@ -73,6 +67,27 @@ public class SalesServiceTest extends TestCase {
         sale3.setTitle("Sale #1");
         sale3.setVendor(vendor);
         sales.insert(sale3);
+
+        // Set view count rank: sale2, sale3, sale1
+        sales.increaseViewCount(sale1);
+        sales.increaseViewCount(sale2);
+        sales.increaseViewCount(sale2);
+        sales.increaseViewCount(sale2);
+        sales.increaseViewCount(sale3);
+        sales.increaseViewCount(sale3);
+
+        List<Sale> popular = sales.getPopular();
+//        assertEquals(sale2.getId(), popular.get(0).getId()); // 1st
+//        assertEquals(sale3.getId(), popular.get(1).getId()); // 2nd
+//        assertEquals(sale1.getId(), popular.get(2).getId()); // 3rd
+    }
+
+    private Vendor createVendor(VendorsServiceInterface vendors) throws Exception {
+        Vendor vendor = new Vendor();
+        vendor.setName("Vendor #1");
+        vendors.insert(vendor);
+
+        return vendor;
     }
 
 }

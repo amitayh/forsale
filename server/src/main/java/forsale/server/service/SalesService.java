@@ -1,19 +1,27 @@
 package forsale.server.service;
 
 import forsale.server.domain.Sale;
+import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class SalesService implements SalesServiceInterface {
 
-    private Connection mysql;
+    public static final String SALE_VIEWS_HASH = "sale_views";
 
-    public SalesService(Connection mysql) {
+    final private Connection mysql;
+
+    final private Jedis redis;
+
+    public SalesService(Connection mysql, Jedis redis) {
         this.mysql = mysql;
+        this.redis = redis;
     }
 
     @Override
@@ -35,7 +43,16 @@ public class SalesService implements SalesServiceInterface {
 
     @Override
     public List<Sale> getPopular() {
-        return null;
+        List<Sale> popular = new ArrayList<>();
+
+        Set<String> popularity = redis.zrange(SALE_VIEWS_HASH, 0, -1);
+
+        return popular;
+    }
+
+    @Override
+    public double increaseViewCount(Sale sale) {
+        return redis.zincrby(SALE_VIEWS_HASH, 1, Integer.toString(sale.getId()));
     }
 
 }
