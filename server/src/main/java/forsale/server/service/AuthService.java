@@ -1,10 +1,8 @@
 package forsale.server.service;
 
 import forsale.server.domain.BirthDate;
-import forsale.server.domain.Email;
 import forsale.server.domain.Gender;
 import forsale.server.domain.User;
-import forsale.server.service.exception.DuplicateEmailException;
 
 import java.sql.*;
 
