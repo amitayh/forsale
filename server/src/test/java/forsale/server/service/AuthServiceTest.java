@@ -129,6 +129,9 @@ public class AuthServiceTest extends TestCase {
         Email email = new Email("john@beatles.com");
         Password password = new Password("AbCd1234#!$&");
 
+        // compare hash and original passwords
+        assertNotEquals(password.getOriginalPassword(), password.getHashPassword());
+
         // Signup user
         User user = new User();
         user.setName("John Lennon");
@@ -145,6 +148,7 @@ public class AuthServiceTest extends TestCase {
         assertNotNull(authenticatedUser);
 
         // compare hash passwords
+        assertNotEquals(authenticatedUser.getPassword().getOriginalPassword(), authenticatedUser.getPassword().getHashPassword());
         assertEquals(password.getHashPassword(), authenticatedUser.getPassword().getHashPassword());
     }
 
