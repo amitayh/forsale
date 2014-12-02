@@ -1,7 +1,6 @@
 package forsale.server.servlet;
 
-import forsale.server.domain.Email;
-import forsale.server.domain.User;
+import forsale.server.domain.*;
 import forsale.server.service.AuthServiceInterface;
 
 import javax.servlet.ServletException;
@@ -31,7 +30,7 @@ public class AuthLoginServlet extends BaseServlet {
         JsonResult result = new JsonResult();
 
         Email email = new Email(request.getParameter("email"));
-        String password = request.getParameter("password");
+        Password password = new Password(request.getParameter("password"));
         User.Credentials credentials = new User.Credentials(email, password);
 
         try {

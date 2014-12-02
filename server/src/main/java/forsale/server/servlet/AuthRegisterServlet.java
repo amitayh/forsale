@@ -1,8 +1,6 @@
 package forsale.server.servlet;
 
-import forsale.server.domain.Email;
-import forsale.server.domain.Gender;
-import forsale.server.domain.User;
+import forsale.server.domain.*;
 import forsale.server.service.AuthServiceInterface;
 
 import javax.servlet.ServletException;
@@ -35,12 +33,12 @@ public class AuthRegisterServlet extends BaseServlet {
         // prepare user object
         User user = new User();
         user.setEmail(new Email(request.getParameter("email")));
-        user.setPassword(request.getParameter("password"));
+        user.setPassword(new Password(request.getParameter("password")));
         user.setName(request.getParameter("name"));
         user.setGender(Gender.valueOf(request.getParameter("gender")));
-        SimpleDateFormat simpleFormat = new SimpleDateFormat("dd-MM-yyyy");
 
         try {
+            SimpleDateFormat simpleFormat = new SimpleDateFormat("dd-MM-yyyy");
             user.setBirthDath(simpleFormat.parse(request.getParameter("birth")));
 
             int userId = auth.signup(user);

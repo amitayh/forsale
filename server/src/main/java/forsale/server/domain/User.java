@@ -8,11 +8,14 @@ public class User {
 
         private Email email;
 
-        private String password;
+        private Password password;
 
-        public Credentials() {}
+        public Credentials() {
+            this.email = null;
+            this.password = null;
+        }
 
-        public Credentials(Email email, String password) {
+        public Credentials(Email email, Password password) {
             this.email = email;
             this.password = password;
         }
@@ -25,24 +28,28 @@ public class User {
             this.email = email;
         }
 
-        public String getPassword() {
+        public Password getPassword() {
             return password;
         }
 
-        public void setPassword(String password) {
+        public void setPassword(Password password) {
             this.password = password;
         }
     }
 
     private int id;
 
-    private Credentials credentials = new Credentials();
+    private Credentials credentials;
 
     private String name;
 
     private Gender gender;
 
     private Date birthDath;
+
+    public User() {
+        this.credentials = new Credentials();
+    }
 
     public int getId() { return id; }
 
@@ -52,9 +59,9 @@ public class User {
 
     public void setEmail(Email email) { this.credentials.setEmail(email); }
 
-    public String getPassword() { return this.credentials.getPassword(); }
+    public Password getPassword() { return this.credentials.getPassword(); }
 
-    public void setPassword(String password) { this.credentials.setPassword(password); }
+    public void setPassword(Password password) { this.credentials.setPassword(password); }
 
     public String getName() { return name; }
 
