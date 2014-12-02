@@ -36,7 +36,7 @@ public class User {
 
     private int id;
 
-    private Credentials credentials;
+    private Credentials credentials = new Credentials();
 
     private String name;
 
@@ -55,8 +55,6 @@ public class User {
     public String getPassword() { return this.credentials.getPassword(); }
 
     public void setPassword(String password) { this.credentials.setPassword(password); }
-
-    public Credentials getCredentials() { return this.credentials; }
 
     public String getName() { return name; }
 

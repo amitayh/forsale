@@ -8,7 +8,7 @@ CREATE TABLE users (
   user_gender ENUM('male', 'female'),
   user_birth_date DATE
 );
-CREATE INDEX users_email ON users(user_email);
+CREATE UNIQUE INDEX users_email ON users(user_email);
 
 CREATE TABLE categories (
   category_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

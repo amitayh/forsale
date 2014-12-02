@@ -1,89 +1,131 @@
 package forsale.server.service;
 
-import forsale.server.Bootstrap;
+import forsale.server.TestCase;
 import forsale.server.dependencyinjection.Container;
 import forsale.server.domain.Email;
 import forsale.server.domain.Gender;
 import forsale.server.domain.User;
-import forsale.server.service.provider.MysqlServiceProvider;
-import java.sql.Connection;
-import java.util.logging.Logger;
-
+import forsale.server.service.exception.DuplicateEmailException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AuthServiceTest {
+import java.sql.Connection;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-    public static final String TEST_DB_MYSQL = "forsale_test";
+import static org.junit.Assert.*;
 
-    private Container container;
-    private Logger logger;
+public class AuthServiceTest extends TestCase {
+
     private AuthService auth;
 
     @Before
     public void setUp() throws Exception {
-        this.container = getTestContainer();
-        this.logger = (Logger)this.container.get("logger");
-        // create auth service object
-        MysqlServiceProvider provider = (MysqlServiceProvider)this.container.get("mysql");
-        Connection mysql = (Connection)provider.create(this.container);
-        this.auth = new AuthService(mysql);
+        Container container = getTestContainer();
+        flush((Connection) container.get("mysql"));
 
+        auth = (AuthService) container.get("service.auth");
     }
 
     @After
     public void tearDown() {
-        this.container = null;
-        this.logger = null;
-        this.auth = null;
+        auth = null;
     }
 
     @Test
-    public void testRegisterAndLogin() throws Exception {
+    public void testSignupSavesUser() throws Exception {
         // prepare new user
         User user = new User();
         user.setName("Assaf Grimberg");
         user.setEmail(new Email("assafgrim@gmail.com"));
         user.setGender(Gender.MALE);
         user.setPassword("AD#ri493-220");
-        user.setBirthDath(null);
-        user.setId(-1);
+        Calendar calendar = new GregorianCalendar(1988, 12, 15);
+        user.setBirthDath(calendar.getTime());
 
-        // register user
-        logger.info("Registering...");
-        testRegister(user);
-
-        // try register again
-        logger.info("Registering again...");
-        testRegister(user);
-
-        // login with registered user
-        logger.info("Login...");
-        testLogin(user.getCredentials());
-    }
-
-    private void testRegister(User user) throws Exception {
+        // signup
         int userId = auth.signup(user);
-        if (userId < 0) {
-            logger.severe("Failed to signup user");
-        } else {
-            logger.fine("User signed up with id: " + userId);
-        }
+
+        // assert
+        assertEquals(userId, user.getId());
+        assertNotNull(userId);
+        assertTrue(userId > 0);
     }
 
-    private void testLogin(User.Credentials credentials) throws Exception {
-        User user = auth.authenticate(credentials);
-        if (user == null) {
-            logger.severe("Failed to login user");
-        } else {
-            logger.fine("User logged in with id: " + user.getId());
-        }
+    @Test(expected=DuplicateEmailException.class)
+    public void testCantSingupTwoUsersWithSameEmail() throws Exception {
+        // 1st user
+        User user1 = new User();
+        user1.setName("John Lennon");
+        user1.setEmail(new Email("john@beatles.com"));
+        user1.setGender(Gender.MALE);
+        user1.setPassword("123");
+        Calendar calendar1 = new GregorianCalendar(1940, 10, 9);
+        user1.setBirthDath(calendar1.getTime());
+
+        // 2nd user
+        User user2 = new User();
+        user2.setName("John Lennon #2");
+        user2.setEmail(new Email("john@beatles.com"));
+        user2.setGender(Gender.MALE);
+        user2.setPassword("456");
+        Calendar calendar2 = new GregorianCalendar(1940, 10, 9);
+        user2.setBirthDath(calendar2.getTime());
+
+        // Signup users - should throw an exception
+        auth.signup(user1);
+        auth.signup(user2);
     }
 
-    private Container getTestContainer() throws Exception {
-        Container container = Bootstrap.createDependencyInjectionContainer();
-        container.set("mysql.db", TEST_DB_MYSQL); // override original db
-        return container;
+    @Test
+    public void testLoginWithBadCredentials() throws Exception {
+        Email email = new Email("john@beatles.com");
+        String goodPassword = "123";
+        String badPassword = "456";
+
+        // Signup user
+        User user = new User();
+        user.setName("John Lennon");
+        user.setEmail(email);
+        user.setGender(Gender.MALE);
+        user.setPassword(goodPassword);
+        Calendar calendar1 = new GregorianCalendar(1940, 10, 9);
+        user.setBirthDath(calendar1.getTime());
+        auth.signup(user);
+
+        // Try to authenticate
+        User.Credentials credentials = new User.Credentials(email, badPassword);
+        User authenticatedUser = auth.authenticate(credentials);
+        assertNull(authenticatedUser);
     }
+
+    @Test
+    public void testLoginWithGoodCredentials() throws Exception {
+        Email email = new Email("john@beatles.com");
+        String password = "123";
+
+        // Signup user
+        User user = new User();
+        user.setName("John Lennon");
+        user.setEmail(email);
+        user.setGender(Gender.MALE);
+        user.setPassword(password);
+        Calendar calendar1 = new GregorianCalendar(1940, 10, 9);
+        user.setBirthDath(calendar1.getTime());
+        auth.signup(user);
+
+        // Try to authenticate
+        User.Credentials credentials = new User.Credentials(email, password);
+        User authenticatedUser = auth.authenticate(credentials);
+        assertNotNull(authenticatedUser);
+        assertEquals(user.getId(), authenticatedUser.getId());
+        assertEquals(email, authenticatedUser.getEmail());
+    }
+
+    @Test
+    public void testPasswordIsBeingHashedAfterSignup() {
+        // TODO
+    }
+
 }

@@ -25,6 +25,7 @@ abstract public class TestCase {
         Statement stmt = conn.createStatement();
         stmt.execute("DELETE FROM sales;");
         stmt.execute("DELETE FROM vendors;");
+        stmt.execute("DELETE FROM users;");
     }
 
     protected void flush(Jedis redis) {
