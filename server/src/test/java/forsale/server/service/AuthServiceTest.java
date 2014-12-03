@@ -9,9 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
 
@@ -40,8 +37,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email("assafgrim@gmail.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("AD#ri493-220"));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        user.setBirthDath(new BirthDate(dateFormat.parse("15-12-1988").getTime()));
+        user.setBirthDath(new BirthDate("15-12-1988"));
 
         // signup
         int userId = auth.signup(user);
@@ -54,7 +50,6 @@ public class AuthServiceTest extends TestCase {
 
     @Test(expected=DuplicateEmailException.class)
     public void testCantSingupTwoUsersWithSameEmail() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
         // 1st user
         User user1 = new User();
@@ -62,7 +57,7 @@ public class AuthServiceTest extends TestCase {
         user1.setEmail(new Email("john@beatles.com"));
         user1.setGender(Gender.MALE);
         user1.setPassword(new Password("123"));
-        user1.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
+        user1.setBirthDath(new BirthDate("09-10-2014"));
 
         // 2nd user
         User user2 = new User();
@@ -70,7 +65,7 @@ public class AuthServiceTest extends TestCase {
         user2.setEmail(new Email("john@beatles.com"));
         user2.setGender(Gender.MALE);
         user2.setPassword(new Password("456"));
-        user2.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
+        user2.setBirthDath(new BirthDate("09-10-2014"));
 
         // Signup users - should throw an exception
         auth.signup(user1);
@@ -79,7 +74,6 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testLoginWithBadCredentials() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Email email = new Email("john@beatles.com");
         Password goodPassword = new Password("123");
         Password badPassword = new Password("456");
@@ -90,7 +84,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(goodPassword);
-        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
+        user.setBirthDath(new BirthDate("09-10-2014"));
         auth.signup(user);
 
         // Try to authenticate
@@ -101,7 +95,6 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testLoginWithGoodCredentials() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Email email = new Email("john@beatles.com");
         Password password = new Password("123");
 
@@ -111,7 +104,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(password);
-        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
+        user.setBirthDath(new BirthDate("09-10-2014"));
         auth.signup(user);
 
         // Try to authenticate
@@ -124,7 +117,6 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testPasswordIsBeingHashedAfterSignup() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Email email = new Email("john@beatles.com");
         Password password = new Password("AbCd1234#!$&");
 
@@ -137,7 +129,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(password);
-        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-2014").getTime()));
+        user.setBirthDath(new BirthDate("09-10-2014"));
         auth.signup(user);
 
         // authenticate user

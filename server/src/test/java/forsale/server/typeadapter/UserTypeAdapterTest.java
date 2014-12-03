@@ -8,11 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class UserTypeAdapterTest extends TestCase {
 
@@ -37,8 +33,7 @@ public class UserTypeAdapterTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-1940").getTime()));
+        user.setBirthDath(new BirthDate("09-10-1940"));
 
         String expected = "{\"id\":1," +
                             "\"email\":\"john@beatles.com\"," +
