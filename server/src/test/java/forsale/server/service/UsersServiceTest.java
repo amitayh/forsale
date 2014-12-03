@@ -1,31 +1,27 @@
 package forsale.server.service;
 
 import forsale.server.TestCase;
-import forsale.server.dependencyinjection.Container;
 import forsale.server.domain.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
-
 import static org.junit.Assert.*;
 
 public class UsersServiceTest extends TestCase {
 
-    private UsersServiceInterface usersService;
+    private UsersService users;
 
     @Before
     public void setUp() throws Exception {
-        Container container = getTestContainer();
-        flush((Connection)container.get("mysql"));
+        flushMysql();
 
-        this.usersService = (UsersServiceInterface)container.get("service.users");
+        users = new UsersService(getMysql());
     }
 
     @After
     public void tearDown() {
-        this.usersService = null;
+        users = null;
     }
 
     @Test
@@ -40,14 +36,14 @@ public class UsersServiceTest extends TestCase {
         user.setBirthDath(new BirthDate("09-10-1940"));
 
         // insert user
-        int userId = usersService.insert(user);
+        int userId = users.insert(user);
         user.setId(userId); // update real id
 
         // validate user id is positive
         assertTrue(userId >= 0);
 
         // get the inserted user by id
-        User insertedUser = usersService.get(userId);
+        User insertedUser = users.get(userId);
 
         // validate same user
         assertNotNull(insertedUser);
@@ -66,17 +62,17 @@ public class UsersServiceTest extends TestCase {
         user.setBirthDath(new BirthDate("09-10-1940"));
 
         // insert user
-        int userId = usersService.insert(user);
+        int userId = users.insert(user);
         user.setId(userId); // update real id
 
         assertTrue(userId >= 0);
 
         // edit user name
         user.setName("Ringo Starr");
-        usersService.edit(user);
+        users.edit(user);
 
         // get edited user
-        User editedUser = usersService.get(userId);
+        User editedUser = users.get(userId);
 
         assertNotNull(editedUser);
         assertEquals(user, editedUser);

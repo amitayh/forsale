@@ -1,14 +1,11 @@
 package forsale.server.service;
 
 import forsale.server.TestCase;
-import forsale.server.dependencyinjection.Container;
 import forsale.server.domain.*;
 import forsale.server.service.exception.DuplicateEmailException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.sql.Connection;
 
 import static org.junit.Assert.*;
 
@@ -18,10 +15,10 @@ public class AuthServiceTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        Container container = getTestContainer();
-        flush((Connection)container.get("mysql")); // clear db rows
+        flushMysql(); // clear db rows
 
-        auth = (AuthServiceInterface)container.get("service.auth");
+        UsersServiceInterface users = (UsersService) container.get("service.users");
+        auth = new AuthService(getMysql(), users);
     }
 
     @After

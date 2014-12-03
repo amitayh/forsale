@@ -1,20 +1,15 @@
 package forsale.server.service;
 
 import forsale.server.TestCase;
-import forsale.server.dependencyinjection.Container;
 import forsale.server.domain.Sale;
 import forsale.server.domain.Vendor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import redis.clients.jedis.Jedis;
 
-import java.sql.Connection;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SalesServiceTest extends TestCase {
 
@@ -24,12 +19,11 @@ public class SalesServiceTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        Container container = getTestContainer();
-        flush((Connection) container.get("mysql"));
-        flush((Jedis) container.get("redis"));
+        flushMysql();
+        flushRedis();
 
-        sales = (SalesService) container.get("service.sales");
-        vendor = createVendor((VendorsServiceInterface) container.get("service.vendors"));
+        sales = new SalesService(getMysql(), getRedis());
+        vendor = createVendor();
     }
 
     @After
@@ -82,7 +76,8 @@ public class SalesServiceTest extends TestCase {
 //        assertEquals(sale1.getId(), popular.get(2).getId()); // 3rd
     }
 
-    private Vendor createVendor(VendorsServiceInterface vendors) throws Exception {
+    private Vendor createVendor() throws Exception {
+        VendorsServiceInterface vendors = (VendorsServiceInterface) container.get("service.vendors");
         Vendor vendor = new Vendor();
         vendor.setName("Vendor #1");
         vendors.insert(vendor);

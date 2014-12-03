@@ -2,7 +2,6 @@ package forsale.server.typeadapter;
 
 import com.google.gson.Gson;
 import forsale.server.TestCase;
-import forsale.server.dependencyinjection.Container;
 import forsale.server.domain.*;
 import org.junit.After;
 import org.junit.Before;
@@ -16,7 +15,6 @@ public class UserTypeAdapterTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        Container container = getTestContainer();
         gson = (Gson) container.get("gson");
     }
 
