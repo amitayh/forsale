@@ -1,6 +1,5 @@
 package forsale.server.domain;
 
-import java.util.Date;
 
 public class User {
 
@@ -45,7 +44,7 @@ public class User {
 
     private Gender gender;
 
-    private Date birthDath;
+    private BirthDate birthDath;
 
     public User() {
         this.credentials = new Credentials();
@@ -71,8 +70,35 @@ public class User {
 
     public void setGender(Gender gender) { this.gender = gender; }
 
-    public Date getBirthDath() { return birthDath; }
+    public BirthDate getBirthDath() { return birthDath; }
 
-    public void setBirthDath(Date birthDath) { this.birthDath = birthDath; }
-    
+    public void setBirthDath(BirthDate birthDath) { this.birthDath = birthDath; }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user1 = (User)o;
+
+        if (this.credentials.password == null || user1.credentials.password == null) {
+            if (this.credentials.password != user1.credentials.password) {
+                return false;
+            } else {
+                return this.id == user1.id && this.name.equals(user1.name) &&
+                        this.credentials.email.toString().equals(user1.credentials.email.toString()) &&
+                        this.birthDath.toString().equals(user1.birthDath.toString()) &&
+                        this.gender.toString().equals(user1.gender.toString());
+            }
+        }
+
+        return this.id == user1.id && this.name.equals(user1.name) &&
+                this.credentials.email.toString().equals(user1.credentials.email.toString()) &&
+                this.credentials.password.toString().equals(user1.credentials.password.toString()) &&
+                this.birthDath.toString().equals(user1.birthDath.toString()) &&
+                this.gender.toString().equals(user1.gender.toString());
+    }
+
 }

@@ -1,45 +1,24 @@
 package forsale.server.service;
 
-import forsale.server.domain.Email;
+import forsale.server.domain.BirthDate;
 import forsale.server.domain.Gender;
 import forsale.server.domain.User;
-import forsale.server.service.exception.DuplicateEmailException;
 
 import java.sql.*;
 
 public class AuthService implements AuthServiceInterface {
 
     final private Connection mysql;
+    final private UsersServiceInterface usersService;
 
-    public AuthService(Connection mysql) {
+    public AuthService(Connection mysql, UsersServiceInterface usersService) {
+        this.usersService = usersService;
         this.mysql = mysql;
     }
 
     @Override
     public int signup(User user) throws Exception {
-        String sql = "INSERT INTO users (user_email, user_password, user_name, user_gender, user_birth_date) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement statement = mysql.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-        Email email = user.getEmail();
-        statement.setString(1, email.toString());
-        statement.setString(2, user.getPassword().getHashedPassword());
-        statement.setString(3, user.getName());
-        statement.setString(4, user.getGender().toString());
-        statement.setDate(5, new Date(user.getBirthDath().getTime()));
-
-        try {
-            statement.executeUpdate();
-        } catch (SQLIntegrityConstraintViolationException e) {
-            String message = "Unable to signup user - email '" + email.toString() + "' already exists";
-            throw new DuplicateEmailException(email, message, e);
-        }
-
-        ResultSet rs = statement.getGeneratedKeys();
-        if (rs.next()) {
-            user.setId(rs.getInt(1));
-        }
-
-        return user.getId();
+        return this.usersService.insert(user);
     }
 
     @Override
@@ -62,7 +41,7 @@ public class AuthService implements AuthServiceInterface {
             user.setPassword(credentials.getPassword());
             user.setName(rs.getString(2));
             user.setGender(Gender.valueOf(rs.getString(3).toUpperCase()));
-            user.setBirthDath(rs.getDate(4));
+            user.setBirthDath(new BirthDate(rs.getDate(4).getTime()));
         }
 
         return user;

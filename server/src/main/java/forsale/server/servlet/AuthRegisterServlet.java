@@ -2,13 +2,14 @@ package forsale.server.servlet;
 
 import forsale.server.domain.*;
 import forsale.server.service.AuthServiceInterface;
+import forsale.server.service.SessionsServiceInterface;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 @WebServlet(name = "AuthRegisterServlet", urlPatterns = {"/auth/register"})
@@ -27,6 +28,7 @@ public class AuthRegisterServlet extends BaseServlet {
     private void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
+        SessionsServiceInterface sessions = (SessionsServiceInterface)get("service.sessions");
         Logger logger = (Logger)get("logger");
         JsonResult result = new JsonResult();
 
@@ -38,8 +40,8 @@ public class AuthRegisterServlet extends BaseServlet {
         user.setGender(Gender.valueOf(request.getParameter("gender")));
 
         try {
-            SimpleDateFormat simpleFormat = new SimpleDateFormat("dd-MM-yyyy");
-            user.setBirthDath(simpleFormat.parse(request.getParameter("birth")));
+
+            user.setBirthDath(new BirthDate(request.getParameter("birth")));
 
             int userId = auth.signup(user);
             logger.fine("Registering user id: " + userId);
@@ -47,6 +49,10 @@ public class AuthRegisterServlet extends BaseServlet {
                 // invalid user id
                 result.fail("Failed to register.");
             } else {
+                // save new session id
+                HttpSession session = request.getSession();
+                sessions.setSessionId(session.getId(), user.getId());
+
                 // new user registered :)
                 result.success(userId);
             }

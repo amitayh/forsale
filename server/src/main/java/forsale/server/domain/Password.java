@@ -4,25 +4,23 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Password {
-
-    private String originalPassword;
-
     private String hashedPassword;
 
+    public Password() { this.hashedPassword = null; }
+
     public Password(String password) {
-        this.originalPassword = password;
         this.hashedPassword = toHashPassword(password);
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 
     public String getHashedPassword() {
         return this.hashedPassword;
     }
 
-    public String getOriginalPassword() {
-        return this.originalPassword;
-    }
-
-    private String toHashPassword(String password) {
+    public String toHashPassword(String password) {
         String generatedPassword = null;
 
         try {
@@ -60,7 +58,7 @@ public class Password {
 
         Password pass1 = (Password)o;
 
-        return pass1.hashedPassword.equals(this.hashedPassword) && pass1.originalPassword.equals(this.originalPassword);
+        return pass1.hashedPassword.equals(this.hashedPassword);
     }
 
     @Override
