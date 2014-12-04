@@ -2,7 +2,6 @@ package forsale.server.servlet;
 
 import forsale.server.domain.*;
 import forsale.server.service.AuthServiceInterface;
-import forsale.server.service.SessionsServiceInterface;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +26,6 @@ public class AuthLoginServlet extends BaseServlet {
     private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
-        SessionsServiceInterface sessions = (SessionsServiceInterface)get("service.sessions");
         JsonResult result = new JsonResult();
 
         Email email = new Email(request.getParameter("email"));
@@ -35,15 +33,12 @@ public class AuthLoginServlet extends BaseServlet {
         User.Credentials credentials = new User.Credentials(email, password);
 
         try {
-            User user = auth.authenticate(credentials);
+            HttpSession session = request.getSession();
+            User user = auth.authenticate(credentials, session.getId());
             if (user == null) {
                 // Failed to login user
                 result.fail("Wrong email or password.");
             } else {
-                // save new session id
-                HttpSession session = request.getSession();
-                sessions.setSessionId(session.getId(), user.getId());
-
                 // Succeed login user, return user's id
                 result.success(user.getId());
             }
