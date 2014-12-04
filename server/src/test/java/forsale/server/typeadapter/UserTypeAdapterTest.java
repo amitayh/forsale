@@ -37,14 +37,14 @@ public class UserTypeAdapterTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-1940").getTime()));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        user.setBirthDath(new BirthDate("1940-10-09"));
 
         String expected = "{\"id\":1," +
                             "\"email\":\"john@beatles.com\"," +
                             "\"name\":\"John Lennon\"," +
                             "\"gender\":\"MALE\"," +
-                            "\"birth\":\"09-10-1940\"}";
+                            "\"birth\":\"1940-10-09\"}";
 
         String actual = gson.toJson(user);
 

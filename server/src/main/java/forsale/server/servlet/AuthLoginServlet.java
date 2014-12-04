@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 @WebServlet(name = "AuthLoginServlet", urlPatterns = {"/auth/login"})
 public class AuthLoginServlet extends BaseServlet {
@@ -29,7 +28,6 @@ public class AuthLoginServlet extends BaseServlet {
 
         AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
         SessionsServiceInterface sessions = (SessionsServiceInterface)get("service.sessions");
-        Logger logger = (Logger)get("logger");
         JsonResult result = new JsonResult();
 
         Email email = new Email(request.getParameter("email"));
@@ -37,11 +35,9 @@ public class AuthLoginServlet extends BaseServlet {
         User.Credentials credentials = new User.Credentials(email, password);
 
         try {
-            logger.fine("Attempting login for '" + email.toString() + "'");
             User user = auth.authenticate(credentials);
             if (user == null) {
                 // Failed to login user
-                logger.warning("Failed to login for '" + email.toString() + "'");
                 result.fail("Wrong email or password.");
             } else {
                 // save new session id
@@ -52,7 +48,6 @@ public class AuthLoginServlet extends BaseServlet {
                 result.success(user.getId());
             }
         } catch (Exception e) {
-            logger.severe("Failed to login with exception: " + e.getMessage());
             result.fail(e.getMessage());
         }
 

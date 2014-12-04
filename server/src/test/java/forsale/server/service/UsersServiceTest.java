@@ -32,7 +32,7 @@ public class UsersServiceTest extends TestCase {
 
     @Test
     public void testUserInsertedSameAsUserGotById() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         // prepare new user
         User user = new User();
@@ -41,7 +41,7 @@ public class UsersServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-1940").getTime()));
+        user.setBirthDath(new BirthDate(dateFormat.parse("1940-10-09").getTime()));
 
         // insert user
         int userId = usersService.insert(user);
@@ -60,7 +60,7 @@ public class UsersServiceTest extends TestCase {
 
     @Test
     public void testUserEditSucceed() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         // prepare new user
         User user = new User();
@@ -69,7 +69,7 @@ public class UsersServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate(dateFormat.parse("09-10-1940").getTime()));
+        user.setBirthDath(new BirthDate(dateFormat.parse("1940-10-09").getTime()));
 
         // insert user
         int userId = usersService.insert(user);

@@ -69,6 +69,32 @@ public class UsersService implements UsersServiceInterface {
     }
 
     @Override
+    public User get(User.Credentials credentials) throws Exception {
+        User user = null;
+
+        String sql =
+                "SELECT user_id, user_name, user_gender, user_birth_date " +
+                        "FROM users WHERE user_email = ? AND user_password = ?";
+
+        PreparedStatement st = mysql.prepareStatement(sql);
+        st.setString(1, credentials.getEmail().toString());
+        st.setString(2, credentials.getPassword().getHashedPassword());
+        ResultSet rs = st.executeQuery();
+
+        if (rs.next()) {
+            user = new User();
+            user.setId(rs.getInt(1));
+            user.setEmail(credentials.getEmail());
+            user.setPassword(credentials.getPassword());
+            user.setName(rs.getString(2));
+            user.setGender(Gender.valueOf(rs.getString(3).toUpperCase()));
+            user.setBirthDath(new BirthDate(rs.getDate(4).getTime()));
+        }
+
+        return user;
+    }
+
+    @Override
     public void edit(User user) throws Exception {
         String sql = "UPDATE users " +
                 "SET user_email = ?, user_password = ?, user_name = ?, user_gender = ?, user_birth_date = ? " +

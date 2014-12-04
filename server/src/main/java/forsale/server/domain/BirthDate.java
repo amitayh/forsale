@@ -5,10 +5,10 @@ import java.util.Date;
 
 public class BirthDate {
     private Date birthDate;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public BirthDate(String dateString) throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        this.birthDate = dateFormat.parse(dateString);
+        this.birthDate = this.dateFormat.parse(dateString);
     }
 
     public BirthDate(long time) {
@@ -21,7 +21,6 @@ public class BirthDate {
 
     @Override
     public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        return dateFormat.format(this.birthDate);
+        return this.dateFormat.format(this.birthDate);
     }
 }

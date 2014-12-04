@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 @WebServlet(name = "AuthRegisterServlet", urlPatterns = {"/auth/register"})
 public class AuthRegisterServlet extends BaseServlet {
@@ -29,7 +28,6 @@ public class AuthRegisterServlet extends BaseServlet {
 
         AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
         SessionsServiceInterface sessions = (SessionsServiceInterface)get("service.sessions");
-        Logger logger = (Logger)get("logger");
         JsonResult result = new JsonResult();
 
         // prepare user object
@@ -44,7 +42,6 @@ public class AuthRegisterServlet extends BaseServlet {
             user.setBirthDath(new BirthDate(request.getParameter("birth")));
 
             int userId = auth.signup(user);
-            logger.fine("Registering user id: " + userId);
             if (userId < 0) {
                 // invalid user id
                 result.fail("Failed to register.");
