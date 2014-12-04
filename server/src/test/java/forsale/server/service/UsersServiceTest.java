@@ -33,7 +33,7 @@ public class UsersServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("09-10-1940"));
+        user.setBirthDath(new BirthDate("1940-10-09"));
 
         // insert user
         int userId = users.insert(user);
@@ -59,7 +59,7 @@ public class UsersServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("09-10-1940"));
+        user.setBirthDath(new BirthDate("1940-10-09"));
 
         // insert user
         int userId = users.insert(user);

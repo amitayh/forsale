@@ -10,4 +10,6 @@ public interface UsersServiceInterface {
 
     public int insert(User user) throws Exception;
 
+    public User get(User.Credentials credentials) throws Exception;
+
 }

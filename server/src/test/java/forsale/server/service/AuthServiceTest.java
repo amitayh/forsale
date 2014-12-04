@@ -18,7 +18,7 @@ public class AuthServiceTest extends TestCase {
         flushMysql(); // clear db rows
 
         UsersServiceInterface users = (UsersService) container.get("service.users");
-        auth = new AuthService(getMysql(), users);
+        auth = new AuthService(users);
     }
 
     @After
@@ -34,7 +34,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email("assafgrim@gmail.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("AD#ri493-220"));
-        user.setBirthDath(new BirthDate("15-12-1988"));
+        user.setBirthDath(new BirthDate("1988-12-15"));
 
         // signup
         int userId = auth.signup(user);
@@ -54,7 +54,7 @@ public class AuthServiceTest extends TestCase {
         user1.setEmail(new Email("john@beatles.com"));
         user1.setGender(Gender.MALE);
         user1.setPassword(new Password("123"));
-        user1.setBirthDath(new BirthDate("09-10-2014"));
+        user1.setBirthDath(new BirthDate("1940-10-09"));
 
         // 2nd user
         User user2 = new User();
@@ -62,7 +62,7 @@ public class AuthServiceTest extends TestCase {
         user2.setEmail(new Email("john@beatles.com"));
         user2.setGender(Gender.MALE);
         user2.setPassword(new Password("456"));
-        user2.setBirthDath(new BirthDate("09-10-2014"));
+        user2.setBirthDath(new BirthDate("1940-10-09"));
 
         // Signup users - should throw an exception
         auth.signup(user1);
@@ -81,7 +81,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(goodPassword);
-        user.setBirthDath(new BirthDate("09-10-2014"));
+        user.setBirthDath(new BirthDate("1940-10-09"));
         auth.signup(user);
 
         // Try to authenticate
@@ -101,7 +101,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(password);
-        user.setBirthDath(new BirthDate("09-10-2014"));
+        user.setBirthDath(new BirthDate("1940-10-09"));
         auth.signup(user);
 
         // Try to authenticate
@@ -126,7 +126,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(password);
-        user.setBirthDath(new BirthDate("09-10-2014"));
+        user.setBirthDath(new BirthDate("1940-10-09"));
         auth.signup(user);
 
         // authenticate user
