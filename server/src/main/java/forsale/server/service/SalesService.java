@@ -3,13 +3,8 @@ package forsale.server.service;
 import forsale.server.domain.Sale;
 import redis.clients.jedis.Jedis;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 
 public class SalesService implements SalesServiceInterface {
 
@@ -42,10 +37,41 @@ public class SalesService implements SalesServiceInterface {
     }
 
     @Override
-    public List<Sale> getPopular() {
-        List<Sale> popular = new ArrayList<>();
+    public List<Sale> getSalesById(Set<Integer> ids) throws Exception {
+        List<Sale> result = new ArrayList<>();
 
-        Set<String> popularity = redis.zrange(SALE_VIEWS_HASH, 0, -1);
+        if (!ids.isEmpty()) {
+            String sql = "SELECT * FROM sales WHERE sale_id IN " + Utils.getMultipleParametersList(ids);
+            PreparedStatement stmt = mysql.prepareStatement(sql);
+
+            // Bind IDs to query
+            int parameterIndex = 1;
+            for (Integer id : ids) {
+                stmt.setInt(parameterIndex, id);
+                parameterIndex++;
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                result.add(hydrate(rs));
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<Sale> getPopular() throws Exception {
+        Map<Integer, Sale> salesMap = new HashMap<>();
+        Set<Integer> popularSalesIds = getPopularSalesIds();
+        for (Sale sale : getSalesById(popularSalesIds)) {
+            salesMap.put(sale.getId(), sale);
+        }
+
+        List <Sale> popular = new ArrayList<>();
+        for (Integer id : popularSalesIds) {
+            popular.add(salesMap.get(id));
+        }
 
         return popular;
     }
@@ -55,4 +81,20 @@ public class SalesService implements SalesServiceInterface {
         return redis.zincrby(SALE_VIEWS_HASH, 1, Integer.toString(sale.getId()));
     }
 
+    private Sale hydrate(ResultSet rs) throws SQLException {
+        Sale sale = new Sale();
+        sale.setId(rs.getInt("sale_id"));
+        sale.setTitle(rs.getString("sale_title"));
+
+        return sale;
+    }
+
+    private Set<Integer> getPopularSalesIds() {
+        Set<Integer> ids = new LinkedHashSet<>();
+        for (String id : redis.zrevrange(SALE_VIEWS_HASH, 0, -1)) {
+            ids.add(Integer.valueOf(id));
+        }
+
+        return ids;
+    }
 }
