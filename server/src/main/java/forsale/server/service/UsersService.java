@@ -56,13 +56,13 @@ public class UsersService implements UsersServiceInterface {
         if (rs.next()) {
             user = new User();
             user.setId(userId);
-            user.setEmail(new Email(rs.getString(1)));
+            user.setEmail(new Email(rs.getString("user_email")));
             Password password = new Password();
-            password.setHashedPassword(rs.getString(2));
+            password.setHashedPassword(rs.getString("user_password"));
             user.setPassword(password);
-            user.setName(rs.getString(3));
-            user.setGender(Gender.valueOf(rs.getString(4).toUpperCase()));
-            user.setBirthDath(new BirthDate(rs.getDate(5).getTime()));
+            user.setName(rs.getString("user_name"));
+            user.setGender(Gender.valueOf(rs.getString("user_gender").toUpperCase()));
+            user.setBirthDath(new BirthDate(rs.getDate("user_birth_date").getTime()));
         }
 
         return user;
@@ -83,12 +83,12 @@ public class UsersService implements UsersServiceInterface {
 
         if (rs.next()) {
             user = new User();
-            user.setId(rs.getInt(1));
+            user.setId(rs.getInt("user_id"));
             user.setEmail(credentials.getEmail());
             user.setPassword(credentials.getPassword());
-            user.setName(rs.getString(2));
-            user.setGender(Gender.valueOf(rs.getString(3).toUpperCase()));
-            user.setBirthDath(new BirthDate(rs.getDate(4).getTime()));
+            user.setName(rs.getString("user_name"));
+            user.setGender(Gender.valueOf(rs.getString("user_gender").toUpperCase()));
+            user.setBirthDath(new BirthDate(rs.getDate("user_birth_date").getTime()));
         }
 
         return user;

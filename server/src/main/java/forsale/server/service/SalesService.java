@@ -21,11 +21,13 @@ public class SalesService implements SalesServiceInterface {
 
     @Override
     public int insert(Sale sale) throws Exception {
-        String sql = "INSERT INTO sales (sale_title, sale_extra, vendor_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO sales (sale_title, sale_extra, vendor_id, sale_start, sale_end) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement stmt = mysql.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, sale.getTitle());
         stmt.setString(2, sale.getExtra());
         stmt.setInt(3, sale.getVendor().getId());
+        stmt.setDate(4, new java.sql.Date(sale.getStartDate().getTime()));
+        stmt.setDate(5, new java.sql.Date(sale.getEndDate().getTime()));
         stmt.executeUpdate();
 
         ResultSet rs = stmt.getGeneratedKeys();
@@ -61,6 +63,20 @@ public class SalesService implements SalesServiceInterface {
     }
 
     @Override
+    public List<Sale> getRecent() throws Exception {
+        List<Sale> result = new ArrayList<>();
+
+        String sql = "SELECT * FROM sales ORDER BY sale_start DESC";
+        PreparedStatement stmt = mysql.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            result.add(hydrate(rs));
+        }
+
+        return result;
+    }
+
+    @Override
     public List<Sale> getPopular() throws Exception {
         Map<Integer, Sale> salesMap = new HashMap<>();
         Set<Integer> popularSalesIds = getPopularSalesIds();
@@ -85,7 +101,9 @@ public class SalesService implements SalesServiceInterface {
         Sale sale = new Sale();
         sale.setId(rs.getInt("sale_id"));
         sale.setTitle(rs.getString("sale_title"));
-
+        sale.setExtra(rs.getString("sale_extra"));
+        sale.setStartDate(rs.getDate("sale_start"));
+        sale.setEndDate(rs.getDate("sale_end"));
         return sale;
     }
 

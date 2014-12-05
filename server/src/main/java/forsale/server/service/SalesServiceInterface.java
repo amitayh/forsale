@@ -11,6 +11,8 @@ public interface SalesServiceInterface {
 
     public List<Sale> getSalesById(Set<Integer> ids) throws Exception;
 
+    public List<Sale> getRecent() throws Exception;
+
     public List<Sale> getPopular() throws Exception;
 
     public double increaseViewCount(Sale sale);

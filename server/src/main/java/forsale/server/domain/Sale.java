@@ -1,5 +1,7 @@
 package forsale.server.domain;
 
+import java.util.Date;
+
 public class Sale {
 
     private int id;
@@ -9,6 +11,10 @@ public class Sale {
     private String extra;
 
     private Vendor vendor;
+
+    private Date startDate;
+
+    private Date endDate;
 
     public int getId() {
         return id;
@@ -41,5 +47,13 @@ public class Sale {
     public void setVendor(Vendor vendor) {
         this.vendor = vendor;
     }
+
+    public Date getStartDate() { return this.startDate; }
+
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
+
+    public Date getEndDate() { return this.endDate; }
+
+    public void setEndDate(Date endDate) { this.endDate = endDate; }
 
 }

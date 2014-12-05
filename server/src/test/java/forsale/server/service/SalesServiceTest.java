@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ public class SalesServiceTest extends TestCase {
     private SalesService sales;
 
     private Vendor vendor;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Before
     public void setUp() throws Exception {
@@ -38,6 +40,9 @@ public class SalesServiceTest extends TestCase {
     public void testInsertSale() throws Exception {
         Sale sale = new Sale();
         sale.setTitle("Sale #1");
+        sale.setExtra("15% off");
+        sale.setStartDate(dateFormat.parse("2014-10-09"));
+        sale.setEndDate(dateFormat.parse("2014-10-09"));
         sale.setVendor(vendor);
         int saleId = sales.insert(sale);
 
@@ -50,6 +55,9 @@ public class SalesServiceTest extends TestCase {
     public void testGetSalesByIdWithEmptySet() throws Exception {
         Sale sale1 = new Sale();
         sale1.setTitle("Sale #1");
+        sale1.setExtra("15% off");
+        sale1.setStartDate(dateFormat.parse("2014-10-09"));
+        sale1.setEndDate(dateFormat.parse("2014-10-09"));
         sale1.setVendor(vendor);
         sales.insert(sale1);
 
@@ -64,16 +72,25 @@ public class SalesServiceTest extends TestCase {
         // Insert sales
         Sale sale1 = new Sale();
         sale1.setTitle("Sale #1");
+        sale1.setExtra("15% off");
+        sale1.setStartDate(dateFormat.parse("2014-10-09"));
+        sale1.setEndDate(dateFormat.parse("2014-10-09"));
         sale1.setVendor(vendor);
         sales.insert(sale1);
 
         Sale sale2 = new Sale();
         sale2.setTitle("Sale #2");
+        sale2.setExtra("15% off");
+        sale2.setStartDate(dateFormat.parse("2014-10-09"));
+        sale2.setEndDate(dateFormat.parse("2014-10-09"));
         sale2.setVendor(vendor);
         sales.insert(sale2);
 
         Sale sale3 = new Sale();
         sale3.setTitle("Sale #3");
+        sale3.setExtra("15% off");
+        sale3.setStartDate(dateFormat.parse("2014-10-09"));
+        sale3.setEndDate(dateFormat.parse("2014-10-09"));
         sale3.setVendor(vendor);
         sales.insert(sale3);
 
@@ -92,16 +109,25 @@ public class SalesServiceTest extends TestCase {
         // Insert sales
         Sale sale1 = new Sale();
         sale1.setTitle("Sale #1");
+        sale1.setExtra("15% off");
+        sale1.setStartDate(dateFormat.parse("2014-10-09"));
+        sale1.setEndDate(dateFormat.parse("2014-10-09"));
         sale1.setVendor(vendor);
         sales.insert(sale1);
 
         Sale sale2 = new Sale();
         sale2.setTitle("Sale #2");
+        sale2.setExtra("15% off");
+        sale2.setStartDate(dateFormat.parse("2014-10-09"));
+        sale2.setEndDate(dateFormat.parse("2014-10-09"));
         sale2.setVendor(vendor);
         sales.insert(sale2);
 
         Sale sale3 = new Sale();
         sale3.setTitle("Sale #3");
+        sale3.setExtra("15% off");
+        sale3.setStartDate(dateFormat.parse("2014-10-09"));
+        sale3.setEndDate(dateFormat.parse("2014-10-09"));
         sale3.setVendor(vendor);
         sales.insert(sale3);
 
@@ -117,6 +143,41 @@ public class SalesServiceTest extends TestCase {
         assertEquals(sale2.getId(), popular.get(0).getId()); // 1st
         assertEquals(sale3.getId(), popular.get(1).getId()); // 2nd
         assertEquals(sale1.getId(), popular.get(2).getId()); // 3rd
+    }
+
+    @Test
+    public void testGotRecentSalesInCorrectOrder() throws Exception {
+        // Insert sales
+        Sale sale1 = new Sale();
+        sale1.setTitle("Sale #1");
+        sale1.setExtra("15% off");
+        sale1.setStartDate(dateFormat.parse("2014-10-09"));         // oldest
+        sale1.setEndDate(dateFormat.parse("2014-10-09"));
+        sale1.setVendor(vendor);
+        sale1.setId(sales.insert(sale1));
+
+
+        Sale sale2 = new Sale();
+        sale2.setTitle("Sale #2");
+        sale2.setExtra("15% off");
+        sale2.setStartDate(dateFormat.parse("2014-11-09"));         // middle
+        sale2.setEndDate(dateFormat.parse("2014-11-09"));
+        sale2.setVendor(vendor);
+        sale2.setId(sales.insert(sale2));
+
+        Sale sale3 = new Sale();
+        sale3.setTitle("Sale #3");
+        sale3.setExtra("15% off");
+        sale3.setStartDate(dateFormat.parse("2014-12-09"));         // newest
+        sale3.setEndDate(dateFormat.parse("2014-12-09"));
+        sale3.setVendor(vendor);
+        sale3.setId(sales.insert(sale3));
+
+        List<Sale> salesList = this.sales.getRecent();
+
+        assertEquals(salesList.get(0).getId(), sale3.getId()); // newest
+        assertEquals(salesList.get(1).getId(), sale2.getId()); // middle
+        assertEquals(salesList.get(2).getId(), sale1.getId()); // oldest
     }
 
     private Vendor createVendor() throws Exception {

@@ -5,7 +5,7 @@ import redis.clients.jedis.Jedis;
 
 public class AuthService implements AuthServiceInterface {
 
-    final private int SESSION_EXPIRE_TIME = 60 * 60 * 24 * 365; // 1 year
+    final static private int SESSION_EXPIRE_TIME = 60 * 60 * 24 * 365; // 1 year
 
     final private Jedis jedis;
     final private UsersServiceInterface usersService;
