@@ -2,12 +2,12 @@ package forsale.server.typeadapter;
 
 import com.google.gson.Gson;
 import forsale.server.TestCase;
-import forsale.server.domain.*;
+import forsale.server.domain.Sale;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class SaleTypeAdapterTest extends TestCase {
 

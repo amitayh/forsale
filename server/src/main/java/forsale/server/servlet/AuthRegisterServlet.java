@@ -2,7 +2,6 @@ package forsale.server.servlet;
 
 import forsale.server.domain.*;
 import forsale.server.service.AuthServiceInterface;
-import forsale.server.service.SessionsServiceInterface;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +26,6 @@ public class AuthRegisterServlet extends BaseServlet {
     private void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
-        SessionsServiceInterface sessions = (SessionsServiceInterface)get("service.sessions");
         JsonResult result = new JsonResult();
 
         // prepare user object
@@ -41,15 +39,12 @@ public class AuthRegisterServlet extends BaseServlet {
 
             user.setBirthDath(new BirthDate(request.getParameter("birth")));
 
-            int userId = auth.signup(user);
+            HttpSession session = request.getSession();
+            int userId = auth.signup(user, session.getId());
             if (userId < 0) {
                 // invalid user id
                 result.fail("Failed to register.");
             } else {
-                // save new session id
-                HttpSession session = request.getSession();
-                sessions.setSessionId(session.getId(), user.getId());
-
                 // new user registered :)
                 result.success(userId);
             }
