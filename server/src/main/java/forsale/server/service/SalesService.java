@@ -1,7 +1,6 @@
 package forsale.server.service;
 
 import forsale.server.domain.Sale;
-import forsale.server.domain.Vendor;
 import redis.clients.jedis.Jedis;
 
 import java.sql.*;
@@ -10,6 +9,8 @@ import java.util.*;
 public class SalesService implements SalesServiceInterface {
 
     public static final String SALE_VIEWS_HASH = "sale_views";
+
+    public static final int POPULAR_LIMIT = 100;
 
     final private Connection mysql;
 
@@ -22,7 +23,11 @@ public class SalesService implements SalesServiceInterface {
 
     @Override
     public int insert(Sale sale) throws Exception {
-        String sql = "INSERT INTO sales (sale_title, sale_extra, vendor_id, sale_start, sale_end) VALUES (?, ?, ?, ?, ?)";
+        String sql =
+                "INSERT INTO sales " +
+                "(sale_title, sale_extra, vendor_id, sale_start, sale_end) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
         PreparedStatement stmt = mysql.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, sale.getTitle());
         stmt.setString(2, sale.getExtra());
@@ -44,8 +49,11 @@ public class SalesService implements SalesServiceInterface {
         Sale sale = null;
 
         String sql =
-                "SELECT s.*, v.vendor_id, v.vendor_name FROM " +
-                "sales AS s, vendors AS v WHERE s.sale_id = ? AND s.vendor_id = v.vendor_id";
+                "SELECT s.*, v.* " +
+                "FROM sales AS s " +
+                "JOIN vendors AS v ON v.vendor_id = s.vendor_id " +
+                "WHERE s.sale_id = ?";
+
         PreparedStatement stmt = mysql.prepareStatement(sql);
         stmt.setInt(1, saleId);
         ResultSet rs = stmt.executeQuery();
@@ -61,8 +69,12 @@ public class SalesService implements SalesServiceInterface {
         List<Sale> result = new ArrayList<>();
 
         if (!ids.isEmpty()) {
-            String sql = "SELECT s.*, v.vendor_id, v.vendor_name FROM sales AS s, vendors AS v " +
-                    "WHERE s.vendor_id = v.vendor_id AND s.sale_id IN " + Utils.getMultipleParametersList(ids);
+            String sql =
+                    "SELECT s.*, v.* " +
+                    "FROM sales AS s " +
+                    "JOIN vendors AS v ON v.vendor_id = s.vendor_id " +
+                    "WHERE s.sale_id IN " + Utils.getMultipleParametersList(ids);
+
             PreparedStatement stmt = mysql.prepareStatement(sql);
 
             // Bind IDs to query
@@ -85,7 +97,12 @@ public class SalesService implements SalesServiceInterface {
     public List<Sale> getRecent() throws Exception {
         List<Sale> result = new ArrayList<>();
 
-        String sql = "SELECT s.*, v.vendor_id, v.vendor_name FROM sales AS s, vendors AS v ORDER BY s.sale_start DESC";
+        String sql =
+                "SELECT s.*, v.* " +
+                "FROM sales AS s " +
+                "JOIN vendors AS v ON v.vendor_id = s.vendor_id " +
+                "ORDER BY s.sale_start DESC";
+
         PreparedStatement stmt = mysql.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
@@ -98,7 +115,7 @@ public class SalesService implements SalesServiceInterface {
     @Override
     public List<Sale> getPopular() throws Exception {
         Map<Integer, Sale> salesMap = new HashMap<>();
-        Set<Integer> popularSalesIds = getPopularSalesIds();
+        Set<Integer> popularSalesIds = getPopularSalesIds(POPULAR_LIMIT);
         for (Sale sale : getSalesByIds(popularSalesIds)) {
             salesMap.put(sale.getId(), sale);
         }
@@ -116,25 +133,22 @@ public class SalesService implements SalesServiceInterface {
         return redis.zincrby(SALE_VIEWS_HASH, 1, Integer.toString(sale.getId()));
     }
 
-    private Sale hydrate(ResultSet rs) throws SQLException {
-        Vendor vendor = new Vendor();
+    public static Sale hydrate(ResultSet rs) throws SQLException {
         Sale sale = new Sale();
-
         sale.setId(rs.getInt("sale_id"));
         sale.setTitle(rs.getString("sale_title"));
         sale.setExtra(rs.getString("sale_extra"));
         sale.setStartDate(rs.getDate("sale_start"));
         sale.setEndDate(rs.getDate("sale_end"));
-        vendor.setId(rs.getInt("vendor_id"));
-        vendor.setName(rs.getString("vendor_name"));
-        sale.setVendor(vendor);
+        sale.setVendor(VendorsService.hydrate(rs));
 
         return sale;
     }
 
-    private Set<Integer> getPopularSalesIds() {
+    private Set<Integer> getPopularSalesIds(int limit) {
         Set<Integer> ids = new LinkedHashSet<>();
-        for (String id : redis.zrevrange(SALE_VIEWS_HASH, 0, -1)) {
+        int offset = 0;
+        for (String id : redis.zrevrange(SALE_VIEWS_HASH, offset, limit)) {
             ids.add(Integer.valueOf(id));
         }
 

@@ -2,10 +2,7 @@ package forsale.server.service;
 
 import forsale.server.domain.Vendor;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class VendorsService implements VendorsServiceInterface {
 
@@ -39,10 +36,16 @@ public class VendorsService implements VendorsServiceInterface {
         stmt.setInt(1, vendorId);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-            vendor = new Vendor();
-            vendor.setId(rs.getInt("vendor_id"));
-            vendor.setName(rs.getString("vendor_name"));
+            vendor = hydrate(rs);
         }
+
+        return vendor;
+    }
+
+    public static Vendor hydrate(ResultSet rs) throws SQLException {
+        Vendor vendor = new Vendor();
+        vendor.setId(rs.getInt("vendor_id"));
+        vendor.setName(rs.getString("vendor_name"));
 
         return vendor;
     }
