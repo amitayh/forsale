@@ -30,4 +30,21 @@ public class VendorsService implements VendorsServiceInterface {
         return vendor.getId();
     }
 
+    @Override
+    public Vendor get(int vendorId) throws Exception {
+        Vendor vendor = null;
+
+        String sql = "SELECT * FROM vendors WHERE vendor_id = ?";
+        PreparedStatement stmt = mysql.prepareStatement(sql);
+        stmt.setInt(1, vendorId);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            vendor = new Vendor();
+            vendor.setId(rs.getInt("vendor_id"));
+            vendor.setName(rs.getString("vendor_name"));
+        }
+
+        return vendor;
+    }
+
 }

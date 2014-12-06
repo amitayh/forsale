@@ -63,7 +63,7 @@ public class SalesServiceTest extends TestCase {
 
         Set<Integer> ids = new HashSet<>();
 
-        List<Sale> result = sales.getSalesById(ids);
+        List<Sale> result = sales.getSalesByIds(ids);
         assertTrue(result.isEmpty());
     }
 
@@ -98,7 +98,7 @@ public class SalesServiceTest extends TestCase {
         ids.add(sale1.getId());
         ids.add(sale3.getId());
 
-        List<Sale> result = sales.getSalesById(ids);
+        List<Sale> result = sales.getSalesByIds(ids);
         assertEquals(2, result.size());
         assertEquals(sale1.getId(), result.get(0).getId());
         assertEquals(sale3.getId(), result.get(1).getId());
@@ -146,6 +146,25 @@ public class SalesServiceTest extends TestCase {
     }
 
     @Test
+    public void testGetSingleSale() throws Exception {
+        // Insert sale
+        Sale sale1 = new Sale();
+        sale1.setTitle("Sale #1");
+        sale1.setExtra("15% off");
+        sale1.setStartDate(dateFormat.parse("2014-10-09"));
+        sale1.setEndDate(dateFormat.parse("2014-10-09"));
+        sale1.setVendor(vendor);
+
+        sale1.setId(sales.insert(sale1));
+
+        Sale sale2 = sales.get(sale1.getId());
+
+        assertNotNull(sale2);
+
+        assertEquals(sale1, sale2);
+    }
+
+    @Test
     public void testGotRecentSalesInCorrectOrder() throws Exception {
         // Insert sales
         Sale sale1 = new Sale();
@@ -155,7 +174,6 @@ public class SalesServiceTest extends TestCase {
         sale1.setEndDate(dateFormat.parse("2014-10-09"));
         sale1.setVendor(vendor);
         sale1.setId(sales.insert(sale1));
-
 
         Sale sale2 = new Sale();
         sale2.setTitle("Sale #2");

@@ -22,4 +22,14 @@ public class Vendor {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vendor ven1 = (Vendor)o;
+
+        return ven1.name.equals(this.name) && ven1.id == this.id;
+    }
 }
