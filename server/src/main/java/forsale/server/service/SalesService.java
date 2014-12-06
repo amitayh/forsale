@@ -73,7 +73,7 @@ public class SalesService implements SalesServiceInterface {
                     "SELECT s.*, v.* " +
                     "FROM sales AS s " +
                     "JOIN vendors AS v ON v.vendor_id = s.vendor_id " +
-                    "WHERE s.sale_id IN " + Utils.getMultipleParametersList(ids);
+                    "WHERE s.sale_id IN " + Utils.getMultipleParametersList(ids.size());
 
             PreparedStatement stmt = mysql.prepareStatement(sql);
 

@@ -1,13 +1,11 @@
 package forsale.server.service;
 
-import java.util.Collection;
-
 public class Utils {
 
-    public static String getMultipleParametersList(Collection values) {
+    public static String getMultipleParametersList(int count) {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
-        for (int i = 0; i < values.size(); i++) {
+        for (int i = 0; i < count; i++) {
             if (i > 0) {
                 sb.append(", ");
             }
