@@ -36,11 +36,10 @@ public class AuthRegisterServlet extends BaseServlet {
         user.setGender(Gender.valueOf(request.getParameter("gender")));
 
         try {
-
             user.setBirthDath(new BirthDate(request.getParameter("birth")));
-
             HttpSession session = request.getSession();
             int userId = auth.signup(user, session.getId());
+
             if (userId < 0) {
                 // invalid user id
                 result.fail("Failed to register.");

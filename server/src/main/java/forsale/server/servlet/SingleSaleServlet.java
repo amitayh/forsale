@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "SingleSaleServlet")
+@WebServlet(name = "SingleSaleServlet", urlPatterns = "/sales/single")
 public class SingleSaleServlet extends BaseServlet {
 
     @Override
@@ -28,11 +28,14 @@ public class SingleSaleServlet extends BaseServlet {
 
         try {
             Sale sale = sales.get(new Integer(request.getParameter("sale_id")));
+
             if (sale != null) {
                 result.success(sale);
+
             } else {
                 result.fail("Wrong sale id");
             }
+
         } catch (Exception e) {
             result.fail(e.getMessage());
         }
