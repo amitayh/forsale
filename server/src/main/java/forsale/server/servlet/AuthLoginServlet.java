@@ -37,6 +37,7 @@ public class AuthLoginServlet extends BaseServlet {
         try {
             HttpSession session = request.getSession();
             User user = auth.authenticate(credentials, session.getId());
+
             if (user == null) {
                 // Failed to login user
                 result.fail("Wrong email or password.");
