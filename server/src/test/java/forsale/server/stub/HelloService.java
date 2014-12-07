@@ -1,4 +1,4 @@
-package forsale.server.service;
+package forsale.server.stub;
 
 public class HelloService {
 

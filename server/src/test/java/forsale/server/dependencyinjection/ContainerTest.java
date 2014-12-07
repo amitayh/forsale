@@ -1,6 +1,6 @@
 package forsale.server.dependencyinjection;
 
-import forsale.server.service.HelloService;
+import forsale.server.stub.HelloService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
