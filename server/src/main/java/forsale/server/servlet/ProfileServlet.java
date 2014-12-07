@@ -1,7 +1,7 @@
 package forsale.server.servlet;
 
 import forsale.server.domain.*;
-import forsale.server.service.UsersServiceInterface;
+import forsale.server.service.UsersService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +37,7 @@ public class ProfileServlet extends BaseServlet {
     }
 
     private void showProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UsersServiceInterface users = (UsersServiceInterface)get("service.users");
+        UsersService users = (UsersService) get("service.users");
         JsonResult result = new JsonResult();
 
         try {
@@ -56,7 +56,7 @@ public class ProfileServlet extends BaseServlet {
     }
 
     private void editProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UsersServiceInterface users = (UsersServiceInterface)get("service.users");
+        UsersService users = (UsersService) get("service.users");
         JsonResult result = new JsonResult();
 
         User user = new User();

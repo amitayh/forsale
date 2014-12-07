@@ -1,12 +1,13 @@
 package forsale.server.service;
 
 import forsale.server.domain.Sale;
+import forsale.server.domain.User;
 import redis.clients.jedis.Jedis;
 
 import java.sql.*;
 import java.util.*;
 
-public class SalesService implements SalesServiceInterface {
+public class SalesService {
 
     public static final String SALE_VIEWS_HASH = "sale_views";
 
@@ -21,7 +22,6 @@ public class SalesService implements SalesServiceInterface {
         this.redis = redis;
     }
 
-    @Override
     public int insert(Sale sale) throws Exception {
         String sql =
                 "INSERT INTO sales " +
@@ -44,7 +44,6 @@ public class SalesService implements SalesServiceInterface {
         return sale.getId();
     }
 
-    @Override
     public Sale get(int saleId) throws Exception {
         Sale sale = null;
 
@@ -64,7 +63,6 @@ public class SalesService implements SalesServiceInterface {
         return sale;
     }
 
-    @Override
     public List<Sale> getSalesByIds(Set<Integer> ids) throws Exception {
         List<Sale> result = new ArrayList<>();
 
@@ -93,7 +91,6 @@ public class SalesService implements SalesServiceInterface {
         return result;
     }
 
-    @Override
     public List<Sale> getRecent() throws Exception {
         List<Sale> result = new ArrayList<>();
 
@@ -112,7 +109,6 @@ public class SalesService implements SalesServiceInterface {
         return result;
     }
 
-    @Override
     public List<Sale> getPopular() throws Exception {
         Map<Integer, Sale> salesMap = new HashMap<>();
         Set<Integer> popularSalesIds = getPopularSalesIds(POPULAR_LIMIT);
@@ -128,7 +124,27 @@ public class SalesService implements SalesServiceInterface {
         return popular;
     }
 
-    @Override
+    public List<Sale> getFavorites(User user) throws Exception {
+        List<Sale> result = new ArrayList<>();
+
+        String sql =
+                "SELECT s.*, v.* " +
+                "FROM sales AS s " +
+                "JOIN vendors AS v ON v.vendor_id = s.vendor_id " +
+                "JOIN user_favorite_vendors AS ufv ON ufv.vendor_id = v.vendor_id " +
+                "WHERE ufv.user_id = ?";
+
+        PreparedStatement stmt = mysql.prepareStatement(sql);
+        stmt.setInt(1, user.getId());
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            result.add(hydrate(rs));
+        }
+
+        return result;
+    }
+
     public double increaseViewCount(Sale sale) {
         return redis.zincrby(SALE_VIEWS_HASH, 1, Integer.toString(sale.getId()));
     }
@@ -154,4 +170,5 @@ public class SalesService implements SalesServiceInterface {
 
         return ids;
     }
+
 }

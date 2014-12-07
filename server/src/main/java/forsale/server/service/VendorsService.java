@@ -4,7 +4,7 @@ import forsale.server.domain.Vendor;
 
 import java.sql.*;
 
-public class VendorsService implements VendorsServiceInterface {
+public class VendorsService {
 
     final private Connection mysql;
 
@@ -12,7 +12,6 @@ public class VendorsService implements VendorsServiceInterface {
         this.mysql = mysql;
     }
 
-    @Override
     public int insert(Vendor vendor) throws Exception {
         String sql = "INSERT INTO vendors (vendor_name) VALUES (?)";
         PreparedStatement stmt = mysql.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -27,7 +26,6 @@ public class VendorsService implements VendorsServiceInterface {
         return vendor.getId();
     }
 
-    @Override
     public Vendor get(int vendorId) throws Exception {
         Vendor vendor = null;
 

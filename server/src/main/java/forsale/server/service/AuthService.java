@@ -3,28 +3,27 @@ package forsale.server.service;
 import forsale.server.domain.User;
 import redis.clients.jedis.Jedis;
 
-public class AuthService implements AuthServiceInterface {
+public class AuthService {
 
     final static private int SESSION_EXPIRE_TIME = 60 * 60 * 24 * 365; // 1 year
 
     final private Jedis jedis;
-    final private UsersServiceInterface usersService;
 
-    public AuthService(UsersServiceInterface usersService, Jedis jedis) {
-        this.usersService = usersService;
+    final private UsersService users;
+
+    public AuthService(UsersService users, Jedis jedis) {
+        this.users = users;
         this.jedis = jedis;
     }
 
-    @Override
     public int signup(User user, String sessionId) throws Exception {
-        int userId = this.usersService.insert(user);
+        int userId = users.insert(user);
         setSessionId(sessionId, userId);
         return userId;
     }
 
-    @Override
     public User authenticate(User.Credentials credentials, String sessionId) throws Exception {
-        User user = this.usersService.get(credentials);
+        User user = users.get(credentials);
         if (user != null) {
             setSessionId(sessionId, user.getId());
         }
@@ -52,7 +51,6 @@ public class AuthService implements AuthServiceInterface {
         }
     }
 
-    @Override
     public int getUserId(String sessionId) {
         String userIdString = jedis.get("session:" + sessionId);
         if (userIdString == null) {
@@ -61,7 +59,6 @@ public class AuthService implements AuthServiceInterface {
         return Integer.parseInt(userIdString);
     }
 
-    @Override
     public boolean isSessionExpired(String sessionId) {
         return jedis.exists("session:" + sessionId);
     }

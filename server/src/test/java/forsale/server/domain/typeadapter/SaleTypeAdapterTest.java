@@ -1,4 +1,4 @@
-package forsale.server.typeadapter;
+package forsale.server.domain.typeadapter;
 
 import com.google.gson.Gson;
 import forsale.server.TestCase;

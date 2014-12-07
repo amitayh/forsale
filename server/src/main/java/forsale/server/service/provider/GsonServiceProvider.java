@@ -5,8 +5,8 @@ import forsale.server.dependencyinjection.Container;
 import forsale.server.dependencyinjection.ServiceProvider;
 import forsale.server.domain.Sale;
 import forsale.server.domain.User;
-import forsale.server.typeadapter.SaleTypeAdapter;
-import forsale.server.typeadapter.UserTypeAdapter;
+import forsale.server.domain.typeadapter.SaleTypeAdapter;
+import forsale.server.domain.typeadapter.UserTypeAdapter;
 
 public class GsonServiceProvider implements ServiceProvider {
 

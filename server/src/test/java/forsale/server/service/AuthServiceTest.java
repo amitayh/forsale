@@ -11,13 +11,13 @@ import static org.junit.Assert.*;
 
 public class AuthServiceTest extends TestCase {
 
-    private AuthServiceInterface auth;
+    private AuthService auth;
 
     @Before
     public void setUp() throws Exception {
         flushMysql();
         flushRedis();
-        UsersServiceInterface users = (UsersServiceInterface) container.get("service.users");
+        UsersService users = (UsersService) container.get("service.users");
         auth = new AuthService(users, getRedis());
     }
 

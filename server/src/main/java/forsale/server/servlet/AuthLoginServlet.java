@@ -3,7 +3,7 @@ package forsale.server.servlet;
 import forsale.server.domain.Email;
 import forsale.server.domain.Password;
 import forsale.server.domain.User;
-import forsale.server.service.AuthServiceInterface;
+import forsale.server.service.AuthService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +27,7 @@ public class AuthLoginServlet extends BaseServlet {
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        AuthServiceInterface auth = (AuthServiceInterface)get("service.auth");
+        AuthService auth = (AuthService) get("service.auth");
         JsonResult result = new JsonResult();
 
         Email email = new Email(request.getParameter("email"));

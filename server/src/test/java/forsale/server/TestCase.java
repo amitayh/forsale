@@ -34,6 +34,7 @@ abstract public class TestCase {
     protected void flushMysql() throws Exception {
         Connection mysql = getMysql();
         Statement stmt = mysql.createStatement();
+        stmt.execute("DELETE FROM user_favorite_vendors;");
         stmt.execute("DELETE FROM sales;");
         stmt.execute("DELETE FROM vendors;");
         stmt.execute("DELETE FROM users;");
