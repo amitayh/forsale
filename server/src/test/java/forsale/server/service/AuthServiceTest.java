@@ -3,11 +3,16 @@ package forsale.server.service;
 import forsale.server.TestCase;
 import forsale.server.domain.*;
 import forsale.server.service.exception.DuplicateEmailException;
+import forsale.server.service.exception.SessionExpiredException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.servlet.http.HttpSession;
+
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AuthServiceTest extends TestCase {
 
@@ -238,7 +243,6 @@ public class AuthServiceTest extends TestCase {
     public void testThatSessionHistoryClearedWhenLoginAgainWithNewSessionId() throws Exception{
         Email email = new Email("john@beatles.com");
         Password password = new Password("123");
-
         String sessionId1 = "321";
 
         // Signup user
@@ -253,13 +257,47 @@ public class AuthServiceTest extends TestCase {
         assertTrue(userId >= 0);
 
         // 1st Login
-        auth.authenticate(new User.Credentials(user.getEmail(), user.getPassword()), sessionId1);
+        auth.authenticate(new User.Credentials(email, password), sessionId1);
 
         // 2nd Login
         String sessionId2 = "989776";
-        auth.authenticate(new User.Credentials(user.getEmail(), user.getPassword()), sessionId2);
+        auth.authenticate(new User.Credentials(email, password), sessionId2);
 
         // check that previous session history cleared
         assertTrue(auth.getUserId(sessionId1) < 0);
     }
+
+    @Test(expected = SessionExpiredException.class)
+    public void testGetUserThrowsIfSessionExpired() throws Exception {
+        HttpSession session = mock(HttpSession.class);
+        when(session.getId()).thenReturn("123");
+        auth.getUser(session);
+    }
+
+    @Test
+    public void testGetUserReturnsAuthenticatedUser() throws Exception {
+        Email email = new Email("john@beatles.com");
+        Password password = new Password("123");
+        String sessionId = "321";
+
+        // Signup user
+        User user = new User();
+        user.setName("John Lennon");
+        user.setEmail(email);
+        user.setGender(Gender.MALE);
+        user.setPassword(password);
+        user.setBirthDath(new BirthDate("2014-10-09"));
+        auth.signup(user, sessionId);
+
+        // Authenticate user
+        auth.authenticate(new User.Credentials(email, password), sessionId);
+
+        // Get authenticated user
+        HttpSession session = mock(HttpSession.class);
+        when(session.getId()).thenReturn(sessionId);
+        User authenticatedUser = auth.getUser(session);
+
+        assertEquals(user.getId(), authenticatedUser.getId());
+    }
+
 }

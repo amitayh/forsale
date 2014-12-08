@@ -1,7 +1,10 @@
 package forsale.server.service;
 
 import forsale.server.domain.User;
+import forsale.server.service.exception.SessionExpiredException;
 import redis.clients.jedis.Jedis;
+
+import javax.servlet.http.HttpSession;
 
 public class AuthService {
 
@@ -60,7 +63,17 @@ public class AuthService {
     }
 
     public boolean isSessionExpired(String sessionId) {
-        return jedis.exists("session:" + sessionId);
+        return !jedis.exists("session:" + sessionId);
+    }
+
+    public User getUser(HttpSession session) throws Exception {
+        String sessionId = session.getId();
+        if (isSessionExpired(sessionId)) {
+            session.invalidate();
+            throw new SessionExpiredException("Session expired");
+        }
+        int userId = getUserId(sessionId);
+        return users.get(userId);
     }
 
 }
