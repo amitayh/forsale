@@ -98,7 +98,7 @@ public class UsersService {
                 "SET user_email = ?, user_password = ?, user_name = ?, user_gender = ?, user_birth_date = ? " +
                 "WHERE user_id = ?";
 
-        PreparedStatement stmt = mysql.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement stmt = mysql.prepareStatement(sql);
 
         stmt.setString(1, user.getEmail().toString());
         stmt.setString(2, user.getPassword().getHashedPassword());
