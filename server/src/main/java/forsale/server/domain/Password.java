@@ -1,53 +1,31 @@
 package forsale.server.domain;
 
-import java.security.MessageDigest;
+import forsale.server.service.Utils;
+
 import java.security.NoSuchAlgorithmException;
 
-public class Password {
-    private String hashedPassword;
+final public class Password {
 
-    public Password() { this.hashedPassword = null; }
+    public static final String SALT = "GaYxlftrLIiIHsWO";
+
+    final private String hashedPassword;
 
     public Password(String password) {
-        this.hashedPassword = toHashPassword(password);
-    }
-
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+        hashedPassword = hashPassword(password);
     }
 
     public String getHashedPassword() {
-        return this.hashedPassword;
+        return hashedPassword;
     }
 
-    public String toHashPassword(String password) {
-        String generatedPassword = null;
-
+    private String hashPassword(String password) {
+        String hashed = null;
         try {
-            // Create MessageDigest instance for MD5
-            MessageDigest md = MessageDigest.getInstance("MD5");
-
-            //Add password bytes to digest
-            md.update(password.getBytes());
-
-            //Get the hash's bytes
-            byte[] bytes = md.digest();
-
-            //This bytes[] has bytes in decimal format;
-            //Convert it to hexadecimal format
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bytes.length ; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-
-            //Get complete hashed password in hex format
-            generatedPassword = sb.toString();
-
-        } catch (NoSuchAlgorithmException e)  {
+            hashed = Utils.md5(SALT + password);
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-        return generatedPassword;
+        return hashed;
     }
 
     @Override
@@ -65,4 +43,5 @@ public class Password {
     public int hashCode() {
         return this.hashedPassword != null ? this.hashedPassword.hashCode() : 0;
     }
+
 }

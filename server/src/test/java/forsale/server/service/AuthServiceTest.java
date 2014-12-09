@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AuthServiceTest extends TestCase {
@@ -273,6 +274,18 @@ public class AuthServiceTest extends TestCase {
         when(session.getId()).thenReturn("123");
         auth.getUser(session);
     }
+
+    @Test
+    public void testGetUserInvalidatesSessionIfExpired() throws Exception {
+        HttpSession session = mock(HttpSession.class);
+        when(session.getId()).thenReturn("123");
+        try {
+            auth.getUser(session);
+        } catch (Exception e) {
+            verify(session).invalidate();
+        }
+    }
+
 
     @Test
     public void testGetUserReturnsAuthenticatedUser() throws Exception {

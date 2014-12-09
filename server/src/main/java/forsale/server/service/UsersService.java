@@ -57,8 +57,7 @@ public class UsersService {
             user = new User();
             user.setId(userId);
             user.setEmail(new Email(rs.getString("user_email")));
-            Password password = new Password();
-            password.setHashedPassword(rs.getString("user_password"));
+            Password password = new Password(rs.getString("user_password"));
             user.setPassword(password);
             user.setName(rs.getString("user_name"));
             user.setGender(Gender.valueOf(rs.getString("user_gender").toUpperCase()));

@@ -1,29 +1,30 @@
 package forsale.server.domain;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class BirthDate {
+final public class BirthDate {
 
-    private Date birthDate;
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    final private Date birthDate;
 
     public BirthDate(String dateString) throws Exception {
-        this.birthDate = dateFormat.parse(dateString);
+        birthDate = dateFormat.parse(dateString);
     }
 
     public BirthDate(long time) {
-        this.birthDate = new Date(time);
+        birthDate = new Date(time);
     }
 
     public long getTime() {
-        return this.birthDate.getTime();
+        return birthDate.getTime();
     }
 
     @Override
     public String toString() {
-        return dateFormat.format(this.birthDate);
+        return dateFormat.format(birthDate);
     }
 
 }
