@@ -2,6 +2,7 @@ package forsale.server.service;
 
 import forsale.server.domain.Sale;
 import forsale.server.domain.User;
+import forsale.server.service.exception.MissingSaleException;
 import redis.clients.jedis.Jedis;
 
 import java.sql.*;
@@ -47,7 +48,7 @@ public class SalesService {
     }
 
     public Sale get(int saleId) throws Exception {
-        Sale sale = null;
+        Sale sale;
 
         String sql =
                 "SELECT s.*, v.* " +
@@ -60,6 +61,8 @@ public class SalesService {
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
             sale = hydrate(rs);
+        } else {
+            throw new MissingSaleException(saleId);
         }
 
         return sale;

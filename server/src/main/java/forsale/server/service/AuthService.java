@@ -5,75 +5,62 @@ import forsale.server.service.exception.SessionExpiredException;
 import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpSession;
+import java.util.concurrent.TimeUnit;
 
 public class AuthService {
 
-    final static private int SESSION_EXPIRE_TIME = 60 * 60 * 24 * 365; // 1 year
+    public static final String USER_ID_ATTR = "user_id";
 
-    final private Jedis jedis;
+    private static final int EXPIRE_TIME = (int) TimeUnit.HOURS.toSeconds(1);
+
+    final private Jedis redis;
 
     final private UsersService users;
 
-    public AuthService(UsersService users, Jedis jedis) {
+    public AuthService(UsersService users, Jedis redis) {
         this.users = users;
-        this.jedis = jedis;
+        this.redis = redis;
     }
 
-    public int signup(User user, String sessionId) throws Exception {
-        int userId = users.insert(user);
-        setSessionId(sessionId, userId);
-        return userId;
+    public boolean login(User user, HttpSession session) {
+        session.setAttribute(USER_ID_ATTR, user.getId());
+        setRedisHash(user);
+        return true;
     }
 
-    public User authenticate(User.Credentials credentials, String sessionId) throws Exception {
-        User user = users.get(credentials);
-        if (user != null) {
-            setSessionId(sessionId, user.getId());
-        }
-        return user;
-    }
-
-    private void setSessionId(String sessionId, Integer userId) throws Exception {
-        int existingUserIdInSession = getUserId(sessionId);
-        if (existingUserIdInSession != -1 && existingUserIdInSession != userId) {
-            throw new Exception("Session id already in use.");
-        }
-
-        clearSessionHistory(userId);
-        jedis.set("session:" + sessionId, userId.toString());
-        jedis.expire("session:" + sessionId, SESSION_EXPIRE_TIME);
-        jedis.set("session:userid:" + userId.toString(), sessionId);
-        jedis.expire("session:userid:" + userId.toString(), SESSION_EXPIRE_TIME);
-    }
-
-    private void clearSessionHistory(Integer userId) {
-        String sessionId = jedis.get("session:userid:" + userId.toString());
-        if (sessionId != null) {
-            jedis.del("session:userid:" + userId.toString());
-            jedis.del("session:" + sessionId);
-        }
-    }
-
-    public int getUserId(String sessionId) {
-        String userIdString = jedis.get("session:" + sessionId);
-        if (userIdString == null) {
-            return -1;
-        }
-        return Integer.parseInt(userIdString);
-    }
-
-    public boolean isSessionExpired(String sessionId) {
-        return !jedis.exists("session:" + sessionId);
+    public boolean logout(HttpSession session) throws Exception {
+        Integer userId = getUserId(session);
+        removeRedisHash(userId);
+        session.invalidate();
+        return true;
     }
 
     public User getUser(HttpSession session) throws Exception {
-        String sessionId = session.getId();
-        if (isSessionExpired(sessionId)) {
-            session.invalidate();
-            throw new SessionExpiredException("Session expired");
-        }
-        int userId = getUserId(sessionId);
+        Integer userId = getUserId(session);
         return users.get(userId);
+    }
+
+    private void setRedisHash(User user) {
+        String redisKey = getRedisKey(user.getId());
+        redis.hset(redisKey, "email", user.getEmail().toString());
+        redis.hset(redisKey, "name", user.getName());
+        redis.expire(redisKey, EXPIRE_TIME);
+    }
+
+    private void removeRedisHash(Integer userId) {
+        redis.del(getRedisKey(userId));
+    }
+
+    private String getRedisKey(Integer userId) {
+        return "user:" + userId.toString();
+    }
+
+    private Integer getUserId(HttpSession session) throws Exception {
+        Integer userId = (Integer) session.getAttribute(USER_ID_ATTR);
+        if (userId == null) {
+            throw new SessionExpiredException();
+        }
+        return userId;
     }
 
 }

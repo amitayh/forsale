@@ -2,6 +2,8 @@ package forsale.server.service;
 
 import forsale.server.domain.*;
 import forsale.server.service.exception.DuplicateEmailException;
+import forsale.server.service.exception.InvalidCredentialsException;
+import forsale.server.service.exception.MissingUserException;
 
 import java.sql.*;
 
@@ -30,8 +32,7 @@ public class UsersService {
         try {
             stmt.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException e) {
-            String message = "Unable to insert user - email '" + email.toString() + "' already exists";
-            throw new DuplicateEmailException(email, message, e);
+            throw new DuplicateEmailException(email, e);
         }
 
         ResultSet rs = stmt.getGeneratedKeys();
@@ -43,50 +44,35 @@ public class UsersService {
     }
 
     public User get(int userId) throws Exception {
-        User user = null;
+        User user;
 
-        String sql =
-                "SELECT user_email, user_password, user_name, user_gender, user_birth_date " +
-                "FROM users WHERE user_id = ?";
-
+        String sql = "SELECT * FROM users WHERE user_id = ?";
         PreparedStatement st = mysql.prepareStatement(sql);
         st.setInt(1, userId);
         ResultSet rs = st.executeQuery();
 
         if (rs.next()) {
-            user = new User();
-            user.setId(userId);
-            user.setEmail(new Email(rs.getString("user_email")));
-            Password password = new Password(rs.getString("user_password"));
-            user.setPassword(password);
-            user.setName(rs.getString("user_name"));
-            user.setGender(Gender.valueOf(rs.getString("user_gender").toUpperCase()));
-            user.setBirthDath(new BirthDate(rs.getDate("user_birth_date").getTime()));
+            user = hydrate(rs);
+        } else {
+            throw new MissingUserException(userId);
         }
 
         return user;
     }
 
     public User get(User.Credentials credentials) throws Exception {
-        User user = null;
+        User user;
 
-        String sql =
-                "SELECT user_id, user_name, user_gender, user_birth_date " +
-                "FROM users WHERE user_email = ? AND user_password = ?";
-
+        String sql = "SELECT * FROM users WHERE user_email = ? AND user_password = ?";
         PreparedStatement st = mysql.prepareStatement(sql);
         st.setString(1, credentials.getEmail().toString());
         st.setString(2, credentials.getPassword().getHashedPassword());
         ResultSet rs = st.executeQuery();
 
         if (rs.next()) {
-            user = new User();
-            user.setId(rs.getInt("user_id"));
-            user.setEmail(credentials.getEmail());
-            user.setPassword(credentials.getPassword());
-            user.setName(rs.getString("user_name"));
-            user.setGender(Gender.valueOf(rs.getString("user_gender").toUpperCase()));
-            user.setBirthDath(new BirthDate(rs.getDate("user_birth_date").getTime()));
+            user = hydrate(rs);
+        } else {
+            throw new InvalidCredentialsException();
         }
 
         return user;
@@ -120,6 +106,17 @@ public class UsersService {
         stmt.setInt(2, vendor.getId());
 
         return stmt.execute();
+    }
+
+    public static User hydrate(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("user_id"));
+        user.setEmail(new Email(rs.getString("user_email")));
+        user.setName(rs.getString("user_name"));
+        user.setGender(Gender.valueOf(rs.getString("user_gender").toUpperCase()));
+        user.setBirthDath(new BirthDate(rs.getDate("user_birth_date").getTime()));
+
+        return user;
     }
 
 }

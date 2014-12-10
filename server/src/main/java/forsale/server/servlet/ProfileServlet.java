@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(name = "UsersServlet", urlPatterns = "/users/profile")
@@ -39,26 +38,12 @@ public class ProfileServlet extends BaseServlet {
     }
 
     private void showProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UsersService users = (UsersService) get("service.users");
         AuthService auth = (AuthService) get("service.auth");
         JsonResult result = new JsonResult();
 
         try {
-            HttpSession session = request.getSession();
-
-            if (auth.isSessionExpired(session.getId())) {
-                result.fail("Session Expired!");
-
-            } else {
-                int userId = auth.getUserId(session.getId());
-                User user = users.get(userId);
-
-                if (user == null) {
-                    result.fail("User does not exist.");
-                } else {
-                    result.success(user);
-                }
-            }
+            User user = auth.getUser(request.getSession());
+            result.success(user);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }
@@ -71,29 +56,22 @@ public class ProfileServlet extends BaseServlet {
         AuthService auth = (AuthService) get("service.auth");
         JsonResult result = new JsonResult();
 
-        HttpSession session = request.getSession();
+        try {
+            // Get user
+            User user = auth.getUser(request.getSession());
 
-        if (auth.isSessionExpired(session.getId())) {
-            result.fail("Session Expired!");
-
-        } else {
-            int userId = auth.getUserId(session.getId());
-
-            User user = new User();
-            user.setId(userId);
+            // Update fields
             user.setEmail(new Email(request.getParameter("email")));
             user.setPassword(new Password(request.getParameter("password")));
             user.setName(request.getParameter("name"));
             user.setGender(Gender.valueOf(request.getParameter("gender")));
+            user.setBirthDath(new BirthDate(request.getParameter("birth")));
 
-            try {
-                user.setBirthDath(new BirthDate(request.getParameter("birth")));
-                users.edit(user);
-                result.success(user); // can be anything and not necessary user as the success object...
-
-            } catch (Exception e) {
-                result.fail(e.getMessage());
-            }
+            // Save
+            users.edit(user);
+            result.success(user); // can be anything and not necessary user as the success object...
+        } catch (Exception e) {
+            result.fail(e.getMessage());
         }
 
         writeJsonResult(response, result);

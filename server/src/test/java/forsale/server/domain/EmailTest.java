@@ -16,4 +16,11 @@ public class EmailTest {
         assertEquals(email1, email2);
         assertNotEquals(email1, email3);
     }
+
+    @Test
+    public void testEmailConvertsToLowerCase() {
+        Email email = new Email("FAKE@MAIL.com");
+        assertEquals("fake@mail.com", email.toString());
+    }
+
 }

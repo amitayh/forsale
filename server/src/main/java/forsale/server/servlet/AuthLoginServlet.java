@@ -4,6 +4,7 @@ import forsale.server.domain.Email;
 import forsale.server.domain.Password;
 import forsale.server.domain.User;
 import forsale.server.service.AuthService;
+import forsale.server.service.UsersService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,39 +17,25 @@ import java.io.IOException;
 public class AuthLoginServlet extends BaseServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        login(request, response);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        login(request, response);
-    }
-
-    private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        UsersService users = (UsersService) get("service.users");
         AuthService auth = (AuthService) get("service.auth");
         JsonResult result = new JsonResult();
 
-        Email email = new Email(request.getParameter("email").toLowerCase());
+        Email email = new Email(request.getParameter("email"));
         Password password = new Password(request.getParameter("password"));
         User.Credentials credentials = new User.Credentials(email, password);
 
         try {
+            User user = users.get(credentials);
             HttpSession session = request.getSession();
-            User user = auth.authenticate(credentials, session.getId());
-
-            if (user == null) {
-                // Failed to login user
-                result.fail("Wrong email or password.");
-            } else {
-                // Succeed login user, return user's id
-                result.success(user.getId());
-            }
+            auth.login(user, session);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }
 
         writeJsonResult(response, result);
     }
+
 }

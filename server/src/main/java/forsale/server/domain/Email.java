@@ -5,7 +5,7 @@ final public class Email {
     final private String email;
 
     public Email(String email) {
-        this.email = email;
+        this.email = (email != null) ? email.toLowerCase() : null;
     }
 
     @Override
