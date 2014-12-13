@@ -11,6 +11,8 @@ public class SalesService {
 
     public static final String SALE_VIEWS_HASH = "sale_views";
 
+    public static final String WILDCARD = "%";
+
     public static final int POPULAR_LIMIT = 100;
 
     final private Connection mysql;
@@ -82,18 +84,13 @@ public class SalesService {
                 parameterIndex++;
             }
 
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                result.add(hydrate(rs));
-            }
+            result = getResults(stmt);
         }
 
         return result;
     }
 
     public List<Sale> getRecent() throws Exception {
-        List<Sale> result = new ArrayList<>();
-
         String sql =
                 "SELECT s.*, v.* " +
                 "FROM sales AS s " +
@@ -101,12 +98,8 @@ public class SalesService {
                 "ORDER BY s.sale_start DESC";
 
         PreparedStatement stmt = mysql.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-            result.add(hydrate(rs));
-        }
 
-        return result;
+        return getResults(stmt);
     }
 
     public List<Sale> getPopular() throws Exception {
@@ -125,8 +118,6 @@ public class SalesService {
     }
 
     public List<Sale> search(SearchCriteria criteria) throws Exception {
-        List<Sale> result = new ArrayList<>();
-
         String sql =
                 "SELECT s.*, v.* " +
                 "FROM sales AS s " +
@@ -135,21 +126,14 @@ public class SalesService {
                 "OR v.vendor_name LIKE ?";
 
         PreparedStatement stmt = mysql.prepareStatement(sql);
-        String query = "%" + criteria.getQuery() + "%";
+        String query = WILDCARD + criteria.getQuery() + WILDCARD;
         stmt.setString(1, query);
         stmt.setString(2, query);
 
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-            result.add(hydrate(rs));
-        }
-
-        return result;
+        return getResults(stmt);
     }
 
     public List<Sale> getFavorites(User user) throws Exception {
-        List<Sale> result = new ArrayList<>();
-
         String sql =
                 "SELECT s.*, v.* " +
                 "FROM sales AS s " +
@@ -160,12 +144,7 @@ public class SalesService {
         PreparedStatement stmt = mysql.prepareStatement(sql);
         stmt.setInt(1, user.getId());
 
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-            result.add(hydrate(rs));
-        }
-
-        return result;
+        return getResults(stmt);
     }
 
     public double increaseViewCount(Sale sale) {
@@ -182,6 +161,16 @@ public class SalesService {
         sale.setVendor(VendorsService.hydrate(rs));
 
         return sale;
+    }
+
+    private List<Sale> getResults(PreparedStatement stmt) throws SQLException {
+        List<Sale> results = new ArrayList<>();
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            results.add(hydrate(rs));
+        }
+
+        return results;
     }
 
     private Set<Integer> getPopularSalesIds(int limit) {
