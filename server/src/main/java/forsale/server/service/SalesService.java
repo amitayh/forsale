@@ -124,6 +124,26 @@ public class SalesService {
         return popular;
     }
 
+    public List<Sale> search(SearchCriteria criteria) throws Exception {
+        List<Sale> result = new ArrayList<>();
+
+        String sql =
+                "SELECT s.*, v.* " +
+                "FROM sales AS s " +
+                "JOIN vendors AS v ON v.vendor_id = s.vendor_id " +
+                "WHERE s.sale_title LIKE ?";
+
+        PreparedStatement stmt = mysql.prepareStatement(sql);
+        stmt.setString(1, "%" + criteria.getQuery() + "%");
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            result.add(hydrate(rs));
+        }
+
+        return result;
+    }
+
     public List<Sale> getFavorites(User user) throws Exception {
         List<Sale> result = new ArrayList<>();
 

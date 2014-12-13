@@ -172,6 +172,20 @@ public class SalesServiceTest extends TestCase {
         assertEquals(salesList.get(2).getId(), sale1.getId()); // oldest
     }
 
+    @Test
+    public void testSearchSalesByTitle() throws Exception {
+        Sale sale1 = createSale("Save 15% on all T-shirts");
+        Sale sale2 = createSale("Save 15% on all shoes");
+        Sale sale3 = createSale("Save 15% on all shirts");
+
+        SearchCriteria criteria = new SearchCriteria("shirts");
+        List<Sale> searchResults = sales.search(criteria);
+
+        assertEquals(2, searchResults.size());
+        assertEquals(searchResults.get(0).getId(), sale1.getId());
+        assertEquals(searchResults.get(1).getId(), sale3.getId());
+    }
+
     private Vendor createVendor() throws Exception {
         VendorsService vendors = (VendorsService) container.get("service.vendors");
         Vendor vendor = new Vendor();
