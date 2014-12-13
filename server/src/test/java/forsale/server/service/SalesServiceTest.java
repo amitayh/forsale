@@ -19,7 +19,7 @@ public class SalesServiceTest extends TestCase {
 
     private SalesService sales;
 
-    private Vendor vendor;
+    private Vendor defaultVendor;
 
     @Before
     public void setUp() throws Exception {
@@ -27,13 +27,13 @@ public class SalesServiceTest extends TestCase {
         flushRedis();
 
         sales = new SalesService(getMysql(), getRedis());
-        vendor = createVendor();
+        defaultVendor = createVendor();
     }
 
     @After
     public void tearDown() {
         sales = null;
-        vendor = null;
+        defaultVendor = null;
     }
 
     @Test
@@ -43,7 +43,7 @@ public class SalesServiceTest extends TestCase {
         sale.setExtra("15% off");
         sale.setStartDate(dateFormat.parse("2014-10-09"));
         sale.setEndDate(dateFormat.parse("2014-10-09"));
-        sale.setVendor(vendor);
+        sale.setVendor(defaultVendor);
         int saleId = sales.insert(sale);
 
         assertEquals(saleId, sale.getId());
@@ -109,7 +109,7 @@ public class SalesServiceTest extends TestCase {
         sale2.setExtra("Sale #2");
         sale2.setStartDate(dateFormat.parse("2014-12-09"));
         sale2.setEndDate(dateFormat.parse("2014-12-09"));
-        sale2.setVendor(createVendor());
+        sale2.setVendor(createVendor("Other vendor"));
         sales.insert(sale2);
 
         Sale sale3 = createSale("Sale #3");
@@ -124,7 +124,7 @@ public class SalesServiceTest extends TestCase {
         user.setBirthDath(new BirthDate("1940-10-09"));
         users.insert(user);
 
-        users.setUserFavoriteVendor(user, vendor);
+        users.setUserFavoriteVendor(user, defaultVendor);
 
         List<Sale> favorites = sales.getFavorites(user);
         assertEquals(2, favorites.size());
@@ -146,7 +146,7 @@ public class SalesServiceTest extends TestCase {
         sale1.setExtra("15% off");
         sale1.setStartDate(dateFormat.parse("2014-10-09"));         // oldest
         sale1.setEndDate(dateFormat.parse("2014-10-09"));
-        sale1.setVendor(vendor);
+        sale1.setVendor(defaultVendor);
         sales.insert(sale1);
 
         Sale sale2 = new Sale();
@@ -154,7 +154,7 @@ public class SalesServiceTest extends TestCase {
         sale2.setExtra("15% off");
         sale2.setStartDate(dateFormat.parse("2014-11-09"));         // middle
         sale2.setEndDate(dateFormat.parse("2014-11-09"));
-        sale2.setVendor(vendor);
+        sale2.setVendor(defaultVendor);
         sales.insert(sale2);
 
         Sale sale3 = new Sale();
@@ -162,7 +162,7 @@ public class SalesServiceTest extends TestCase {
         sale3.setExtra("15% off");
         sale3.setStartDate(dateFormat.parse("2014-12-09"));         // newest
         sale3.setEndDate(dateFormat.parse("2014-12-09"));
-        sale3.setVendor(vendor);
+        sale3.setVendor(defaultVendor);
         sales.insert(sale3);
 
         List<Sale> salesList = this.sales.getRecent();
@@ -186,16 +186,40 @@ public class SalesServiceTest extends TestCase {
         assertEquals(searchResults.get(1).getId(), sale3.getId());
     }
 
+    @Test
+    public void testSearchSalesByVendor() throws Exception {
+        Sale sale1 = createSale("Save 15% on all T-shirts");
+        Sale sale2 = createSale("Save 15% on all shoes");
+
+        Vendor shoeVendor = createVendor("Magic shoes");
+        Sale sale3 = createSale("AMAZING SALE!", shoeVendor);
+
+        SearchCriteria criteria = new SearchCriteria("shoes");
+        List<Sale> searchResults = sales.search(criteria);
+
+        assertEquals(2, searchResults.size());
+        assertEquals(searchResults.get(0).getId(), sale2.getId());
+        assertEquals(searchResults.get(1).getId(), sale3.getId());
+    }
+
     private Vendor createVendor() throws Exception {
+        return createVendor("Default vendor");
+    }
+
+    private Vendor createVendor(String name) throws Exception {
         VendorsService vendors = (VendorsService) container.get("service.vendors");
         Vendor vendor = new Vendor();
-        vendor.setName("Vendor #1");
+        vendor.setName(name);
         vendors.insert(vendor);
 
         return vendor;
     }
 
     private Sale createSale(String title) throws Exception {
+        return createSale(title, defaultVendor);
+    }
+
+    private Sale createSale(String title, Vendor vendor) throws Exception {
         Sale sale = new Sale();
         sale.setTitle(title);
         sale.setExtra(title + " - 15% off");

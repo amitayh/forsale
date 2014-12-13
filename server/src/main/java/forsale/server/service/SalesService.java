@@ -131,10 +131,13 @@ public class SalesService {
                 "SELECT s.*, v.* " +
                 "FROM sales AS s " +
                 "JOIN vendors AS v ON v.vendor_id = s.vendor_id " +
-                "WHERE s.sale_title LIKE ?";
+                "WHERE s.sale_title LIKE ? " +
+                "OR v.vendor_name LIKE ?";
 
         PreparedStatement stmt = mysql.prepareStatement(sql);
-        stmt.setString(1, "%" + criteria.getQuery() + "%");
+        String query = "%" + criteria.getQuery() + "%";
+        stmt.setString(1, query);
+        stmt.setString(2, query);
 
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
