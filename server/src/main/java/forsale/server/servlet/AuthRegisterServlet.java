@@ -30,10 +30,10 @@ public class AuthRegisterServlet extends BaseServlet {
 
         // prepare user object
         User user = new User();
-        user.setEmail(new Email(request.getParameter("email")));
+        user.setEmail(new Email(request.getParameter("email").toLowerCase()));
         user.setPassword(new Password(request.getParameter("password")));
         user.setName(request.getParameter("name"));
-        user.setGender(Gender.valueOf(request.getParameter("gender")));
+        user.setGender(Gender.valueOf(request.getParameter("gender").toUpperCase()));
 
         try {
             user.setBirthDath(new BirthDate(request.getParameter("birth")));
