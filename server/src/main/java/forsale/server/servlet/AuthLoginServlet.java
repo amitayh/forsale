@@ -30,7 +30,7 @@ public class AuthLoginServlet extends BaseServlet {
         AuthService auth = (AuthService) get("service.auth");
         JsonResult result = new JsonResult();
 
-        Email email = new Email(request.getParameter("email"));
+        Email email = new Email(request.getParameter("email").toLowerCase());
         Password password = new Password(request.getParameter("password"));
         User.Credentials credentials = new User.Credentials(email, password);
 

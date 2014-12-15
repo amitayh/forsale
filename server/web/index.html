@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>4Sale - test page</title>
+</head>
+
+<body>
+
+    <form action="auth/register" method="post">
+        <h2>Register:</h2>
+        <table>
+            <tr>
+                <td><label for="register-email">Email:</label></td>
+                <td><input type="email" id="register-email" name="email"></td>
+            </tr>
+            <tr>
+                <td><label for="register-name">Name:</label></td>
+                <td><input id="register-name" name="name"></td>
+            </tr>
+            <tr>
+                <td><label for="register-password">Password:</label></td>
+                <td><input type="password" id="register-password" name="password"></td>
+            </tr>
+            <tr>
+                <td><label for="register-birth-date">Birth date:</label></td>
+                <td><input type="date" id="register-birth-date" name="birth" value="2000-04-22"></td>
+            </tr>
+            <tr>
+                <td>Gender:</td>
+                <td>
+                    <label><input type="radio" name="gender" value="MALE" checked> Male</label>
+                    <label><input type="radio" name="gender" value="FEMALE" checked> Female</label>
+                </td>
+            </tr>
+        </table>
+        <p><input type="submit" value="Register"></p>
+    </form>
+
+    <form action="auth/login" method="post">
+        <h2>Login:</h2>
+        <table>
+            <tr>
+                <td><label for="login-email">Email:</label></td>
+                <td><input type="email" id="login-email" name="email"></td>
+            </tr>
+            <tr>
+                <td><label for="login-password">Password:</label></td>
+                <td><input type="password" id="login-password" name="password"></td>
+            </tr>
+        </table>
+        <p><input type="submit" value="Login"></p>
+    </form>
+
+    <h2>Users:</h2>
+    <ul>
+        <li><a href="users/profile">Profile</a></li>
+    </ul>
+
+    <h2>Sales:</h2>
+    <ul>
+        <li><a href="sales/popular">Popular</a></li>
+        <li><a href="sales/favorites">Favorites</a></li>
+        <li><a href="sales/recent">Recent</a></li>
+    </ul>
+
+</body>
+
+</html>

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "SalesPopularServlet", urlPatterns = {"/sales/favorites"})
+@WebServlet(name = "SalesFavoritesServlet", urlPatterns = {"/sales/favorites"})
 public class SalesFavoritesServlet extends BaseServlet {
 
     @Override
