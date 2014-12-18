@@ -61,6 +61,7 @@ public class AuthService {
     private Integer getUserId(HttpSession session) throws Exception {
         Integer userId = (Integer) session.getAttribute(USER_ID_ATTR);
         if (userId == null) {
+            session.invalidate();
             throw new SessionExpiredException();
         }
         return userId;

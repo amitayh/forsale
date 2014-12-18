@@ -16,6 +16,16 @@ public class SalesService {
 
     public static final int POPULAR_LIMIT = 100;
 
+    public static final String SALE_ID = "sale_id";
+
+    public static final String SALE_TITLE = "sale_title";
+
+    public static final String SALE_EXTRA = "sale_extra";
+
+    public static final String SALE_START = "sale_start";
+
+    public static final String SALE_END = "sale_end";
+
     final private Connection mysql;
 
     final private Jedis redis;
@@ -156,11 +166,11 @@ public class SalesService {
 
     public static Sale hydrate(ResultSet rs) throws SQLException {
         Sale sale = new Sale();
-        sale.setId(rs.getInt("sale_id"));
-        sale.setTitle(rs.getString("sale_title"));
-        sale.setExtra(rs.getString("sale_extra"));
-        sale.setStartDate(rs.getDate("sale_start"));
-        sale.setEndDate(rs.getDate("sale_end"));
+        sale.setId(rs.getInt(SALE_ID));
+        sale.setTitle(rs.getString(SALE_TITLE));
+        sale.setExtra(rs.getString(SALE_EXTRA));
+        sale.setStartDate(rs.getDate(SALE_START));
+        sale.setEndDate(rs.getDate(SALE_END));
         sale.setVendor(VendorsService.hydrate(rs));
 
         return sale;

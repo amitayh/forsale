@@ -6,6 +6,10 @@ import java.sql.*;
 
 public class VendorsService {
 
+    public static final String VENDOR_ID = "vendor_id";
+
+    public static final String VENDOR_NAME = "vendor_name";
+
     final private Connection mysql;
 
     public VendorsService(Connection mysql) {
@@ -42,8 +46,8 @@ public class VendorsService {
 
     public static Vendor hydrate(ResultSet rs) throws SQLException {
         Vendor vendor = new Vendor();
-        vendor.setId(rs.getInt("vendor_id"));
-        vendor.setName(rs.getString("vendor_name"));
+        vendor.setId(rs.getInt(VENDOR_ID));
+        vendor.setName(rs.getString(VENDOR_NAME));
 
         return vendor;
     }
