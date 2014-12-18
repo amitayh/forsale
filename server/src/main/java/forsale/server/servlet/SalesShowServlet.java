@@ -21,6 +21,7 @@ public class SalesShowServlet extends BaseServlet {
         try {
             Integer saleId = Integer.valueOf(request.getParameter("sale_id"));
             Sale sale = sales.get(saleId);
+            sales.increaseViewCount(sale);
             result.success(sale);
         } catch (Exception e) {
             result.fail(e.getMessage());
