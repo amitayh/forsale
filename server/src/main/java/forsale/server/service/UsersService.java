@@ -6,8 +6,19 @@ import forsale.server.service.exception.InvalidCredentialsException;
 import forsale.server.service.exception.MissingUserException;
 
 import java.sql.*;
+import java.util.Map;
 
 public class UsersService {
+
+    public static final String USER_ID = "user_id";
+
+    public static final String USER_EMAIL = "user_email";
+
+    public static final String USER_NAME = "user_name";
+
+    public static final String USER_GENDER = "user_gender";
+
+    public static final String USER_BIRTH_DATE = "user_birth_date";
 
     final private Connection mysql;
 
@@ -110,13 +121,23 @@ public class UsersService {
 
     public static User hydrate(ResultSet rs) throws SQLException {
         User user = new User();
-        user.setId(rs.getInt("user_id"));
-        user.setEmail(new Email(rs.getString("user_email")));
-        user.setName(rs.getString("user_name"));
-        user.setGender(Gender.valueOf(rs.getString("user_gender").toUpperCase()));
-        user.setBirthDath(new BirthDate(rs.getDate("user_birth_date").getTime()));
+        user.setId(rs.getInt(USER_ID));
+        user.setEmail(new Email(rs.getString(USER_EMAIL)));
+        user.setName(rs.getString(USER_NAME));
+        user.setGender(Gender.valueOf(rs.getString(USER_GENDER).toUpperCase()));
+        user.setBirthDath(new BirthDate(rs.getDate(USER_BIRTH_DATE).getTime()));
 
         return user;
     }
 
+    public static User hydrate(Map<String, String> userHash) throws Exception {
+        User user = new User();
+        user.setId(Integer.valueOf(userHash.get(USER_ID)));
+        user.setEmail(new Email(userHash.get(USER_EMAIL)));
+        user.setName(userHash.get(USER_NAME));
+        user.setGender(Gender.valueOf(userHash.get(USER_GENDER)));
+        user.setBirthDath(new BirthDate(userHash.get(USER_BIRTH_DATE)));
+
+        return user;
+    }
 }

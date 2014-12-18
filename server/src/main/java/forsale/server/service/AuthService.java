@@ -5,6 +5,7 @@ import forsale.server.service.exception.SessionExpiredException;
 import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class AuthService {
@@ -15,10 +16,7 @@ public class AuthService {
 
     final private Jedis redis;
 
-    final private UsersService users;
-
-    public AuthService(UsersService users, Jedis redis) {
-        this.users = users;
+    public AuthService(Jedis redis) {
         this.redis = redis;
     }
 
@@ -37,13 +35,18 @@ public class AuthService {
 
     public User getUser(HttpSession session) throws Exception {
         Integer userId = getUserId(session);
-        return users.get(userId);
+        String redisKey = getRedisKey(userId);
+        Map<String, String> userHash = redis.hgetAll(redisKey);
+        userHash.put(UsersService.USER_ID, String.valueOf(userId));
+        return UsersService.hydrate(userHash);
     }
 
     private void setRedisHash(User user) {
         String redisKey = getRedisKey(user.getId());
-        redis.hset(redisKey, "email", user.getEmail().toString());
-        redis.hset(redisKey, "name", user.getName());
+        redis.hset(redisKey, UsersService.USER_EMAIL, user.getEmail().toString());
+        redis.hset(redisKey, UsersService.USER_NAME, user.getName());
+        redis.hset(redisKey, UsersService.USER_GENDER, user.getGender().toString());
+        redis.hset(redisKey, UsersService.USER_BIRTH_DATE, user.getBirthDath().toString());
         redis.expire(redisKey, EXPIRE_TIME);
     }
 

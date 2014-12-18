@@ -4,7 +4,7 @@ CREATE TABLE users (
   user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_email VARCHAR(50) NOT NULL,
   user_password CHAR(32) NOT NULL,
-  user_name	VARCHAR(50) NOT NULL,
+  user_name VARCHAR(50) NOT NULL,
   user_gender ENUM('male', 'female'),
   user_birth_date DATE
 );

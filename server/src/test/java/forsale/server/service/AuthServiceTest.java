@@ -29,7 +29,7 @@ public class AuthServiceTest extends TestCase {
 
         users = (UsersService) container.get("service.users");
         redis = getRedis();
-        auth = new AuthService(users, redis);
+        auth = new AuthService(redis);
     }
 
     @After
@@ -62,21 +62,25 @@ public class AuthServiceTest extends TestCase {
         Integer userId = 1;
         String email = "john@beatles.com";
         String name = "John Lennon";
+        String gender = "MALE";
+        String birthDate = "2014-10-09";
 
         User user = new User();
         user.setId(userId);
         user.setName(name);
         user.setEmail(new Email(email));
-        user.setGender(Gender.MALE);
+        user.setGender(Gender.valueOf(gender));
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("2014-10-09"));
+        user.setBirthDath(new BirthDate(birthDate));
 
         HttpSession session = createSessionMock();
         auth.login(user, session);
 
         Map<String, String> userHash = redis.hgetAll("user:" + userId.toString());
-        assertEquals(email, userHash.get("email"));
-        assertEquals(name, userHash.get("name"));
+        assertEquals(email, userHash.get("user_email"));
+        assertEquals(name, userHash.get("user_name"));
+        assertEquals(gender, userHash.get("user_gender"));
+        assertEquals(birthDate, userHash.get("user_birth_date"));
     }
 
     @Test
