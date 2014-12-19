@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "SalesPopularServlet", urlPatterns = {"/search"})
+@WebServlet(name = "SearchServlet", urlPatterns = {"/search"})
 public class SearchServlet extends BaseServlet {
 
     @Override

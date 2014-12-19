@@ -3,8 +3,10 @@ package forsale.server.servlet;
 import forsale.server.domain.Email;
 import forsale.server.domain.Password;
 import forsale.server.domain.User;
+import forsale.server.events.Dispatcher;
 import forsale.server.service.AuthService;
 import forsale.server.service.UsersService;
+import forsale.server.service.event.UserLoginEvent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +23,7 @@ public class AuthLoginServlet extends BaseServlet {
             throws ServletException, IOException {
         UsersService users = (UsersService) get("service.users");
         AuthService auth = (AuthService) get("service.auth");
+        Dispatcher dispatcher = (Dispatcher) get("dispatcher");
         JsonResult result = new JsonResult();
 
         Email email = new Email(request.getParameter("email"));
@@ -31,6 +34,7 @@ public class AuthLoginServlet extends BaseServlet {
             User user = users.get(credentials);
             HttpSession session = request.getSession();
             auth.login(user, session);
+            dispatcher.dispatch(new UserLoginEvent(user));
         } catch (Exception e) {
             result.fail(e.getMessage());
         }

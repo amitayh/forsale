@@ -10,6 +10,8 @@ public class Bootstrap {
     public static Container createDependencyInjectionContainer() {
         Container container = new Container();
 
+        container.set("dispatcher", new EventsDispatcherProvider());
+
         // Domain services
         container.set("service.auth", new AuthServiceProvider());
         container.set("service.vendors", new VendorsServiceProvider());
