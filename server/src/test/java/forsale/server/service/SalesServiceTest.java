@@ -2,6 +2,7 @@ package forsale.server.service;
 
 import forsale.server.TestCase;
 import forsale.server.domain.*;
+import forsale.server.service.exception.MissingSaleException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,6 +77,11 @@ public class SalesServiceTest extends TestCase {
         assertEquals(2, result.size());
         assertEquals(sale1.getId(), result.get(0).getId());
         assertEquals(sale3.getId(), result.get(1).getId());
+    }
+
+    @Test(expected = MissingSaleException.class)
+    public void testMissingSaleThrowsException() throws Exception {
+        sales.get(-1);
     }
 
     @Test

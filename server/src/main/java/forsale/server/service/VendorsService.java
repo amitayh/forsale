@@ -1,6 +1,7 @@
 package forsale.server.service;
 
 import forsale.server.domain.Vendor;
+import forsale.server.service.exception.MissingVendorException;
 
 import java.sql.*;
 
@@ -32,7 +33,7 @@ public class VendorsService {
     }
 
     public Vendor get(int vendorId) throws Exception {
-        Vendor vendor = null;
+        Vendor vendor;
 
         String sql = "SELECT * FROM vendors WHERE vendor_id = ?";
         PreparedStatement stmt = mysql.prepareStatement(sql);
@@ -40,6 +41,8 @@ public class VendorsService {
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
             vendor = hydrate(rs);
+        } else {
+            throw new MissingVendorException(vendorId);
         }
 
         return vendor;

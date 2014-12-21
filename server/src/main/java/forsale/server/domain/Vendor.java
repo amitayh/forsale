@@ -28,8 +28,9 @@ public class Vendor {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        Vendor ven1 = (Vendor)o;
+        Vendor vendor = (Vendor) o;
 
-        return ven1.name.equals(this.name) && ven1.id == this.id;
+        return id == vendor.id;
+
     }
 }

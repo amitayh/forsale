@@ -7,7 +7,7 @@ public class Dispatcher {
 
     private Multimap<Class, Listener> events = LinkedListMultimap.create();
 
-    public boolean addListener(Class eventType, Listener listener) {
+    public <T> boolean addListener(Class<T> eventType, Listener<T> listener) {
         return events.put(eventType, listener);
     }
 

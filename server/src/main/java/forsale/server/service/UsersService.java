@@ -103,8 +103,8 @@ public class UsersService {
 
         try {
             stmt.executeUpdate();
-        } catch (Exception e) {
-            throw new Exception("Unable to edit user (" + user.getEmail().toString() +")");
+        } catch (SQLException e) {
+            throw new Exception("Unable to edit user (" + user.getEmail().toString() +")", e);
         }
     }
 

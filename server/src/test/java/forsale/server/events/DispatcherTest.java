@@ -2,6 +2,7 @@ package forsale.server.events;
 
 import forsale.server.stub.FakeEvent;
 import forsale.server.stub.FakeEventListener;
+import forsale.server.stub.FakeStringListener;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class DispatcherTest {
 
     @Test
     public void testAddListener() {
-        Listener listener = new FakeEventListener("listener");
+        Listener<FakeEvent> listener = new FakeEventListener("listener");
         FakeEvent event = new FakeEvent();
 
         dispatcher.addListener(FakeEvent.class, listener);
@@ -39,20 +40,17 @@ public class DispatcherTest {
 
     @Test
     public void testAddMultipleListeners() {
-        Listener listener1 = new FakeEventListener("listener1");
-        Listener listener2 = new FakeEventListener("listener2");
-        Listener listener3 = new FakeEventListener("listener3");
         FakeEvent event = new FakeEvent();
 
-        dispatcher.addListener(FakeEvent.class, listener1);
-        dispatcher.addListener(String.class, listener2);
-        dispatcher.addListener(FakeEvent.class, listener3);
+        dispatcher.addListener(FakeEvent.class, new FakeEventListener("listener1"));
+        dispatcher.addListener(FakeEvent.class, new FakeEventListener("listener2"));
+        dispatcher.addListener(String.class, new FakeStringListener());
         dispatcher.dispatch(event);
 
         List<String> callers = event.getCallers();
         assertEquals(2, callers.size());
         assertEquals("listener1", callers.get(0));
-        assertEquals("listener3", callers.get(1));
+        assertEquals("listener2", callers.get(1));
     }
 
     @Test
