@@ -15,7 +15,10 @@ public class SaleTypeAdapter implements JsonSerializer<Sale> {
         JsonObject el = new JsonObject();
         el.add("id", new JsonPrimitive(sale.getId()));
         el.add("title", new JsonPrimitive(sale.getTitle()));
-        el.add("extra", new JsonPrimitive(sale.getExtra()));
+        String extra = sale.getExtra();
+        if (extra != null) {
+            el.add("extra", new JsonPrimitive(extra));
+        }
         el.add("vendor", new JsonPrimitive(sale.getVendor().getName()));
         el.add("start", new JsonPrimitive(dateFormat.format(sale.getStartDate())));
         el.add("end", new JsonPrimitive(dateFormat.format(sale.getEndDate())));
