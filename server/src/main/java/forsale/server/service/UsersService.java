@@ -10,15 +10,13 @@ import java.util.Map;
 
 public class UsersService {
 
-    public static final String USER_ID = "user_id";
-
-    public static final String USER_EMAIL = "user_email";
-
-    public static final String USER_NAME = "user_name";
-
-    public static final String USER_GENDER = "user_gender";
-
-    public static final String USER_BIRTH_DATE = "user_birth_date";
+    public static final class Field {
+        public static final String USER_ID = "user_id";
+        public static final String USER_EMAIL = "user_email";
+        public static final String USER_NAME = "user_name";
+        public static final String USER_GENDER = "user_gender";
+        public static final String USER_BIRTH_DATE = "user_birth_date";
+    }
 
     final private Connection mysql;
 
@@ -121,22 +119,22 @@ public class UsersService {
 
     public static User hydrate(ResultSet rs) throws SQLException {
         User user = new User();
-        user.setId(rs.getInt(USER_ID));
-        user.setEmail(new Email(rs.getString(USER_EMAIL)));
-        user.setName(rs.getString(USER_NAME));
-        user.setGender(Gender.valueOf(rs.getString(USER_GENDER).toUpperCase()));
-        user.setBirthDath(new BirthDate(rs.getDate(USER_BIRTH_DATE).getTime()));
+        user.setId(rs.getInt(Field.USER_ID));
+        user.setEmail(new Email(rs.getString(Field.USER_EMAIL)));
+        user.setName(rs.getString(Field.USER_NAME));
+        user.setGender(Gender.valueOf(rs.getString(Field.USER_GENDER).toUpperCase()));
+        user.setBirthDath(new BirthDate(rs.getDate(Field.USER_BIRTH_DATE).getTime()));
 
         return user;
     }
 
     public static User hydrate(Map<String, String> userHash) throws Exception {
         User user = new User();
-        user.setId(Integer.valueOf(userHash.get(USER_ID)));
-        user.setEmail(new Email(userHash.get(USER_EMAIL)));
-        user.setName(userHash.get(USER_NAME));
-        user.setGender(Gender.valueOf(userHash.get(USER_GENDER)));
-        user.setBirthDath(new BirthDate(userHash.get(USER_BIRTH_DATE)));
+        user.setId(Integer.valueOf(userHash.get(Field.USER_ID)));
+        user.setEmail(new Email(userHash.get(Field.USER_EMAIL)));
+        user.setName(userHash.get(Field.USER_NAME));
+        user.setGender(Gender.valueOf(userHash.get(Field.USER_GENDER)));
+        user.setBirthDath(new BirthDate(userHash.get(Field.USER_BIRTH_DATE)));
 
         return user;
     }

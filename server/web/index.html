@@ -67,6 +67,27 @@
         <li><a href="sales/recent">Recent</a></li>
     </ul>
 
+    <form action="sales/show" method="get">
+        <h2>Show sale:</h2>
+        <table>
+            <tr>
+                <td><label for="sale-id">ID:</label></td>
+                <td><input type="number" id="sale-id" name="sale_id"></td>
+            </tr>
+        </table>
+        <p><input type="submit" value="Show"></p>
+    </form>
+
+    <form action="search" method="get">
+        <h2>Search:</h2>
+        <p>
+            <label>
+                <input type="text" name="query">
+            </label>
+        </p>
+        <p><input type="submit" value="Submit"></p>
+    </form>
+
 </body>
 
 </html>

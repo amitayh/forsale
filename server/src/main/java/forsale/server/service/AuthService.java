@@ -37,16 +37,16 @@ public class AuthService {
         Integer userId = getUserId(session);
         String redisKey = getRedisKey(userId);
         Map<String, String> userHash = redis.hgetAll(redisKey);
-        userHash.put(UsersService.USER_ID, String.valueOf(userId));
+        userHash.put(UsersService.Field.USER_ID, String.valueOf(userId));
         return UsersService.hydrate(userHash);
     }
 
     private void setRedisHash(User user) {
         String redisKey = getRedisKey(user.getId());
-        redis.hset(redisKey, UsersService.USER_EMAIL, user.getEmail().toString());
-        redis.hset(redisKey, UsersService.USER_NAME, user.getName());
-        redis.hset(redisKey, UsersService.USER_GENDER, user.getGender().toString());
-        redis.hset(redisKey, UsersService.USER_BIRTH_DATE, user.getBirthDath().toString());
+        redis.hset(redisKey, UsersService.Field.USER_EMAIL, user.getEmail().toString());
+        redis.hset(redisKey, UsersService.Field.USER_NAME, user.getName());
+        redis.hset(redisKey, UsersService.Field.USER_GENDER, user.getGender().toString());
+        redis.hset(redisKey, UsersService.Field.USER_BIRTH_DATE, user.getBirthDath().toString());
         redis.expire(redisKey, EXPIRE_TIME);
     }
 

@@ -10,21 +10,19 @@ import java.util.*;
 
 public class SalesService {
 
+    public static final class Field {
+        public static final String SALE_ID = "sale_id";
+        public static final String SALE_TITLE = "sale_title";
+        public static final String SALE_EXTRA = "sale_extra";
+        public static final String SALE_START = "sale_start";
+        public static final String SALE_END = "sale_end";
+    }
+
     public static final String SALE_VIEWS_HASH = "sale_views";
 
     public static final String WILDCARD = "%";
 
     public static final int POPULAR_LIMIT = 100;
-
-    public static final String SALE_ID = "sale_id";
-
-    public static final String SALE_TITLE = "sale_title";
-
-    public static final String SALE_EXTRA = "sale_extra";
-
-    public static final String SALE_START = "sale_start";
-
-    public static final String SALE_END = "sale_end";
 
     final private Connection mysql;
 
@@ -166,11 +164,11 @@ public class SalesService {
 
     public static Sale hydrate(ResultSet rs) throws SQLException {
         Sale sale = new Sale();
-        sale.setId(rs.getInt(SALE_ID));
-        sale.setTitle(rs.getString(SALE_TITLE));
-        sale.setExtra(rs.getString(SALE_EXTRA));
-        sale.setStartDate(rs.getDate(SALE_START));
-        sale.setEndDate(rs.getDate(SALE_END));
+        sale.setId(rs.getInt(Field.SALE_ID));
+        sale.setTitle(rs.getString(Field.SALE_TITLE));
+        sale.setExtra(rs.getString(Field.SALE_EXTRA));
+        sale.setStartDate(rs.getDate(Field.SALE_START));
+        sale.setEndDate(rs.getDate(Field.SALE_END));
         sale.setVendor(VendorsService.hydrate(rs));
 
         return sale;
