@@ -48,9 +48,7 @@ public class SalesFavoritesServlet extends BaseServlet {
             int vendorId = Integer.valueOf(request.getParameter("vendor_id"));
             User user = auth.getUser(request.getSession());
             Vendor vendor = vendors.get(vendorId);
-            if (!users.setUserFavoriteVendor(user, vendor)) {
-                result.fail("Unable to set user favorite vendor");
-            }
+            users.setUserFavoriteVendor(user, vendor);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }

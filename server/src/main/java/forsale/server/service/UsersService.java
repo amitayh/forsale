@@ -108,13 +108,17 @@ public class UsersService {
         }
     }
 
-    public boolean setUserFavoriteVendor(User user, Vendor vendor) throws Exception {
+    public void setUserFavoriteVendor(User user, Vendor vendor) throws Exception {
         String sql = "INSERT INTO user_favorite_vendors (user_id, vendor_id) VALUES (?, ?)";
         PreparedStatement stmt = mysql.prepareStatement(sql);
         stmt.setInt(1, user.getId());
         stmt.setInt(2, vendor.getId());
 
-        return stmt.execute();
+        try {
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new Exception("Unable to set user favorite vendor", e);
+        }
     }
 
     public static User hydrate(ResultSet rs) throws SQLException {
