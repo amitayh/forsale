@@ -1,7 +1,8 @@
-package forsale.server.service;
+package forsale.server.db;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class QueryScanner implements Iterable<String> {
@@ -10,17 +11,17 @@ public class QueryScanner implements Iterable<String> {
 
     final private Scanner scanner;
 
-    QueryScanner(URL resource) throws IOException {
+    public QueryScanner(URL resource) throws IOException {
         scanner = new Scanner(resource.openStream());
         scanner.useDelimiter(SQL_DELIMITER);
     }
 
     @Override
-    public java.util.Iterator<String> iterator() {
-        return new Iterator();
+    public Iterator<String> iterator() {
+        return new QueryScannerIterator();
     }
 
-    private class Iterator implements java.util.Iterator<String> {
+    private class QueryScannerIterator implements Iterator<String> {
 
         @Override
         public boolean hasNext() {

@@ -1,4 +1,4 @@
-package forsale.server.service;
+package forsale.server.db;
 
 import com.google.common.collect.Lists;
 import org.junit.Test;

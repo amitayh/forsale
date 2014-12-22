@@ -1,5 +1,9 @@
 package forsale.server.service;
 
+import forsale.server.Utils;
+import forsale.server.db.QueryScanner;
+import forsale.server.db.Transactor;
+
 import java.net.URL;
 import java.sql.Connection;
 

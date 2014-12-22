@@ -1,6 +1,6 @@
 package forsale.server.domain;
 
-import forsale.server.service.Utils;
+import forsale.server.Utils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

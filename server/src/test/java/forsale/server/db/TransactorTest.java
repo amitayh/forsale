@@ -1,4 +1,4 @@
-package forsale.server.service;
+package forsale.server.db;
 
 import forsale.server.TestCase;
 import org.junit.After;
@@ -9,9 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TransactorTest extends TestCase {
 

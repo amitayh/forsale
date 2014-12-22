@@ -1,5 +1,6 @@
 package forsale.server.service;
 
+import forsale.server.Utils;
 import forsale.server.domain.Sale;
 import forsale.server.domain.SearchCriteria;
 import forsale.server.domain.User;

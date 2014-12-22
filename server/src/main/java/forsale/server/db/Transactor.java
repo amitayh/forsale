@@ -1,4 +1,4 @@
-package forsale.server.service;
+package forsale.server.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;

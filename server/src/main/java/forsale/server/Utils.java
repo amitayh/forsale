@@ -1,4 +1,4 @@
-package forsale.server.service;
+package forsale.server;
 
 import java.net.URL;
 import java.security.MessageDigest;
