@@ -36,7 +36,7 @@ public class UsersServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("1940-10-09"));
+        user.setBirthDate(new BirthDate("1940-10-09"));
 
         // insert user
         int userId = users.insert(user);
@@ -61,7 +61,7 @@ public class UsersServiceTest extends TestCase {
         user1.setEmail(new Email("john@beatles.com"));
         user1.setGender(Gender.MALE);
         user1.setPassword(new Password("123"));
-        user1.setBirthDath(new BirthDate("2014-10-09"));
+        user1.setBirthDate(new BirthDate("2014-10-09"));
 
         // 2nd user
         User user2 = new User();
@@ -69,7 +69,7 @@ public class UsersServiceTest extends TestCase {
         user2.setEmail(new Email("john@beatles.com"));
         user2.setGender(Gender.MALE);
         user2.setPassword(new Password("456"));
-        user2.setBirthDath(new BirthDate("2014-10-09"));
+        user2.setBirthDate(new BirthDate("2014-10-09"));
 
         // Signup users - should throw an exception
         users.insert(user1);
@@ -88,7 +88,7 @@ public class UsersServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("2014-10-09"));
+        user.setBirthDate(new BirthDate("2014-10-09"));
 
         int userId = users.insert(user);
 
@@ -113,7 +113,7 @@ public class UsersServiceTest extends TestCase {
         user.setEmail(email);
         user.setGender(Gender.MALE);
         user.setPassword(password);
-        user.setBirthDath(new BirthDate("2014-10-09"));
+        user.setBirthDate(new BirthDate("2014-10-09"));
         users.insert(user);
 
         User fetchedUser = users.get(new User.Credentials(email, password));
@@ -129,7 +129,7 @@ public class UsersServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("1940-10-09"));
+        user.setBirthDate(new BirthDate("1940-10-09"));
 
         // insert user
         int userId = users.insert(user);

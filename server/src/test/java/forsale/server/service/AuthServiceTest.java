@@ -49,7 +49,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("2014-10-09"));
+        user.setBirthDate(new BirthDate("2014-10-09"));
 
         HttpSession session = createSessionMock();
         auth.login(user, session);
@@ -71,7 +71,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email(email));
         user.setGender(Gender.valueOf(gender));
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate(birthDate));
+        user.setBirthDate(new BirthDate(birthDate));
 
         HttpSession session = createSessionMock();
         auth.login(user, session);
@@ -93,7 +93,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("2014-10-09"));
+        user.setBirthDate(new BirthDate("2014-10-09"));
 
         HttpSession session = createSessionMock();
         when(session.getAttribute("user_id")).thenReturn(userId);
@@ -114,7 +114,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("2014-10-09"));
+        user.setBirthDate(new BirthDate("2014-10-09"));
 
         HttpSession session = createSessionMock();
         when(session.getAttribute("user_id")).thenReturn(userId);
@@ -133,7 +133,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("2014-10-09"));
+        user.setBirthDate(new BirthDate("2014-10-09"));
         users.insert(user);
 
         HttpSession session = createSessionMock();
@@ -152,7 +152,7 @@ public class AuthServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("2014-10-09"));
+        user.setBirthDate(new BirthDate("2014-10-09"));
         users.insert(user);
 
         HttpSession session = createSessionMock();

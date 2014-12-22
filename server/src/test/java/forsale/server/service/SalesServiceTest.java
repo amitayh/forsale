@@ -127,7 +127,7 @@ public class SalesServiceTest extends TestCase {
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
-        user.setBirthDath(new BirthDate("1940-10-09"));
+        user.setBirthDate(new BirthDate("1940-10-09"));
         users.insert(user);
 
         users.setUserFavoriteVendor(user, defaultVendor);

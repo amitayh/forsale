@@ -65,7 +65,7 @@ public class ProfileServlet extends BaseServlet {
             user.setPassword(new Password(request.getParameter("password")));
             user.setName(request.getParameter("name"));
             user.setGender(Gender.valueOf(request.getParameter("gender")));
-            user.setBirthDath(new BirthDate(request.getParameter("birth")));
+            user.setBirthDate(new BirthDate(request.getParameter("birth")));
 
             // Save
             users.edit(user);

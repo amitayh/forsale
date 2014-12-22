@@ -14,7 +14,7 @@ public class UserTypeAdapter implements JsonSerializer<User> {
         el.add("email", new JsonPrimitive(user.getEmail().toString()));
         el.add("name", new JsonPrimitive(user.getName()));
         el.add("gender", new JsonPrimitive(user.getGender().toString()));
-        el.add("birth", new JsonPrimitive(user.getBirthDath().toString()));
+        el.add("birth", new JsonPrimitive(user.getBirthDate().toString()));
         return el;
     }
 

@@ -6,7 +6,7 @@ import forsale.server.service.event.SaleViewEvent;
 
 public class SaleViewListener implements Listener<SaleViewEvent> {
 
-    private SalesService sales;
+    final private SalesService sales;
 
     public SaleViewListener(SalesService sales) {
         this.sales = sales;

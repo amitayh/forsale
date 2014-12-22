@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class AuthService {
 
-    public static final String USER_ID_ATTR = "user_id";
+    private static final String USER_ID_ATTR = "user_id";
 
     private static final int EXPIRE_TIME = (int) TimeUnit.HOURS.toSeconds(1);
 
@@ -46,7 +46,7 @@ public class AuthService {
         redis.hset(redisKey, UsersService.Field.USER_EMAIL, user.getEmail().toString());
         redis.hset(redisKey, UsersService.Field.USER_NAME, user.getName());
         redis.hset(redisKey, UsersService.Field.USER_GENDER, user.getGender().toString());
-        redis.hset(redisKey, UsersService.Field.USER_BIRTH_DATE, user.getBirthDath().toString());
+        redis.hset(redisKey, UsersService.Field.USER_BIRTH_DATE, user.getBirthDate().toString());
         redis.expire(redisKey, EXPIRE_TIME);
     }
 

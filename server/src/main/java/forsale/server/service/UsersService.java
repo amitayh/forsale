@@ -36,7 +36,7 @@ public class UsersService {
         stmt.setString(2, user.getPassword().getHashedPassword());
         stmt.setString(3, user.getName());
         stmt.setString(4, user.getGender().toString());
-        stmt.setDate(5, new Date(user.getBirthDath().getTime()));
+        stmt.setDate(5, new Date(user.getBirthDate().getTime()));
 
         try {
             stmt.executeUpdate();
@@ -98,7 +98,7 @@ public class UsersService {
         stmt.setString(2, user.getPassword().getHashedPassword());
         stmt.setString(3, user.getName());
         stmt.setString(4, user.getGender().toString());
-        stmt.setDate(5, new Date(user.getBirthDath().getTime()));
+        stmt.setDate(5, new Date(user.getBirthDate().getTime()));
         stmt.setInt(6, user.getId());
 
         try {
@@ -127,7 +127,7 @@ public class UsersService {
         user.setEmail(new Email(rs.getString(Field.USER_EMAIL)));
         user.setName(rs.getString(Field.USER_NAME));
         user.setGender(Gender.valueOf(rs.getString(Field.USER_GENDER).toUpperCase()));
-        user.setBirthDath(new BirthDate(rs.getDate(Field.USER_BIRTH_DATE).getTime()));
+        user.setBirthDate(new BirthDate(rs.getDate(Field.USER_BIRTH_DATE).getTime()));
 
         return user;
     }
@@ -138,7 +138,7 @@ public class UsersService {
         user.setEmail(new Email(userHash.get(Field.USER_EMAIL)));
         user.setName(userHash.get(Field.USER_NAME));
         user.setGender(Gender.valueOf(userHash.get(Field.USER_GENDER)));
-        user.setBirthDath(new BirthDate(userHash.get(Field.USER_BIRTH_DATE)));
+        user.setBirthDate(new BirthDate(userHash.get(Field.USER_BIRTH_DATE)));
 
         return user;
     }

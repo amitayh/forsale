@@ -44,7 +44,7 @@ public class User {
 
     private Gender gender;
 
-    private BirthDate birthDath;
+    private BirthDate birthDate;
 
     public User() {
         this.credentials = new Credentials();
@@ -70,9 +70,9 @@ public class User {
 
     public void setGender(Gender gender) { this.gender = gender; }
 
-    public BirthDate getBirthDath() { return birthDath; }
+    public BirthDate getBirthDate() { return birthDate; }
 
-    public void setBirthDath(BirthDate birthDath) { this.birthDath = birthDath; }
+    public void setBirthDate(BirthDate birthDate) { this.birthDate = birthDate; }
 
     @Override
     public boolean equals(Object o) {

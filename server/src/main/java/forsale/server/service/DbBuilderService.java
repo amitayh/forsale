@@ -9,7 +9,7 @@ import java.sql.Connection;
 
 public class DbBuilderService {
 
-    public static final String SCHEMA_RESOURCE = "db/schema.sql";
+    private static final String SCHEMA_RESOURCE = "db/schema.sql";
 
     final private Connection mysql;
 

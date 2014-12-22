@@ -13,13 +13,6 @@ public class BaseServlet extends HttpServlet {
 
     private static Container container;
 
-    protected static Container getContainer() {
-        if (container == null) {
-            container = Bootstrap.createDependencyInjectionContainer();
-        }
-        return container;
-    }
-
     protected Object get(String key) throws ServletException {
         Object value;
         try {
@@ -37,6 +30,13 @@ public class BaseServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         gson.toJson(result, response.getWriter());
+    }
+
+    private static Container getContainer() {
+        if (container == null) {
+            container = Bootstrap.createDependencyInjectionContainer();
+        }
+        return container;
     }
 
 }
