@@ -2,8 +2,6 @@ package forsale.server.service;
 
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class DbBuilderService {
@@ -20,19 +18,12 @@ public class DbBuilderService {
 
     public void createTables() throws Exception {
         Scanner scanner = getScanner(SCHEMA_RESOURCE);
-        try {
-            mysql.setAutoCommit(false);
-            while (scanner.hasNext()) {
-                String query = scanner.next().trim();
-                PreparedStatement stmt = mysql.prepareStatement(query);
-                stmt.execute();
-            }
-            mysql.commit();
-        } catch (SQLException e) {
-            mysql.rollback();
-        } finally {
-            mysql.setAutoCommit(true);
+        Transactor transactor = new Transactor(mysql);
+        while (scanner.hasNext()) {
+            String query = scanner.next().trim();
+            transactor.add(query);
         }
+        transactor.transact();
     }
 
     private Scanner getScanner(String name) throws Exception {
