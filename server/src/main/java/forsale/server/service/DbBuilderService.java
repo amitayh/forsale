@@ -2,13 +2,10 @@ package forsale.server.service;
 
 import java.net.URL;
 import java.sql.Connection;
-import java.util.Scanner;
 
 public class DbBuilderService {
 
     public static final String SCHEMA_RESOURCE = "db/schema.sql";
-
-    public static final String SQL_DELIMITER = ";";
 
     final private Connection mysql;
 
@@ -17,20 +14,13 @@ public class DbBuilderService {
     }
 
     public void createTables() throws Exception {
-        Scanner scanner = getScanner(SCHEMA_RESOURCE);
+        URL schema = getResource(SCHEMA_RESOURCE);
+        QueryScanner queries = new QueryScanner(schema);
         Transactor transactor = new Transactor(mysql);
-        while (scanner.hasNext()) {
-            String query = scanner.next().trim();
+        for (String query : queries) {
             transactor.add(query);
         }
         transactor.transact();
-    }
-
-    private Scanner getScanner(String name) throws Exception {
-        URL schema = getResource(name);
-        Scanner scanner = new Scanner(schema.openStream());
-        scanner.useDelimiter(SQL_DELIMITER);
-        return scanner;
     }
 
     private URL getResource(String name) throws Exception {
