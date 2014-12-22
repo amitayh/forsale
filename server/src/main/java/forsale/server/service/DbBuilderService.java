@@ -14,21 +14,13 @@ public class DbBuilderService {
     }
 
     public void createTables() throws Exception {
-        URL schema = getResource(SCHEMA_RESOURCE);
+        URL schema = Utils.getResource(SCHEMA_RESOURCE);
         QueryScanner queries = new QueryScanner(schema);
         Transactor transactor = new Transactor(mysql);
         for (String query : queries) {
             transactor.add(query);
         }
         transactor.transact();
-    }
-
-    private URL getResource(String name) throws Exception {
-        URL resource = getClass().getClassLoader().getResource(name);
-        if (resource == null) {
-            throw new Exception("Unable to locate resource '" + name + "'");
-        }
-        return resource;
     }
 
 }

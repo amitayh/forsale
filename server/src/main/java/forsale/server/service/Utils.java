@@ -1,5 +1,6 @@
 package forsale.server.service;
 
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -38,6 +39,14 @@ public class Utils {
 
         //Get complete hashed password in hex format
         return sb.toString();
+    }
+
+    public static URL getResource(String name) throws Exception {
+        URL resource = Utils.class.getClassLoader().getResource(name);
+        if (resource == null) {
+            throw new Exception("Unable to locate resource '" + name + "'");
+        }
+        return resource;
     }
 
 }
