@@ -1,5 +1,3 @@
-USE forsale;
-
 CREATE TABLE users (
   user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_email VARCHAR(50) NOT NULL,

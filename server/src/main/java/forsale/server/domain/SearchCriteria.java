@@ -1,4 +1,4 @@
-package forsale.server.service;
+package forsale.server.domain;
 
 final public class SearchCriteria {
 

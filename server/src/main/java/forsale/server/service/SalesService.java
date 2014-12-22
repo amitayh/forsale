@@ -1,6 +1,7 @@
 package forsale.server.service;
 
 import forsale.server.domain.Sale;
+import forsale.server.domain.SearchCriteria;
 import forsale.server.domain.User;
 import forsale.server.service.exception.MissingSaleException;
 import redis.clients.jedis.Jedis;
