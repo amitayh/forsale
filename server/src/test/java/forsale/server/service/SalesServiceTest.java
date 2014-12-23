@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class SalesServiceTest extends TestCase {
 
         Set<Integer> ids = new HashSet<>();
 
-        List<Sale> result = sales.getSalesByIds(ids);
+        List<Sale> result = sales.get(ids);
         assertTrue(result.isEmpty());
     }
 
@@ -73,10 +74,25 @@ public class SalesServiceTest extends TestCase {
         ids.add(sale1.getId());
         ids.add(sale3.getId());
 
-        List<Sale> result = sales.getSalesByIds(ids);
+        List<Sale> result = sales.get(ids);
         assertEquals(2, result.size());
-        assertEquals(sale1.getId(), result.get(0).getId());
-        assertEquals(sale3.getId(), result.get(1).getId());
+        assertEquals(sale1, result.get(0));
+        assertEquals(sale3, result.get(1));
+    }
+
+    @Test(expected = MissingSaleException.class)
+    public void testGetSalesByIdMissingSale() throws Exception {
+        // Insert sales
+        Sale sale1 = createSale("Sale #1");
+        Sale sale2 = createSale("Sale #2");
+        Sale sale3 = createSale("Sale #3");
+
+        Set<Integer> ids = new HashSet<>();
+        ids.add(sale1.getId());
+        ids.add(sale2.getId());
+        ids.add(sale3.getId() + 1); // Invalid ID
+
+        sales.get(ids);
     }
 
     @Test(expected = MissingSaleException.class)
@@ -130,7 +146,7 @@ public class SalesServiceTest extends TestCase {
         user.setBirthDate(new BirthDate("1940-10-09"));
         users.insert(user);
 
-        users.setUserFavoriteVendor(user, defaultVendor);
+        users.setUserFavoriteVendors(user, Arrays.asList(defaultVendor));
 
         List<Sale> favorites = sales.getFavorites(user);
         assertEquals(2, favorites.size());

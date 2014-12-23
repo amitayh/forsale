@@ -3,6 +3,8 @@ package forsale.server;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
@@ -47,6 +49,14 @@ public class Utils {
             throw new Exception("Unable to locate resource '" + name + "'");
         }
         return resource;
+    }
+
+    public static List<Integer> convertIds(String[] ids) {
+        List<Integer> newIds = new ArrayList<>();
+        for (String id : ids) {
+            newIds.add(Integer.valueOf(id));
+        }
+        return newIds;
     }
 
 }

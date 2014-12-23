@@ -1,11 +1,15 @@
 package forsale.server.service;
 
+import forsale.server.db.Transactor;
 import forsale.server.domain.*;
 import forsale.server.service.exception.DuplicateEmailException;
 import forsale.server.service.exception.InvalidCredentialsException;
 import forsale.server.service.exception.MissingUserException;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class UsersService {
@@ -56,9 +60,9 @@ public class UsersService {
         User user;
 
         String sql = "SELECT * FROM users WHERE user_id = ?";
-        PreparedStatement st = mysql.prepareStatement(sql);
-        st.setInt(1, userId);
-        ResultSet rs = st.executeQuery();
+        PreparedStatement stmt = mysql.prepareStatement(sql);
+        stmt.setInt(1, userId);
+        ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
             user = hydrate(rs);
@@ -73,10 +77,10 @@ public class UsersService {
         User user;
 
         String sql = "SELECT * FROM users WHERE user_email = ? AND user_password = ?";
-        PreparedStatement st = mysql.prepareStatement(sql);
-        st.setString(1, credentials.getEmail().toString());
-        st.setString(2, credentials.getPassword().getHashedPassword());
-        ResultSet rs = st.executeQuery();
+        PreparedStatement stmt = mysql.prepareStatement(sql);
+        stmt.setString(1, credentials.getEmail().toString());
+        stmt.setString(2, credentials.getPassword().getHashedPassword());
+        ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
             user = hydrate(rs);
@@ -108,17 +112,46 @@ public class UsersService {
         }
     }
 
-    public void setUserFavoriteVendor(User user, Vendor vendor) throws Exception {
-        String sql = "INSERT INTO user_favorite_vendors (user_id, vendor_id) VALUES (?, ?)";
-        PreparedStatement stmt = mysql.prepareStatement(sql);
-        stmt.setInt(1, user.getId());
-        stmt.setInt(2, vendor.getId());
+    public void setUserFavoriteVendors(User user, Collection<Vendor> vendors) throws Exception {
+        Transactor transactor = new Transactor(mysql);
 
         try {
-            stmt.execute();
+            String deleteSql = "DELETE FROM user_favorite_vendors WHERE user_id = ?";
+            PreparedStatement deleteStmt = mysql.prepareStatement(deleteSql);
+            deleteStmt.setInt(1, user.getId());
+            transactor.add(deleteStmt);
+
+            String insertSql = "INSERT INTO user_favorite_vendors (user_id, vendor_id) VALUES (?, ?)";
+            for (Vendor vendor : vendors) {
+                PreparedStatement insertStmt = mysql.prepareStatement(insertSql);
+                insertStmt.setInt(1, user.getId());
+                insertStmt.setInt(2, vendor.getId());
+                transactor.add(insertStmt);
+            }
+
+            transactor.transact();
         } catch (SQLException e) {
             throw new Exception("Unable to set user favorite vendor", e);
         }
+    }
+
+    public List<Vendor> getUserFavoriteVendors(User user) throws Exception {
+        List<Vendor> favoriteVendors = new ArrayList<>();
+
+        String sql =
+                "SELECT v.* " +
+                "FROM vendors AS v " +
+                "JOIN user_favorite_vendors AS ufv ON v.vendor_id = ufv.vendor_id " +
+                "WHERE ufv.user_id = ?";
+
+        PreparedStatement stmt = mysql.prepareStatement(sql);
+        stmt.setInt(1, user.getId());
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            favoriteVendors.add(VendorsService.hydrate(rs));
+        }
+
+        return favoriteVendors;
     }
 
     public static User hydrate(ResultSet rs) throws SQLException {

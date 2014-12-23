@@ -9,9 +9,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class UsersServiceTest extends TestCase {
+
+    private VendorsService vendors;
 
     private UsersService users;
 
@@ -19,28 +24,21 @@ public class UsersServiceTest extends TestCase {
     public void setUp() throws Exception {
         flushMysql();
 
+        vendors = (VendorsService) container.get("service.vendors");
         users = new UsersService(getMysql());
     }
 
     @After
     public void tearDown() {
+        vendors = null;
         users = null;
     }
 
     @Test
     public void testUserInsertedSameAsUserGotById() throws Exception {
         // prepare new user
-        User user = new User();
-        user.setId(-1); // dummy id
-        user.setName("John Lennon");
-        user.setEmail(new Email("john@beatles.com"));
-        user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
-        user.setBirthDate(new BirthDate("1940-10-09"));
-
-        // insert user
-        int userId = users.insert(user);
-        user.setId(userId); // update real id
+        User user = createUser();
+        int userId = user.getId();
 
         // validate user id is positive
         assertTrue(userId >= 0);
@@ -55,25 +53,9 @@ public class UsersServiceTest extends TestCase {
 
     @Test(expected=DuplicateEmailException.class)
     public void testCantInsertTwoUsersWithSameEmail() throws Exception {
-        // 1st user
-        User user1 = new User();
-        user1.setName("John Lennon");
-        user1.setEmail(new Email("john@beatles.com"));
-        user1.setGender(Gender.MALE);
-        user1.setPassword(new Password("123"));
-        user1.setBirthDate(new BirthDate("2014-10-09"));
-
-        // 2nd user
-        User user2 = new User();
-        user2.setName("John Lennon #2");
-        user2.setEmail(new Email("john@beatles.com"));
-        user2.setGender(Gender.MALE);
-        user2.setPassword(new Password("456"));
-        user2.setBirthDate(new BirthDate("2014-10-09"));
-
-        // Signup users - should throw an exception
-        users.insert(user1);
-        users.insert(user2);
+        // Insert two users with same email - should throw an exception
+        createUser();
+        createUser();
     }
 
     @Test(expected = MissingUserException.class)
@@ -83,16 +65,8 @@ public class UsersServiceTest extends TestCase {
 
     @Test
     public void testGetUserByIdSuccess() throws Exception {
-        User user = new User();
-        user.setName("John Lennon");
-        user.setEmail(new Email("john@beatles.com"));
-        user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
-        user.setBirthDate(new BirthDate("2014-10-09"));
-
-        int userId = users.insert(user);
-
-        User fetchedUser = users.get(userId);
+        User user = createUser();
+        User fetchedUser = users.get(user.getId());
         assertEquals(user, fetchedUser);
     }
 
@@ -105,17 +79,9 @@ public class UsersServiceTest extends TestCase {
 
     @Test
     public void testGetUserByCredentialsSuccess() throws Exception {
-        Email email = new Email("john@beatles.com");
-        Password password = new Password("123");
-
-        User user = new User();
-        user.setName("John Lennon");
-        user.setEmail(email);
-        user.setGender(Gender.MALE);
-        user.setPassword(password);
-        user.setBirthDate(new BirthDate("2014-10-09"));
-        users.insert(user);
-
+        User user = createUser();
+        Email email = user.getEmail();
+        Password password = user.getPassword();
         User fetchedUser = users.get(new User.Credentials(email, password));
         assertEquals(user, fetchedUser);
     }
@@ -123,29 +89,69 @@ public class UsersServiceTest extends TestCase {
     @Test
     public void testUserEditSucceed() throws Exception {
         // prepare new user
+        User user = createUser();
+
+        // edit user name
+        String newName = "Ringo Starr";
+        user.setName(newName);
+        users.edit(user);
+
+        // get edited user
+        User editedUser = users.get(user.getId());
+
+        assertNotNull(editedUser);
+        assertEquals(user, editedUser);
+        assertEquals(newName, editedUser.getName());
+    }
+
+    @Test
+    public void testUserFavoriteVendors() throws Exception {
+        User user = createUser();
+        Vendor vendor1 = createVendor("Vendor #1");
+        Vendor vendor2 = createVendor("Vendor #2");
+        Vendor vendor3 = createVendor("Vendor #3");
+
+        users.setUserFavoriteVendors(user, Arrays.asList(vendor1, vendor3));
+
+        List<Vendor> favoriteVendors = users.getUserFavoriteVendors(user);
+        assertEquals(2, favoriteVendors.size());
+        assertEquals(vendor1, favoriteVendors.get(0));
+        assertEquals(vendor3, favoriteVendors.get(1));
+    }
+
+    @Test
+    public void testSetUserFavoriteVendorsClearsOldFavorites() throws Exception {
+        User user = createUser();
+        Vendor vendor1 = createVendor("Vendor #1");
+        Vendor vendor2 = createVendor("Vendor #2");
+        Vendor vendor3 = createVendor("Vendor #3");
+
+        users.setUserFavoriteVendors(user, Arrays.asList(vendor1, vendor2));
+        users.setUserFavoriteVendors(user, Arrays.asList(vendor3));
+
+        List<Vendor> favoriteVendors = users.getUserFavoriteVendors(user);
+        assertEquals(1, favoriteVendors.size());
+        assertEquals(vendor3, favoriteVendors.get(0));
+    }
+
+    private User createUser() throws Exception {
         User user = new User();
-        user.setId(-1); // dummy id
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123"));
         user.setBirthDate(new BirthDate("1940-10-09"));
+        users.insert(user);
 
-        // insert user
-        int userId = users.insert(user);
-        user.setId(userId); // update real id
+        return user;
+    }
 
-        assertTrue(userId >= 0);
+    private Vendor createVendor(String name) throws Exception {
+        Vendor vendor = new Vendor();
+        vendor.setName(name);
+        vendors.insert(vendor);
 
-        // edit user name
-        user.setName("Ringo Starr");
-        users.edit(user);
-
-        // get edited user
-        User editedUser = users.get(userId);
-
-        assertNotNull(editedUser);
-        assertEquals(user, editedUser);
+        return vendor;
     }
 
 }

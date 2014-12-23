@@ -78,26 +78,31 @@ public class SalesService {
         return sale;
     }
 
-    public List<Sale> getSalesByIds(Set<Integer> ids) throws Exception {
+    public List<Sale> get(Set<Integer> saleIds) throws Exception {
         List<Sale> result = new ArrayList<>();
 
-        if (!ids.isEmpty()) {
+        if (!saleIds.isEmpty()) {
             String sql =
                     "SELECT s.*, v.* " +
                     "FROM sales AS s " +
                     "JOIN vendors AS v ON v.vendor_id = s.vendor_id " +
-                    "WHERE s.sale_id IN " + Utils.getMultipleParametersList(ids.size());
+                    "WHERE s.sale_id IN " + Utils.getMultipleParametersList(saleIds.size());
 
             PreparedStatement stmt = mysql.prepareStatement(sql);
 
             // Bind IDs to query
             int parameterIndex = 1;
-            for (Integer id : ids) {
-                stmt.setInt(parameterIndex, id);
+            for (Integer saleId : saleIds) {
+                stmt.setInt(parameterIndex, saleId);
                 parameterIndex++;
             }
 
             result = getResults(stmt);
+
+            if (result.size() != saleIds.size()) {
+                Set<Integer> missingSaleIds = findMissingSaleIds(result, saleIds);
+                throw new MissingSaleException(missingSaleIds);
+            }
         }
 
         return result;
@@ -118,7 +123,7 @@ public class SalesService {
     public List<Sale> getPopular() throws Exception {
         Map<Integer, Sale> salesMap = new HashMap<>();
         Set<Integer> popularSalesIds = getPopularSalesIds(POPULAR_LIMIT);
-        for (Sale sale : getSalesByIds(popularSalesIds)) {
+        for (Sale sale : get(popularSalesIds)) {
             salesMap.put(sale.getId(), sale);
         }
 
@@ -194,6 +199,20 @@ public class SalesService {
         }
 
         return ids;
+    }
+
+    private Set<Integer> findMissingSaleIds(List<Sale> result, Set<Integer> saleIds) {
+        Set<Integer> foundSaleIds = new HashSet<>();
+        Set<Integer> missingSaleIds = new HashSet<>();
+        for (Sale sale : result) {
+            foundSaleIds.add(sale.getId());
+        }
+        for (Integer saleId : saleIds) {
+            if (!foundSaleIds.contains(saleId)) {
+                missingSaleIds.add(saleId);
+            }
+        }
+        return missingSaleIds;
     }
 
 }

@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "UsersServlet", urlPatterns = "/users/profile")
-public class ProfileServlet extends BaseServlet {
+@WebServlet(name = "UsersProfileServlet", urlPatterns = "/users/profile")
+public class UsersProfileServlet extends BaseServlet {
 
     /**
      * Post: when edit profile info
