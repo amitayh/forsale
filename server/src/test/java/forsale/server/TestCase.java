@@ -34,10 +34,15 @@ abstract public class TestCase {
     protected void flushMysql() throws Exception {
         Connection mysql = getMysql();
         Statement stmt = mysql.createStatement();
-        stmt.execute("DELETE FROM user_favorite_vendors;");
-        stmt.execute("DELETE FROM sales;");
-        stmt.execute("DELETE FROM vendors;");
-        stmt.execute("DELETE FROM users;");
+        stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+        stmt.execute("TRUNCATE TABLE categories");
+        stmt.execute("TRUNCATE TABLE sales");
+        stmt.execute("TRUNCATE TABLE user_favorite_categories");
+        stmt.execute("TRUNCATE TABLE user_favorite_vendors");
+        stmt.execute("TRUNCATE TABLE users");
+        stmt.execute("TRUNCATE TABLE vendor_categories");
+        stmt.execute("TRUNCATE TABLE vendors");
+        stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
 
     protected void flushRedis() throws Exception {

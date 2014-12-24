@@ -25,7 +25,7 @@ public class EmailTest {
 
     @Test
     public void testEmailValidation() {
-        String[] invalidEmails = new String[]{null, "", "invalid-email"};
+        String[] invalidEmails = {null, "", "invalid-email"};
 
         for (String email : invalidEmails) {
             try {
