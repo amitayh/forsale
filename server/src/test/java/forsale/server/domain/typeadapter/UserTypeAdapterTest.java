@@ -30,7 +30,7 @@ public class UserTypeAdapterTest extends TestCase {
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
+        user.setPassword(new Password("123456"));
         user.setBirthDate(new BirthDate("1940-10-09"));
 
         String expected = "{\"id\":1," +

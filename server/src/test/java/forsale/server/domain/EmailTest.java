@@ -1,9 +1,9 @@
 package forsale.server.domain;
 
+import forsale.server.domain.exception.ValidationException;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 public class EmailTest {
 
@@ -18,9 +18,21 @@ public class EmailTest {
     }
 
     @Test
-    public void testEmailConvertsToLowerCase() {
+    public void testEmailConvertsToLowerCase() throws ValidationException {
         Email email = new Email("FAKE@MAIL.com");
         assertEquals("fake@mail.com", email.toString());
+    }
+
+    @Test
+    public void testEmailValidation() {
+        String[] invalidEmails = new String[]{null, "", "invalid-email"};
+
+        for (String email : invalidEmails) {
+            try {
+                new Email(email);
+                fail("Instantiated Email with invalid address '" + email + "'");
+            } catch (ValidationException ignored) {}
+        }
     }
 
 }

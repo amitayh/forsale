@@ -1,6 +1,7 @@
 package forsale.server.domain;
 
 import forsale.server.Utils;
+import forsale.server.domain.exception.ValidationException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -25,5 +26,9 @@ public class PasswordTest {
         assertNotEquals(password1, password3);
     }
 
+    @Test(expected = ValidationException.class)
+    public void testPasswordMinimumLength() throws ValidationException {
+        new Password("12345");
+    }
 
 }

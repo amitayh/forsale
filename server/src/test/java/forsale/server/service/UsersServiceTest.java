@@ -73,7 +73,7 @@ public class UsersServiceTest extends TestCase {
     @Test(expected = InvalidCredentialsException.class)
     public void testGetUserByCredentialsFailure() throws Exception {
         Email email = new Email("john@beatles.com");
-        Password password = new Password("123");
+        Password password = new Password("123456");
         users.get(new User.Credentials(email, password));
     }
 
@@ -139,7 +139,7 @@ public class UsersServiceTest extends TestCase {
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
+        user.setPassword(new Password("123456"));
         user.setBirthDate(new BirthDate("1940-10-09"));
         users.insert(user);
 

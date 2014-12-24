@@ -1,11 +1,16 @@
 package forsale.server.domain;
 
+import forsale.server.domain.exception.ValidationException;
+import org.apache.commons.validator.routines.EmailValidator;
+
 final public class Email {
+
+    final private static EmailValidator validator = EmailValidator.getInstance();
 
     final private String email;
 
-    public Email(String email) {
-        this.email = (email != null) ? email.toLowerCase() : null;
+    public Email(String email) throws ValidationException {
+        this.email = getEmail(email);
     }
 
     @Override
@@ -26,6 +31,13 @@ final public class Email {
     @Override
     public int hashCode() {
         return email != null ? email.hashCode() : 0;
+    }
+
+    private String getEmail(String email) throws ValidationException {
+        if (!validator.isValid(email)) {
+            throw new ValidationException("Invalid email address '" + email + "'");
+        }
+        return email.toLowerCase();
     }
 
 }

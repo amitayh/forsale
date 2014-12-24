@@ -154,7 +154,7 @@ public class UsersService {
         return favoriteVendors;
     }
 
-    public static User hydrate(ResultSet rs) throws SQLException {
+    public static User hydrate(ResultSet rs) throws Exception {
         User user = new User();
         user.setId(rs.getInt(Field.USER_ID));
         user.setEmail(new Email(rs.getString(Field.USER_EMAIL)));

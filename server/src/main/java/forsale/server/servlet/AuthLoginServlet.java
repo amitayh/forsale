@@ -26,11 +26,11 @@ public class AuthLoginServlet extends BaseServlet {
         Dispatcher dispatcher = (Dispatcher) get("dispatcher");
         JsonResult result = new JsonResult();
 
-        Email email = new Email(request.getParameter("email"));
-        Password password = new Password(request.getParameter("password"));
-        User.Credentials credentials = new User.Credentials(email, password);
-
         try {
+            Email email = new Email(request.getParameter("email"));
+            Password password = new Password(request.getParameter("password"));
+            User.Credentials credentials = new User.Credentials(email, password);
+
             User user = users.get(credentials);
             HttpSession session = request.getSession();
             auth.login(user, session);

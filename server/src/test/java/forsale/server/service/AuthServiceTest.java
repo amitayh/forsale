@@ -48,7 +48,7 @@ public class AuthServiceTest extends TestCase {
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
+        user.setPassword(new Password("123456"));
         user.setBirthDate(new BirthDate("2014-10-09"));
 
         HttpSession session = createSessionMock();
@@ -70,7 +70,7 @@ public class AuthServiceTest extends TestCase {
         user.setName(name);
         user.setEmail(new Email(email));
         user.setGender(Gender.valueOf(gender));
-        user.setPassword(new Password("123"));
+        user.setPassword(new Password("123456"));
         user.setBirthDate(new BirthDate(birthDate));
 
         HttpSession session = createSessionMock();
@@ -92,7 +92,7 @@ public class AuthServiceTest extends TestCase {
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
+        user.setPassword(new Password("123456"));
         user.setBirthDate(new BirthDate("2014-10-09"));
 
         HttpSession session = createSessionMock();
@@ -113,7 +113,7 @@ public class AuthServiceTest extends TestCase {
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
+        user.setPassword(new Password("123456"));
         user.setBirthDate(new BirthDate("2014-10-09"));
 
         HttpSession session = createSessionMock();
@@ -132,7 +132,7 @@ public class AuthServiceTest extends TestCase {
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
+        user.setPassword(new Password("123456"));
         user.setBirthDate(new BirthDate("2014-10-09"));
         users.insert(user);
 
@@ -151,7 +151,7 @@ public class AuthServiceTest extends TestCase {
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
-        user.setPassword(new Password("123"));
+        user.setPassword(new Password("123456"));
         user.setBirthDate(new BirthDate("2014-10-09"));
         users.insert(user);
 
