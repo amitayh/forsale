@@ -41,62 +41,33 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testLoginSavesUserIdToSession() throws Exception {
-        Integer userId = 1;
-
-        User user = new User();
-        user.setId(userId);
-        user.setName("John Lennon");
-        user.setEmail(new Email("john@beatles.com"));
-        user.setGender(Gender.MALE);
-        user.setPassword(new Password("123456"));
-        user.setBirthDate(new BirthDate("2014-10-09"));
-
+        User user = createUser();
         HttpSession session = createSessionMock();
+
         auth.login(user, session);
 
-        verify(session).setAttribute("user_id", userId);
+        verify(session).setAttribute("user_id", user.getId());
     }
 
     @Test
     public void testLoginSavesUserHashToRedis() throws Exception {
-        Integer userId = 1;
-        String email = "john@beatles.com";
-        String name = "John Lennon";
-        String gender = "MALE";
-        String birthDate = "2014-10-09";
-
-        User user = new User();
-        user.setId(userId);
-        user.setName(name);
-        user.setEmail(new Email(email));
-        user.setGender(Gender.valueOf(gender));
-        user.setPassword(new Password("123456"));
-        user.setBirthDate(new BirthDate(birthDate));
-
+        User user = createUser();
         HttpSession session = createSessionMock();
+
         auth.login(user, session);
 
-        Map<String, String> userHash = redis.hgetAll("user:" + userId.toString());
-        assertEquals(email, userHash.get("user_email"));
-        assertEquals(name, userHash.get("user_name"));
-        assertEquals(gender, userHash.get("user_gender"));
-        assertEquals(birthDate, userHash.get("user_birth_date"));
+        Map<String, String> userHash = redis.hgetAll("user:" + user.getId());
+        assertEquals(user.getEmail().toString(), userHash.get("user_email"));
+        assertEquals(user.getName(), userHash.get("user_name"));
+        assertEquals(user.getGender().toString(), userHash.get("user_gender"));
+        assertEquals(user.getBirthDate().toString(), userHash.get("user_birth_date"));
     }
 
     @Test
     public void testLogoutInvalidatesSession() throws Exception {
-        Integer userId = 1;
-
-        User user = new User();
-        user.setId(userId);
-        user.setName("John Lennon");
-        user.setEmail(new Email("john@beatles.com"));
-        user.setGender(Gender.MALE);
-        user.setPassword(new Password("123456"));
-        user.setBirthDate(new BirthDate("2014-10-09"));
-
+        User user = createUser();
         HttpSession session = createSessionMock();
-        when(session.getAttribute("user_id")).thenReturn(userId);
+        when(session.getAttribute("user_id")).thenReturn(user.getId());
 
         auth.login(user, session);
         auth.logout(session);
@@ -106,16 +77,8 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testLogoutRemovesUserHashFromRedis() throws Exception {
-        Integer userId = 1;
-
-        User user = new User();
-        user.setId(userId);
-        user.setName("John Lennon");
-        user.setEmail(new Email("john@beatles.com"));
-        user.setGender(Gender.MALE);
-        user.setPassword(new Password("123456"));
-        user.setBirthDate(new BirthDate("2014-10-09"));
-
+        User user = createUser();
+        Integer userId = user.getId();
         HttpSession session = createSessionMock();
         when(session.getAttribute("user_id")).thenReturn(userId);
 
@@ -128,36 +91,34 @@ public class AuthServiceTest extends TestCase {
 
     @Test
     public void testGetUserWhenLoggedIn() throws Exception {
-        User user = new User();
-        user.setName("John Lennon");
-        user.setEmail(new Email("john@beatles.com"));
-        user.setGender(Gender.MALE);
-        user.setPassword(new Password("123456"));
-        user.setBirthDate(new BirthDate("2014-10-09"));
-        users.insert(user);
-
+        User user = createUser();
         HttpSession session = createSessionMock();
         when(session.getAttribute("user_id")).thenReturn(user.getId());
 
         auth.login(user, session);
-        User authenticatedUser = auth.getUser(session);
 
+        User authenticatedUser = auth.getUser(session);
         assertEquals(user, authenticatedUser);
     }
 
     @Test(expected = SessionExpiredException.class)
     public void testGetUserWhenLoggedOut() throws Exception {
+        createUser();
+        HttpSession session = createSessionMock();
+
+        auth.getUser(session);
+    }
+
+    private User createUser() throws Exception {
         User user = new User();
         user.setName("John Lennon");
         user.setEmail(new Email("john@beatles.com"));
         user.setGender(Gender.MALE);
         user.setPassword(new Password("123456"));
-        user.setBirthDate(new BirthDate("2014-10-09"));
+        user.setBirthDate(new BirthDate("1940-10-09"));
         users.insert(user);
 
-        HttpSession session = createSessionMock();
-
-        auth.getUser(session);
+        return user;
     }
 
     private HttpSession createSessionMock() {
