@@ -1,6 +1,9 @@
 package forsale.server.domain;
 
+import forsale.server.domain.exception.ValidationException;
+
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,8 +13,12 @@ final public class BirthDate {
 
     final private Date birthDate;
 
-    public BirthDate(String dateString) throws Exception {
-        birthDate = dateFormat.parse(dateString);
+    public BirthDate(String dateString) throws ValidationException {
+        try {
+            birthDate = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new ValidationException("Invalid date '" + dateString + "'", e);
+        }
     }
 
     public BirthDate(long time) {
