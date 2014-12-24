@@ -1,7 +1,6 @@
 package forsale.server.servlet;
 
 import forsale.server.domain.*;
-import forsale.server.service.AuthService;
 import forsale.server.service.UsersService;
 
 import javax.servlet.ServletException;
@@ -38,11 +37,10 @@ public class UsersProfileServlet extends BaseServlet {
     }
 
     private void showProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        AuthService auth = (AuthService) get("service.auth");
         JsonResult result = new JsonResult();
 
         try {
-            User user = auth.getUser(request.getSession());
+            User user = getUser(request.getSession());
             result.success(user);
         } catch (Exception e) {
             result.fail(e.getMessage());
@@ -53,14 +51,11 @@ public class UsersProfileServlet extends BaseServlet {
 
     private void editProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UsersService users = (UsersService) get("service.users");
-        AuthService auth = (AuthService) get("service.auth");
         JsonResult result = new JsonResult();
 
         try {
-            // Get user
-            User user = auth.getUser(request.getSession());
-
             // Update fields
+            User user = getUser(request.getSession());
             user.setEmail(new Email(request.getParameter("email")));
             user.setPassword(new Password(request.getParameter("password")));
             user.setName(request.getParameter("name"));

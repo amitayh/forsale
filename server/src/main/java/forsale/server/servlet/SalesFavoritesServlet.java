@@ -2,7 +2,6 @@ package forsale.server.servlet;
 
 import forsale.server.domain.Sale;
 import forsale.server.domain.User;
-import forsale.server.service.AuthService;
 import forsale.server.service.SalesService;
 
 import javax.servlet.ServletException;
@@ -18,12 +17,11 @@ public class SalesFavoritesServlet extends BaseServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AuthService auth = (AuthService) get("service.auth");
         SalesService sales = (SalesService) get("service.sales");
         JsonResult result = new JsonResult();
 
         try {
-            User user = auth.getUser(request.getSession());
+            User user = getUser(request.getSession());
             List<Sale> favorites = sales.getFavorites(user);
             result.success(favorites);
         } catch (Exception e) {

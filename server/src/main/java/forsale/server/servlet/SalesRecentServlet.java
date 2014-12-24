@@ -17,6 +17,7 @@ public class SalesRecentServlet extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SalesService sales = (SalesService) get("service.sales");
         JsonResult result = new JsonResult();
+
         try {
             List<Sale> recent = sales.getRecent();
             result.success(recent);

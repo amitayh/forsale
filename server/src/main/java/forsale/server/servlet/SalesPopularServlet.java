@@ -18,6 +18,7 @@ public class SalesPopularServlet extends BaseServlet {
             throws ServletException, IOException {
         SalesService sales = (SalesService) get("service.sales");
         JsonResult result = new JsonResult();
+
         try {
             List<Sale> popular = sales.getPopular();
             result.success(popular);

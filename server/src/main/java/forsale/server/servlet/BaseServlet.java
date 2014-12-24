@@ -3,10 +3,13 @@ package forsale.server.servlet;
 import com.google.gson.Gson;
 import forsale.server.Bootstrap;
 import forsale.server.dependencyinjection.Container;
+import forsale.server.domain.User;
+import forsale.server.service.AuthService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class BaseServlet extends HttpServlet {
@@ -22,6 +25,11 @@ public class BaseServlet extends HttpServlet {
             throw new ServletException(message, e);
         }
         return value;
+    }
+
+    protected User getUser(HttpSession session) throws Exception {
+        AuthService auth = (AuthService) get("service.auth");
+        return auth.getUser(session);
     }
 
     protected void writeJsonResult(HttpServletResponse response, JsonResult result)

@@ -19,6 +19,7 @@ public class SearchServlet extends BaseServlet {
             throws ServletException, IOException {
         SalesService sales = (SalesService) get("service.sales");
         JsonResult result = new JsonResult();
+
         try {
             String query = request.getParameter("query");
             SearchCriteria criteria = new SearchCriteria(query);
