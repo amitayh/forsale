@@ -1,6 +1,7 @@
 package forsale.server.servlet;
 
 import forsale.server.domain.Email;
+import forsale.server.domain.JsonResult;
 import forsale.server.domain.Password;
 import forsale.server.domain.User;
 import forsale.server.events.Dispatcher;

@@ -1,6 +1,6 @@
 package forsale.server;
 
-import forsale.server.dependencyinjection.Container;
+import forsale.server.ioc.Container;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;
@@ -12,7 +12,7 @@ abstract public class TestCase {
 
     public static final int TEST_DB_REDIS = 1;
 
-    protected static final Container container = Bootstrap.createDependencyInjectionContainer();
+    protected static final Container container = Bootstrap.createIocContainer();
 
     static {
         initContainer();

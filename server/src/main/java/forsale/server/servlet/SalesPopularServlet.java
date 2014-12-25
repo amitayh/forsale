@@ -1,5 +1,6 @@
 package forsale.server.servlet;
 
+import forsale.server.domain.JsonResult;
 import forsale.server.domain.Sale;
 import forsale.server.service.SalesService;
 

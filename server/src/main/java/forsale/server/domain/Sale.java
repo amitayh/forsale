@@ -1,11 +1,8 @@
 package forsale.server.domain;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Sale {
-
-    final private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private int id;
 
@@ -62,15 +59,17 @@ public class Sale {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
-        Sale sale1 = (Sale)o;
+        Sale sale = (Sale) o;
 
-        return sale1.id == this.id && sale1.title.equals(this.title) && sale1.extra.equals(this.extra) &&
-                dateFormat.format(sale1.startDate).equals(dateFormat.format(this.startDate)) &&
-                dateFormat.format(sale1.endDate).equals(dateFormat.format(this.endDate)) &&
-                sale1.vendor.equals(this.vendor);
+        return id == sale.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 
 }

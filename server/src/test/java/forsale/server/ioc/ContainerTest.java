@@ -1,4 +1,4 @@
-package forsale.server.dependencyinjection;
+package forsale.server.ioc;
 
 import forsale.server.stub.HelloService;
 import org.junit.After;

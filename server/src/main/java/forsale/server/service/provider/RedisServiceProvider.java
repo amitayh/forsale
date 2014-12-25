@@ -1,7 +1,7 @@
 package forsale.server.service.provider;
 
-import forsale.server.dependencyinjection.Container;
-import forsale.server.dependencyinjection.ServiceProvider;
+import forsale.server.ioc.Container;
+import forsale.server.ioc.ServiceProvider;
 import redis.clients.jedis.Jedis;
 
 public class RedisServiceProvider implements ServiceProvider {

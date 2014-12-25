@@ -1,7 +1,7 @@
 package forsale.server.service.provider;
 
-import forsale.server.dependencyinjection.Container;
-import forsale.server.dependencyinjection.ServiceProvider;
+import forsale.server.ioc.Container;
+import forsale.server.ioc.ServiceProvider;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

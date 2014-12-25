@@ -1,4 +1,4 @@
-package forsale.server.dependencyinjection;
+package forsale.server.ioc;
 
 public interface ServiceProvider {
 

@@ -25,7 +25,6 @@ public class Vendor {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         Vendor vendor = (Vendor) o;
@@ -33,4 +32,10 @@ public class Vendor {
         return id == vendor.id;
 
     }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
 }

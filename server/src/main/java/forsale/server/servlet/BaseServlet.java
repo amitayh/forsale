@@ -2,7 +2,8 @@ package forsale.server.servlet;
 
 import com.google.gson.Gson;
 import forsale.server.Bootstrap;
-import forsale.server.dependencyinjection.Container;
+import forsale.server.ioc.Container;
+import forsale.server.domain.JsonResult;
 import forsale.server.domain.User;
 import forsale.server.service.AuthService;
 
@@ -21,7 +22,7 @@ public class BaseServlet extends HttpServlet {
         try {
             value = getContainer().get(key);
         } catch (Exception e) {
-            String message = "Exception thrown while getting key '" + key + "' from DI container";
+            String message = "Exception thrown while getting key '" + key + "' from IoC container";
             throw new ServletException(message, e);
         }
         return value;
@@ -42,7 +43,7 @@ public class BaseServlet extends HttpServlet {
 
     private static Container getContainer() {
         if (container == null) {
-            container = Bootstrap.createDependencyInjectionContainer();
+            container = Bootstrap.createIocContainer();
         }
         return container;
     }

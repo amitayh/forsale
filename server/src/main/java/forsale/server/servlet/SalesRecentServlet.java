@@ -1,5 +1,6 @@
 package forsale.server.servlet;
 
+import forsale.server.domain.JsonResult;
 import forsale.server.domain.Sale;
 import forsale.server.service.SalesService;
 
@@ -14,7 +15,8 @@ import java.util.List;
 public class SalesRecentServlet extends BaseServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         SalesService sales = (SalesService) get("service.sales");
         JsonResult result = new JsonResult();
 

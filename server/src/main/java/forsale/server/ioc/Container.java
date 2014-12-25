@@ -1,4 +1,4 @@
-package forsale.server.dependencyinjection;
+package forsale.server.ioc;
 
 import java.util.HashMap;
 import java.util.Map;

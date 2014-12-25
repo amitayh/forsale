@@ -1,15 +1,16 @@
 package forsale.server;
 
-import forsale.server.dependencyinjection.Container;
+import forsale.server.ioc.Container;
 import forsale.server.service.provider.*;
 
 import java.util.logging.Level;
 
 public class Bootstrap {
 
-    public static Container createDependencyInjectionContainer() {
+    public static Container createIocContainer() {
         Container container = new Container();
 
+        // Events dispatcher
         container.set("dispatcher", new EventsDispatcherProvider());
 
         // Domain services

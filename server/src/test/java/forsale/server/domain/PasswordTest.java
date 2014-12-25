@@ -27,7 +27,7 @@ public class PasswordTest {
     }
 
     @Test(expected = ValidationException.class)
-    public void testPasswordMinimumLength() throws ValidationException {
+    public void testPasswordMinimumLength() throws Exception {
         new Password("12345");
     }
 

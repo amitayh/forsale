@@ -3,8 +3,6 @@ package forsale.server.domain;
 import forsale.server.Utils;
 import forsale.server.domain.exception.ValidationException;
 
-import java.security.NoSuchAlgorithmException;
-
 final public class Password {
 
     public static final String SALT = "GaYxlftrLIiIHsWO";
@@ -13,23 +11,13 @@ final public class Password {
 
     final private String hashedPassword;
 
-    public Password(String password) throws ValidationException {
-        validatePassword(password);
+    public Password(String password) throws Exception {
+        validatePasswordLength(password);
         hashedPassword = hashPassword(password);
     }
 
     public String getHashedPassword() {
         return hashedPassword;
-    }
-
-    private String hashPassword(String password) {
-        String hashed = null;
-        try {
-            hashed = Utils.md5(SALT + password);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return hashed;
     }
 
     @Override
@@ -48,10 +36,14 @@ final public class Password {
         return this.hashedPassword != null ? this.hashedPassword.hashCode() : 0;
     }
 
-    private void validatePassword(String password) throws ValidationException {
+    private void validatePasswordLength(String password) throws ValidationException {
         if (password == null || password.length() < MIN_LENGTH) {
             throw new ValidationException("Password must contain at least " + MIN_LENGTH + " characters");
         }
+    }
+
+    private String hashPassword(String password) throws Exception {
+        return Utils.md5(SALT + password);
     }
 
 }

@@ -1,7 +1,7 @@
 package forsale.server.service.provider;
 
-import forsale.server.dependencyinjection.Container;
-import forsale.server.dependencyinjection.ServiceProvider;
+import forsale.server.ioc.Container;
+import forsale.server.ioc.ServiceProvider;
 import forsale.server.events.Dispatcher;
 import forsale.server.service.SalesService;
 import forsale.server.service.event.SaleViewEvent;
