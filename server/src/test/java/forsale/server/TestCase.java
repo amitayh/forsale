@@ -1,6 +1,7 @@
 package forsale.server;
 
 import forsale.server.ioc.Container;
+import forsale.server.service.DbBuilderService;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;
@@ -21,6 +22,12 @@ abstract public class TestCase {
     private static void initContainer() {
         container.set("mysql.db", TEST_DB_MYSQL);
         container.set("redis.db", TEST_DB_REDIS);
+        try {
+            DbBuilderService dbBuilder = (DbBuilderService) container.get("service.db-builder");
+            dbBuilder.createTables();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected Connection getMysql() throws Exception {
