@@ -4,5 +4,6 @@ jdk:
   - oraclejdk7
 before_script:
   - mysql -e 'CREATE DATABASE forsale_test;'
+  - cd server
 services:
   - redis-server
