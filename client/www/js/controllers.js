@@ -1,7 +1,12 @@
 angular.module('starter.controllers', [])
 
-    .controller('RecentCtrl', function($scope) {
-      $scope.sales = ['Sale #1', 'Sale #2', 'Sale #3'];
+    .controller('RecentCtrl', function($scope, Sales) {
+        $scope.sales = [];
+        Sales.recent().then(function(sales) {
+            $scope.sales = sales;
+        }, function() {
+            $scope.sales = [];
+        });
     })
 
 .controller('DashCtrl', function($scope) {})

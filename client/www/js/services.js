@@ -1,5 +1,31 @@
 angular.module('starter.services', [])
 
+    .factory('Sales', function($q, $http) {
+
+        var BASE_URL = 'http://localhost:9000';
+
+        function recent() {
+            return $q(function(resolve, reject) {
+                $http.get(BASE_URL + '/sales/recent')
+                    .success(function(data) {
+                        data = data || {};
+                        if (data.response_code == 'OK') {
+                            resolve(data.data);
+                        } else {
+                            reject(data.error || 'Unknown error');
+                        }
+                    })
+                    .error(function(data) {
+                        reject(data);
+                    });
+            });
+        }
+
+        return {
+            recent: recent
+        };
+    })
+
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 
