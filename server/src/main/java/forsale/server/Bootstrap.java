@@ -24,6 +24,7 @@ public class Bootstrap {
         container.set("mysql.db", "forsale");
         container.set("mysql.user", "root");
         container.set("mysql.password", "");
+        container.set("mysql.auto-reconnect", true);
         container.set("mysql", new MysqlServiceProvider());
 
         // Redis connection

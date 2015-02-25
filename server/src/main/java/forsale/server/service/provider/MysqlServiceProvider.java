@@ -27,8 +27,15 @@ public class MysqlServiceProvider implements ServiceProvider {
         String host = (String) container.get("mysql.host", DEFAULT_HOST);
         String port = (String) container.get("mysql.port", DEFAULT_PORT);
         String db = (String) container.get("mysql.db");
+        Boolean autoReconnect = (Boolean) container.get("mysql.auto-reconnect");
 
-        return "jdbc:mysql://" + host + ":" + port + "/" + db;
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + db;
+
+        if (autoReconnect) {
+            url += "?autoReconnect=true";
+        }
+
+        return url;
     }
 
 }
