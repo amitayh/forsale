@@ -1,26 +1,20 @@
 <ion-view view-title="Account">
-  <ion-content>
-      <div class="list">
-          <label class="item item-input">
-              <input type="text" placeholder="Email" ng-model="credentials.email">
-          </label>
-          <label class="item item-input">
-              <input type="password" placeholder="Password" ng-model="credentials.password">
-          </label>
-          <button class="button button-block button-positive" ng-click="login()">
-              Login
-          </button>
-      </div>
-    <!--<ion-list>
-      <ion-item class="item-toggle">
-        Enable Friends
-        <label class="toggle">
-          <input type="checkbox" ng-model="settings.enableFriends">
-          <div class="track">
-            <div class="handle"></div>
-          </div>
-        </label>
-      </ion-item>
-    </ion-list>-->
-  </ion-content>
+    <ion-content>
+        <form class="list" ng-submit="login()">
+            <label class="item item-input">
+                <input type="text" placeholder="Email" ng-model="credentials.email" required>
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="Password" ng-model="credentials.password" required>
+            </label>
+            <div class="item">
+                <button type="submit" class="button button-block button-positive">
+                    Login
+                </button>
+                <button class="button button-block button-calm">
+                    Register
+                </button>
+            </div>
+        </form>
+    </ion-content>
 </ion-view>

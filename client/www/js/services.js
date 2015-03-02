@@ -19,19 +19,35 @@ angular.module('starter.services', [])
       });
     }
 
-    function doGet(url, params) {
+    function objToFormData(obj) {
+      var str = [], encode = encodeURIComponent;
+      for (var p in obj) {
+        if (obj.hasOwnProperty(p)) {
+          str.push(encode(p) + '=' + encode(obj[p]));
+        }
+      }
+      return str.join('&');
+    }
+
+    function getUrl(path) {
+      return BASE_URL + path;
+    }
+
+    function doGet(path, params) {
       return createPromise({
-        method: 'GET',
-        url: BASE_URL + url,
+        method: 'get',
+        url: getUrl(path),
         params: params
       });
     }
 
-    function doPost(url, data) {
+    function doPost(path, data) {
       return createPromise({
-        method: 'POST',
-        url: BASE_URL + url,
-        data: data
+        method: 'post',
+        url: getUrl(path),
+        data: data,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        transformRequest: objToFormData
       });
     }
 
@@ -41,18 +57,47 @@ angular.module('starter.services', [])
     };
   })
 
-  .factory('Auth', function (API) {
-    function login(email, password) {
-      return API.post('/auth/login', {email: email, password: password});
+  .factory('Auth', function ($q, API) {
+
+    var loggedIn = false;
+
+    function register(user) {
+      // email, password, name, gender, birth
+      return API.post('/auth/register', user)
+        .then(function (data) {
+          loggedIn = true;
+          return data;
+        });
+    }
+
+    function login(credentials) {
+      // email, password
+      return API.post('/auth/login', credentials)
+        .then(function (data) {
+          loggedIn = true;
+          return data;
+        }, function (error) {
+          loggedIn = false;
+          return $q.reject(error);
+        });
     }
 
     function logout() {
-      return API.get('/auth/logout');
+      return API.get('/auth/logout').then(function (data) {
+        loggedIn = false;
+        return data;
+      });
+    }
+
+    function isLoggedIn() {
+      return loggedIn;
     }
 
     return {
+      register: register,
       login: login,
-      logout: logout
+      logout: logout,
+      isLoggedIn: isLoggedIn
     };
   })
 

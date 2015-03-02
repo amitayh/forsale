@@ -44,12 +44,19 @@ angular.module('starter.controllers', [])
   })
 
   .controller('AccountCtrl', function ($scope, Auth) {
-    $scope.credentials = {email: 'foo', password: 'bar'};
+    function resetCredentials() {
+      $scope.credentials = {email: '', password: ''};
+    }
+
+    resetCredentials();
 
     $scope.login = function() {
-      Auth.login($scope.credentials.email, $scope.credentials.password).then(function(data) {
-        console.log(data);
-      });
-      $scope.credentials = {email: '', password: ''};
+      Auth.login($scope.credentials)
+        .then(function () {
+          console.log('success');
+          resetCredentials();
+        }, function (error) {
+          alert(error);
+        });
     }
   });
