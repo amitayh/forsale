@@ -1,13 +1,12 @@
 angular.module('starter.services', [])
 
-  .factory('Sales', function ($q, $http) {
-
+  .factory('API', function ($q, $http) {
     var BASE_URL = 'http://localhost:9000';
     var STATUS_OK = 'OK';
 
-    function apiCall(url) {
+    function createPromise(options) {
       return $q(function (resolve, reject) {
-        $http.get(BASE_URL + url)
+        $http(options)
           .success(function (data) {
             data = data || {};
             if (data.response_code == STATUS_OK) {
@@ -20,12 +19,51 @@ angular.module('starter.services', [])
       });
     }
 
+    function doGet(url, params) {
+      return createPromise({
+        method: 'GET',
+        url: BASE_URL + url,
+        params: params
+      });
+    }
+
+    function doPost(url, data) {
+      return createPromise({
+        method: 'POST',
+        url: BASE_URL + url,
+        data: data
+      });
+    }
+
+    return {
+      get: doGet,
+      post: doPost
+    };
+  })
+
+  .factory('Auth', function (API) {
+    function login(email, password) {
+      return API.post('/auth/login', {email: email, password: password});
+    }
+
+    function logout() {
+      return API.get('/auth/logout');
+    }
+
+    return {
+      login: login,
+      logout: logout
+    };
+  })
+
+  .factory('Sales', function (API) {
+
     function recent() {
-      return apiCall('/sales/recent');
+      return API.get('/sales/recent');
     }
 
     function detail(saleId) {
-      return apiCall('/sales/show?sale_id=' + saleId);
+      return API.get('/sales/show', {sale_id: saleId});
     }
 
     return {

@@ -43,8 +43,13 @@ angular.module('starter.controllers', [])
     $scope.friend = Friends.get($stateParams.friendId);
   })
 
-  .controller('AccountCtrl', function ($scope) {
-    $scope.settings = {
-      enableFriends: true
-    };
+  .controller('AccountCtrl', function ($scope, Auth) {
+    $scope.credentials = {email: 'foo', password: 'bar'};
+
+    $scope.login = function() {
+      Auth.login($scope.credentials.email, $scope.credentials.password).then(function(data) {
+        console.log(data);
+      });
+      $scope.credentials = {email: '', password: ''};
+    }
   });
