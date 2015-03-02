@@ -43,4 +43,10 @@ public class AuthLoginServlet extends BaseServlet {
         writeJsonResult(response, result);
     }
 
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        writeJsonResult(response, new JsonResult());
+    }
+
 }
