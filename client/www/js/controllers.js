@@ -1,21 +1,4 @@
-angular.module('starter.controllers', [])
-
-  .controller('RecentCtrl', function ($scope, Sales) {
-    $scope.sales = [];
-    Sales.recent().then(function (sales) {
-      $scope.sales = sales;
-    }, function () {
-      $scope.sales = [];
-    });
-  })
-  .controller('SaleDetailCtrl', function ($scope, $stateParams, Sales) {
-    $scope.sale = null;
-    Sales.detail($stateParams.saleId).then(function (sale) {
-      $scope.sale = sale;
-    }, function () {
-      $scope.sale = null;
-    });
-  })
+angular.module('forsale.controllers', [])
 
   ////////////////////////////////////////////////////////////////////////////////////////////
   // TODO: REMOVE THESE
@@ -41,22 +24,4 @@ angular.module('starter.controllers', [])
 
   .controller('FriendDetailCtrl', function ($scope, $stateParams, Friends) {
     $scope.friend = Friends.get($stateParams.friendId);
-  })
-
-  .controller('AccountCtrl', function ($scope, Auth) {
-    function resetCredentials() {
-      $scope.credentials = {email: '', password: ''};
-    }
-
-    resetCredentials();
-
-    $scope.login = function() {
-      Auth.login($scope.credentials)
-        .then(function () {
-          console.log('success');
-          resetCredentials();
-        }, function (error) {
-          alert(error);
-        });
-    }
   });

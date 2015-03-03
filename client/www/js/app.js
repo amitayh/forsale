@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('forsale', ['ionic', 'forsale.controllers', 'forsale.services'])
 
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -32,28 +32,87 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       // Setup an abstract state for the tabs directive
 
       .state('tab', {
-        url: "/tab",
+        url: '/tab',
         abstract: true,
-        templateUrl: "templates/tabs.html"
+        templateUrl: 'templates/tabs.html'
       })
 
-      // Each tab has its own nav history stack:
+      // Sales
 
-      .state('tab.recent', {
-        url: '/recent',
+      .state('tab.sales', {
+        url: '/sales',
         views: {
-          'tab-recent': {
-            templateUrl: 'templates/tab-recent.html',
-            controller: 'RecentCtrl'
+          'tab-sales': {
+            templateUrl: 'templates/tab-sales.html'
           }
         }
       })
-      .state('tab.sale', {
-        url: '/sale/:saleId',
+      .state('tab.sales-recent', {
+        url: '/sales/recent',
         views: {
-          'tab-recent': {
-            templateUrl: 'templates/sale-detail.html',
-            controller: 'SaleDetailCtrl'
+          'tab-sales': {
+            templateUrl: 'templates/sales/list.html',
+            controller: 'SalesRecentCtrl'
+          }
+        }
+      })
+      .state('tab.sales-popular', {
+        url: '/sales/popular',
+        views: {
+          'tab-sales': {
+            templateUrl: 'templates/sales/list.html',
+            controller: 'SalesPopularCtrl'
+          }
+        }
+      })
+      .state('tab.sales-favorites', {
+        url: '/sales/favorites',
+        views: {
+          'tab-sales': {
+            templateUrl: 'templates/sales/list.html',
+            controller: 'SalesFavoritesCtrl'
+          }
+        }
+      })
+      .state('tab.sales-show', {
+        url: '/sales/show/:saleId',
+        views: {
+          'tab-sales': {
+            templateUrl: 'templates/sales/show.html',
+            controller: 'SalesShowCtrl'
+          }
+        }
+      })
+
+      // Auth
+
+      .state('tab.auth-login', {
+        url: '/auth/login',
+        views: {
+          'tab-auth': {
+            templateUrl: 'templates/auth/login.html',
+            controller: 'AuthLoginCtrl'
+          }
+        }
+      })
+      .state('tab.auth-register', {
+        url: '/auth/register',
+        views: {
+          'tab-auth': {
+            templateUrl: 'templates/auth/register.html',
+            controller: 'AuthRegisterCtrl'
+          }
+        }
+      })
+
+      // Users
+
+      .state('tab.users-profile', {
+        url: '/users/profile',
+        views: {
+          'tab-auth': {
+            templateUrl: 'templates/users/profile.html',
+            controller: 'UsersProfileCtrl'
           }
         }
       })
@@ -108,19 +167,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             controller: 'FriendDetailCtrl'
           }
         }
-      })
-
-      .state('tab.account', {
-        url: '/account',
-        views: {
-          'tab-account': {
-            templateUrl: 'templates/tab-account.html',
-            controller: 'AccountCtrl'
-          }
-        }
       });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/tab/dash');
+    $urlRouterProvider.otherwise('/tab/sales');
 
   });
