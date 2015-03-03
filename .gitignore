@@ -1,0 +1,5 @@
+.idea
+target
+web/node_modules
+web/plugins
+*.iml

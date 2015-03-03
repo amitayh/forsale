@@ -1,6 +1,6 @@
 angular.module('forsale.services')
   .factory('API', function ($q, $http) {
-    var BASE_URL = 'http://localhost:9000';
+    var BASE_URL = '';
     var STATUS_OK = 'OK';
 
     function createPromise(options) {

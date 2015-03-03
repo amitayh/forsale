@@ -1,5 +1,5 @@
 angular.module('forsale.services')
-  .factory('Users', function (API) {
+  .factory('Users', function (Utils, API) {
 
     function getFavorites() {
       return API.get('/users/favorites');
@@ -10,11 +10,16 @@ angular.module('forsale.services')
     }
 
     function getProfile() {
-      return API.get('/users/profile');
+      return API.get('/users/profile').then(function (profile) {
+        profile.birth = new Date(profile.birth);
+        return profile;
+      });
     }
 
     function setProfile(user) {
-      return API.post('/users/profile', user);
+      var userCopy = angular.copy(user);
+      userCopy.birth = Utils.formatDate(userCopy.birth);
+      return API.post('/users/profile', userCopy);
     }
 
     return {

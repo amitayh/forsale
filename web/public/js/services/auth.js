@@ -1,16 +1,12 @@
 angular.module('forsale.services')
-  .factory('Auth', function ($q, $filter, API) {
+  .factory('Auth', function ($q, Utils, API) {
     var errorSessionExpired = 'Session expired';
     var loggedIn = false;
-
-    function formatDate(date) {
-      return $filter('date')(date, 'yyyy-MM-dd');
-    }
 
     function register(user) {
       // email, password, name, gender, birth
       var userCopy = angular.copy(user);
-      userCopy.birth = formatDate(userCopy.birth);
+      userCopy.birth = Utils.formatDate(userCopy.birth);
       return API.post('/auth/register', userCopy)
         .then(function (data) {
           loggedIn = true;

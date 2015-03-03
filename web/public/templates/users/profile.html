@@ -1,6 +1,6 @@
 <ion-view view-title="User Profile">
     <ion-content>
-        <form class="list" ng-submit="register()">
+        <form class="list" ng-submit="updateProfile()">
             <label class="item item-input">
                 <input type="text" placeholder="Update email" ng-model="profile.email" required>
             </label>
@@ -24,7 +24,7 @@
                 <i class="radio-icon ion-checkmark"></i>
             </label>
             <div class="item">
-                <button type="submit" class="button button-block button-assertive">
+                <button class="button button-block button-assertive" ng-click="logout()">
                     Logout
                 </button>
                 <button type="submit" class="button button-block button-positive">
