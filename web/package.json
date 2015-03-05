@@ -3,6 +3,10 @@
   "description": "Sales & Discounts",
   "version": "1.0.0",
   "dependencies": {
+    "events": "^1.0.2",
+    "flux": "^2.0.1",
+    "object-assign": "^2.0.0",
+    "qajax": "^1.1.0",
     "react": "~0.12.2",
     "react-router": "~0.12.4"
   },
