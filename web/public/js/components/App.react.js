@@ -10,10 +10,6 @@ var App = React.createClass({
 
   mixins : [Router.Navigation],
 
-  getInitialState: function() {
-    return {loggedIn: AuthStore.isLoggedIn()};
-  },
-
   componentWillMount: function() {
     AuthStore.addChangeListener(this.authChanged);
   },
@@ -26,12 +22,10 @@ var App = React.createClass({
     return (
       <div>
         <header>
-          <p>{this.state.loggedIn ? 'Logged in' : 'Logged out'}</p>
           <ul>
             <li><Link to="app">Welcome</Link></li>
             <li><Link to="sales">Sales</Link></li>
-            <li><Link to="inbox">Inbox</Link></li>
-            <li><Link to="calendar">Calendar</Link></li>
+            <li><Link to="account">Acount</Link></li>
           </ul>
         </header>
         <RouteHandler />
@@ -42,7 +36,6 @@ var App = React.createClass({
   authChanged: function() {
     var loggedIn = AuthStore.isLoggedIn();
     this.replaceWith(loggedIn ? 'app' : 'login');
-    this.setState({loggedIn: loggedIn});
   }
 
 });

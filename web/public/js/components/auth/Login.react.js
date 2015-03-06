@@ -1,19 +1,16 @@
 var React = require('react');
 var Router = require('react-router');
 
+var FormMixin = require('../../FormMixin');
 var Actions = require('../../Actions');
 var AuthStore = require('../../stores/Auth');
 
 var Login = React.createClass({
 
-  mixins : [Router.Navigation, Router.State],
+  mixins : [Router.Navigation, FormMixin],
 
   getInitialState: function() {
-    return {
-      email: '',
-      password: '',
-      error: null
-    };
+    return {error: null};
   },
 
   componentWillMount: function() {
@@ -31,9 +28,10 @@ var Login = React.createClass({
 
     return (
       <div>
+        <h1>Login</h1>
         {error}
-        <p><input type="email" placeholder="Email" value={state.email} onChange={this.emailChanged} /></p>
-        <p><input type="password" placeholder="Password" value={state.password} onChange={this.passwordChanged} /></p>
+        <p><input type="email" placeholder="Email" ref="email" /></p>
+        <p><input type="password" placeholder="Password" ref="password" /></p>
         <p>
           <button onClick={this.handleLogin}>Login</button>
           <button onClick={this.handleRegister}>Register</button>
@@ -46,18 +44,8 @@ var Login = React.createClass({
     this.setState({error: AuthStore.getError()});
   },
 
-  emailChanged: function(event) {
-    this.setState({email: event.target.value});
-  },
-
-  passwordChanged: function(event) {
-    this.setState({password: event.target.value});
-  },
-
   handleLogin: function() {
-    var state = this.state;
-    var nextPath = this.getQuery().nextPath;
-    Actions.login(state.email, state.password, nextPath);
+    Actions.login(this.getValue('email'), this.getValue('password'));
   },
 
   handleRegister: function() {

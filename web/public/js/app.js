@@ -2,13 +2,8 @@ var React = require('react');
 var Router = require('react-router');
 
 var App = require('./components/App.react');
-var Inbox = require('./components/Inbox.react');
-var Calendar = require('./components/Calendar.react');
 var Welcome = require('./components/Welcome.react');
-
-var Auth = require('./components/Auth.react');
-var AuthLogin = require('./components/auth/Login.react');
-var AuthRegister = require('./components/auth/Register.react');
+var Account = require('./components/Account.react');
 
 var Sales = require('./components/Sales.react');
 var SalesShow = require('./components/sales/Show.react');
@@ -17,6 +12,10 @@ var SalesPopular = require('./components/sales/Popular.react');
 var SalesFavorites = require('./components/sales/Favorites.react');
 var SalesSearch = require('./components/sales/Search.react');
 
+var AuthLogin = require('./components/auth/Login.react');
+var AuthRegister = require('./components/auth/Register.react');
+
+var RouteHandler = Router.RouteHandler;
 var DefaultRoute = Router.DefaultRoute;
 var Route = Router.Route;
 
@@ -31,13 +30,12 @@ var routes = (
       <DefaultRoute handler={SalesRecent} />
     </Route>
 
-    <Route name="auth" handler={Auth}>
+    <Route name="auth" handler={RouteHandler}>
       <Route name="login" handler={AuthLogin} />
       <Route name="register" handler={AuthRegister} />
     </Route>
 
-    <Route name="inbox" handler={Inbox} />
-    <Route name="calendar" handler={Calendar} />
+    <Route name="account" handler={Account} />
 
     <DefaultRoute handler={Welcome} />
   </Route>

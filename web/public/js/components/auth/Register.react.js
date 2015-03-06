@@ -1,18 +1,14 @@
 var React = require('react');
 
+var ProfileForm = require('../users/ProfileForm');
+
 var Register = React.createClass({
 
   render: function() {
     return (
       <div>
-        <p><input type="email" placeholder="Email" /></p>
-        <p><input type="text" placeholder="Name" /></p>
-        <p><input type="password" placeholder="Password" /></p>
-        <p><input type="date" placeholder="Birth date" /></p>
-        <p>
-          <label><input type="radio" name="gender" value="MALE" defaultChecked /> Male</label>
-          <label><input type="radio" name="gender" value="FEMALE" /> Female</label>
-        </p>
+        <h1>Register</h1>
+        <ProfileForm />
         <p>
           <button onClick={this.handleRegister}>Register</button>
         </p>
@@ -21,7 +17,6 @@ var Register = React.createClass({
   },
 
   handleRegister: function() {
-
   }
 
 });

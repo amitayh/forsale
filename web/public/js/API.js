@@ -69,6 +69,10 @@ var API = {
     return doPost('/auth/login', {email: email, password: password});
   },
 
+  getProfile: function() {
+    return doGet('/users/profile');
+  },
+
   getRecentSales: function() {
     return doGet('/sales/recent').then(convertSales);
   },
