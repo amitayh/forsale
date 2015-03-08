@@ -33,7 +33,7 @@ public class AuthService {
         return true;
     }
 
-    public User getUser(HttpSession session) throws Exception {
+    public synchronized User getUser(HttpSession session) throws Exception {
         Integer userId = getUserId(session);
         String redisKey = getRedisKey(userId);
         Map<String, String> userHash = redis.hgetAll(redisKey);

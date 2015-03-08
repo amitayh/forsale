@@ -8,7 +8,9 @@
     "object-assign": "^2.0.0",
     "qajax": "^1.1.0",
     "react": "~0.12.2",
-    "react-router": "~0.12.4"
+    "react-router": "~0.12.4",
+    "react-radio-group": "~1.0.0",
+    "q": "~1.2.0"
   },
   "devDependencies": {
     "browserify": "~9.0.3",
@@ -18,7 +20,7 @@
   },
   "scripts": {
     "start": "watchify -o public/js/bundle.js -v -d public/js/app.js",
-    "build": "uglifyjs public/js/app.js > js/bundle.min.js"
+    "build": "NODE_ENV=production browserify public/js/app.js | uglifyjs > public/js/bundle.min.js"
   },
   "browserify": {
     "transform": [

@@ -1,3 +1,4 @@
+var Q = require('q');
 var Qajax = require('qajax');
 
 var STATUS_OK = 'OK';
@@ -8,7 +9,15 @@ function toFormData(obj) {
   var params = [];
   for (var key in obj) {
     if (obj.hasOwnProperty(key) && obj[key] !== undefined) {
-      params.push(encode(key) + '=' + encode(obj[key]));
+      var encodedKey = encode(key);
+      var value = obj[key];
+      if (value instanceof Array) {
+        for (var i = 0, l = value.length; i < l; i++) {
+          params.push(encodedKey + '=' + encode(value[i]));
+        }
+      } else {
+        params.push(encodedKey + '=' + encode(value));
+      }
     }
   }
   return params.join('&');
@@ -21,7 +30,7 @@ function checkStatus(result) {
   } else {
     var errorMessage = result.error || 'Unknown error';
     if (errorMessage == SESSION_EXPIRED) {
-      require('./Actions').logout();
+      require('./Actions').sessionExpired();
     }
     throw new Error(errorMessage);
   }
@@ -71,6 +80,23 @@ var API = {
 
   getProfile: function() {
     return doGet('/users/profile');
+  },
+
+  getFavorites: function() {
+    return doGet('/users/favorites');
+  },
+
+  getVendors: function() {
+    return doGet('/vendors/list');
+  },
+
+  updateAccount: function(profile, favorites) {
+    var favoritesIds = favorites.map(function(vendor) {
+      return vendor.id;
+    });
+    var updateProfile = doPost('/users/profile', profile);
+    var updateFavorites = doPost('/users/favorites', {vendor_id: favoritesIds});
+    return Q.all([updateProfile, updateFavorites]);
   },
 
   getRecentSales: function() {

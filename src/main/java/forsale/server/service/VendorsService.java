@@ -37,6 +37,13 @@ public class VendorsService {
         return vendor.getId();
     }
 
+    public List<Vendor> getAll() throws Exception {
+        String sql = "SELECT * FROM vendors";
+        PreparedStatement stmt = mysql.prepareStatement(sql);
+
+        return getResults(stmt);
+    }
+
     public Vendor get(int vendorId) throws Exception {
         Vendor vendor;
 

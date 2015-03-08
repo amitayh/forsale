@@ -1,14 +1,17 @@
+var Q = require('q');
 var React = require('react');
 
-var ProfileForm = require('../users/ProfileForm');
+var ProfileForm = require('../users/ProfileForm.react');
 
 var Register = React.createClass({
 
   render: function() {
+    var profile = this.emptyProfile();
+
     return (
       <div>
         <h1>Register</h1>
-        <ProfileForm />
+        <ProfileForm profile={profile} ref="profileForm" />
         <p>
           <button onClick={this.handleRegister}>Register</button>
         </p>
@@ -16,7 +19,20 @@ var Register = React.createClass({
     );
   },
 
+  emptyProfile: function() {
+    return Q.fcall(function() {
+      return {
+        email: '',
+        name: '',
+        password: '',
+        birth: '',
+        gender: 'MALE'
+      };
+    });
+  },
+
   handleRegister: function() {
+    console.log(this.refs.profileForm.getProfile());
   }
 
 });

@@ -1,7 +1,6 @@
 var React = require('react');
 var Router = require('react-router');
 var AuthStore = require('../stores/Auth');
-var Constants = require('../Constants');
 
 var Link = Router.Link;
 var RouteHandler = Router.RouteHandler;
@@ -34,8 +33,7 @@ var App = React.createClass({
   },
 
   authChanged: function() {
-    var loggedIn = AuthStore.isLoggedIn();
-    this.replaceWith(loggedIn ? 'app' : 'login');
+    this.replaceWith(AuthStore.isLoggedIn() ? 'app' : 'login');
   }
 
 });

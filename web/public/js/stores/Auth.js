@@ -5,8 +5,7 @@ var Constants = require('../Constants');
 
 var state = {
   loggedIn: false,
-  error: null,
-  nextPath: null
+  error: null
 };
 
 var Auth = assign({}, EventEmitter.prototype, {
@@ -17,10 +16,6 @@ var Auth = assign({}, EventEmitter.prototype, {
 
   getError: function() {
     return state.error;
-  },
-
-  getNextPath: function() {
-    return state.nextPath;
   },
 
   addChangeListener: function(callback) {
@@ -37,17 +32,15 @@ var Auth = assign({}, EventEmitter.prototype, {
 
 });
 
-function login(nextPath) {
+function login() {
   state.loggedIn = true;
   state.error = null;
-  state.nextPath = nextPath;
   Auth.emitChange();
 }
 
 function logout(error) {
   state.loggedIn = false;
   state.error = error;
-  state.nextPath = null;
   Auth.emitChange();
 }
 
@@ -55,15 +48,15 @@ Dispatcher.register(function(action) {
 
   switch (action.actionType) {
     case Constants.LOGIN_SUCCESS:
-      login(action.nextPath);
+      login();
       break;
 
     case Constants.LOGIN_FAILED:
       logout(action.error);
       break;
 
-    case Constants.LOGOUT:
-      logout(null);
+    case Constants.SESSION_EXPIRED:
+      logout('Session expired');
       break;
   }
 
