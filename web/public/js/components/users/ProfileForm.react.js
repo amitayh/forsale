@@ -26,7 +26,7 @@ var ProfileForm = React.createClass({
       var profile = this.getProfile();
       return (
         <div>
-          <p><input type="email" placeholder="Email" ref="email" value={profile.email} onChange={this.createChangeHandler('email')} /></p>
+          <p>{this.getEmailInput()}</p>
           <p><input type="text" placeholder="Name" ref="name" value={profile.name} onChange={this.createChangeHandler('name')} /></p>
           <p><input type="password" placeholder="Password" ref="password" value={profile.password} onChange={this.createChangeHandler('password')} /></p>
           <p><input type="date" placeholder="Birth date" ref="birth" value={profile.birth} onChange={this.createChangeHandler('birth')} /></p>
@@ -38,6 +38,15 @@ var ProfileForm = React.createClass({
           </p>
         </div>
       );
+    }
+  },
+
+  getEmailInput: function() {
+    var value = this.getProfile().email;
+    if (this.props.edit) {
+      return <input type="email" value={value} readOnly="readonly" disabled="disabled" />
+    } else {
+      return <input type="email" placeholder="Email" ref="email" value={value} onChange={this.createChangeHandler('email')} />
     }
   },
 

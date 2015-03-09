@@ -18,7 +18,7 @@ var Account = React.createClass({
       <div>
         <h1>Account</h1>
         <h2>Profile</h2>
-        <ProfileForm profile={this.profile} ref="profileForm" />
+        <ProfileForm profile={this.profile} ref="profileForm" edit="true" />
         <h2>Favorite Vendors</h2>
         <FavoritesList />
         <p>
