@@ -19,7 +19,7 @@ var App = React.createClass({
 
   render: function() {
     return (
-      <div>
+      <div className="container">
         <header>
           <ul>
             <li><Link to="app">Welcome</Link></li>

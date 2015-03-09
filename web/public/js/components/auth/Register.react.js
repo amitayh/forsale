@@ -13,7 +13,7 @@ var Register = React.createClass({
         <h1>Register</h1>
         <ProfileForm profile={profile} ref="profileForm" />
         <p>
-          <button onClick={this.handleRegister}>Register</button>
+          <button className="btn waves-effect waves-light" onClick={this.handleRegister}>Register</button>
         </p>
       </div>
     );

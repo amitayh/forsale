@@ -37,17 +37,23 @@ var FavoritesList = React.createClass({
 
   renderFavorites: function() {
     return (
-      <ul>
-        {this.getItems()}
-        <FavoritesListAdd key="add" />
-      </ul>
+      <div>
+        {this.getList()}
+        <FavoritesListAdd />
+      </div>
     );
   },
 
-  getItems: function() {
-    return this.state.selected.map(function(vendor) {
-      return <FavoritesListItem key={vendor.id} vendor={vendor} />;
-    });
+  getList: function() {
+    var selected = this.state.selected;
+    if (selected.length) {
+      var items = selected.map(function(vendor) {
+        return <FavoritesListItem key={vendor.id} vendor={vendor} />;
+      });
+      return <ul className="collection">{items}</ul>;
+    } else {
+      return null;
+    }
   },
 
   favoritesChanged: function() {

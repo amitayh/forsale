@@ -35,7 +35,7 @@ var SalesList = React.createClass({
       return <SalesListItem key={sale.id} sale={sale} />
     });
 
-    return <ul>{sales}</ul>;
+    return <ul className="collection">{sales}</ul>;
   }
 
 });

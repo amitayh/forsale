@@ -30,12 +30,16 @@ var ProfileForm = React.createClass({
           <p><input type="text" placeholder="Name" ref="name" value={profile.name} onChange={this.createChangeHandler('name')} /></p>
           <p><input type="password" placeholder="Password" ref="password" value={profile.password} onChange={this.createChangeHandler('password')} /></p>
           <p><input type="date" placeholder="Birth date" ref="birth" value={profile.birth} onChange={this.createChangeHandler('birth')} /></p>
-          <p>
-            <RadioGroup name="gender" value={profile.gender} onChange={this.createChangeHandler('gender')}>
-              <label><input type="radio" value="MALE" /> Male</label>
-              <label><input type="radio" value="FEMALE" /> Female</label>
-            </RadioGroup>
-          </p>
+          <RadioGroup name="gender" value={profile.gender} onChange={this.createChangeHandler('gender')}>
+            <p>
+              <input type="radio" id="gender-male" value="MALE" />
+              <label htmlFor="gender-male">Male</label>
+            </p>
+            <p>
+              <input type="radio" id="gender-female" value="FEMALE" />
+              <label htmlFor="gender-female">Female</label>
+            </p>
+          </RadioGroup>
         </div>
       );
     }

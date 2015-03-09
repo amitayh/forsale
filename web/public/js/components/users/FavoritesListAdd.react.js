@@ -29,10 +29,13 @@ var FavoritesListAdd = React.createClass({
   render: function() {
     if (this.state.remaining.length) {
       return (
-        <li>
-          <select value={this.state.value} onChange={this.handleChange}>{this.getOptions()}</select>
-          <button onClick={this.handleAdd}>Add</button>
-        </li>
+        <div>
+          <select className="browser-default" value={this.state.value} onChange={this.handleChange}>{this.getOptions()}</select>
+          <button className="waves-effect waves-light btn" onClick={this.handleAdd}>
+            <i className="mdi-content-add-circle left"></i>
+            Add
+          </button>
+        </div>
       );
     } else {
       return null;

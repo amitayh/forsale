@@ -33,8 +33,9 @@ var Login = React.createClass({
         <p><input type="email" placeholder="Email" ref="email" /></p>
         <p><input type="password" placeholder="Password" ref="password" /></p>
         <p>
-          <button onClick={this.handleLogin}>Login</button>
-          <button onClick={this.handleRegister}>Register</button>
+          <button className="btn waves-effect waves-light" onClick={this.handleLogin}>Login</button>
+          {' '}
+          <button className="btn waves-effect waves-light" onClick={this.handleRegister}>Register</button>
         </p>
       </div>
     );

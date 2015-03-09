@@ -5,7 +5,14 @@ var Actions = require('../../Actions');
 var FavoritesListItem = React.createClass({
 
   render: function() {
-    return <li>{this.props.vendor.name} <button onClick={this.handleRemove}>Remove</button></li>;
+    return (
+      <li className="collection-item">
+        {this.props.vendor.name}
+        <span className="secondary-content" onClick={this.handleRemove}>
+          <i className="mdi-action-highlight-remove"></i>
+        </span>
+      </li>
+    );
   },
 
   handleRemove: function() {

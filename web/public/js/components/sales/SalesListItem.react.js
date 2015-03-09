@@ -9,8 +9,9 @@ var SalesListItem = React.createClass({
     var sale = this.props.sale;
 
     return (
-      <li>
-        <h3><Link to="show" params={sale}>{sale.title}</Link></h3>
+      <li className="collection-item avatar">
+        <i className="mdi-maps-local-offer circle"></i>
+        <Link className="title" to="show" params={sale}>{sale.title}</Link>
         <p>{sale.vendor}</p>
       </li>
     );
