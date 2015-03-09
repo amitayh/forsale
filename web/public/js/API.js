@@ -78,6 +78,10 @@ var API = {
     return doPost('/auth/login', {email: email, password: password});
   },
 
+  register: function(user) {
+    return doPost('/auth/register', user);
+  },
+
   getProfile: function() {
     return doGet('/users/profile');
   },

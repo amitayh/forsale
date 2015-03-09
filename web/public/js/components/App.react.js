@@ -19,15 +19,21 @@ var App = React.createClass({
 
   render: function() {
     return (
-      <div className="container">
-        <header>
-          <ul>
-            <li><Link to="app">Welcome</Link></li>
-            <li><Link to="sales">Sales</Link></li>
-            <li><Link to="account">Acount</Link></li>
-          </ul>
-        </header>
-        <RouteHandler />
+      <div>
+        <div className="navbar-fixed">
+          <nav>
+            <div className="nav-wrapper">
+              <ul>
+                <li><Link to="app">Welcome</Link></li>
+                <li><Link to="sales">Sales</Link></li>
+                <li><Link to="account">Acount</Link></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+        <div className="container">
+          <RouteHandler />
+        </div>
       </div>
     );
   },

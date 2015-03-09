@@ -21,6 +21,17 @@ var Actions = {
       });
   },
 
+  register: function(user) {
+    API.register(user)
+      .then(function() {
+        Dispatcher.dispatch({
+          actionType: Constants.LOGIN_SUCCESS
+        });
+      }, function(error) {
+        alert(error);
+      });
+  },
+
   sessionExpired: function() {
     Dispatcher.dispatch({
       actionType: Constants.SESSION_EXPIRED

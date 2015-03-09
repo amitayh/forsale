@@ -1,6 +1,7 @@
 var Q = require('q');
 var React = require('react');
 
+var Actions = require('../../Actions');
 var ProfileForm = require('../users/ProfileForm.react');
 
 var Register = React.createClass({
@@ -32,7 +33,8 @@ var Register = React.createClass({
   },
 
   handleRegister: function() {
-    console.log(this.refs.profileForm.getProfile());
+    var profile = this.refs.profileForm.getProfile();
+    Actions.register(profile);
   }
 
 });
