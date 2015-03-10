@@ -38,9 +38,7 @@ public class BaseServlet extends HttpServlet {
         Gson gson = (Gson) get("gson");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(result.status);
         gson.toJson(result, response.getWriter());
     }
 

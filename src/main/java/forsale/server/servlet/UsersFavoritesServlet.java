@@ -6,6 +6,7 @@ import forsale.server.domain.User;
 import forsale.server.domain.Vendor;
 import forsale.server.service.UsersService;
 import forsale.server.service.VendorsService;
+import forsale.server.service.exception.SessionExpiredException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,6 +30,8 @@ public class UsersFavoritesServlet extends BaseServlet {
             User user = getUser(request.getSession());
             List<Vendor> favoriteVendors = users.getUserFavoriteVendors(user);
             result.success(favoriteVendors);
+        } catch (SessionExpiredException e) {
+            result.fail(e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }
@@ -49,6 +52,8 @@ public class UsersFavoritesServlet extends BaseServlet {
             Set<Integer> vendorIds = new HashSet<>(Utils.convertIds(vendorIdsRaw));
             List<Vendor> selectedVendors = vendors.get(vendorIds);
             users.setUserFavoriteVendors(user, selectedVendors);
+        } catch (SessionExpiredException e) {
+            result.fail(e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }

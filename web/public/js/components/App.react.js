@@ -7,7 +7,7 @@ var RouteHandler = Router.RouteHandler;
 
 var App = React.createClass({
 
-  mixins : [Router.Navigation],
+  mixins : [Router.Navigation, Router.State],
 
   componentWillMount: function() {
     AuthStore.addChangeListener(this.authChanged);
@@ -18,15 +18,20 @@ var App = React.createClass({
   },
 
   render: function() {
+    var pathName = this.getPathname();
+    var welcomeActive = (pathName === '/');
+    var accountActive = (pathName === '/account');
+    var salesActive = /^\/sales/.test(pathName);
+
     return (
       <div>
         <div className="navbar-fixed">
           <nav>
             <div className="nav-wrapper">
               <ul>
-                <li><Link to="app">Welcome</Link></li>
-                <li><Link to="sales">Sales</Link></li>
-                <li><Link to="account">Acount</Link></li>
+                <li className={this.getMenuClass(welcomeActive)}><Link to="app">Welcome</Link></li>
+                <li className={this.getMenuClass(salesActive)}><Link to="sales">Sales</Link></li>
+                <li className={this.getMenuClass(accountActive)}><Link to="account">Acount</Link></li>
               </ul>
             </div>
           </nav>
@@ -36,6 +41,10 @@ var App = React.createClass({
         </div>
       </div>
     );
+  },
+
+  getMenuClass: function(active) {
+    return active ? 'active' : '';
   },
 
   authChanged: function() {

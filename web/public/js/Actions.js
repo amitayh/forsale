@@ -38,6 +38,17 @@ var Actions = {
     });
   },
 
+  loadSales: function(promise) {
+    Dispatcher.dispatch({actionType: Constants.SALES_LOADING});
+
+    promise.then(function(sales) {
+      Dispatcher.dispatch({
+        actionType: Constants.SALES_LOADED,
+        sales: sales
+      });
+    });
+  },
+
   loadFavorites: function() {
     Dispatcher.dispatch({actionType: Constants.FAVORITES_LOADING});
 

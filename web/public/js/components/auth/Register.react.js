@@ -1,35 +1,40 @@
 var Q = require('q');
 var React = require('react');
+var Router = require('react-router');
 
-var Actions = require('../../Actions');
+var AuthActions = require('./Actions.react');
 var ProfileForm = require('../users/ProfileForm.react');
+var Utils = require('../../Utils');
+var Actions = require('../../Actions');
+
+function emptyProfile() {
+  return Q({
+    email: '',
+    name: '',
+    password: '',
+    birth: '',
+    gender: 'MALE'
+  });
+}
 
 var Register = React.createClass({
 
+  mixins : [Router.Navigation],
+
   render: function() {
-    var profile = this.emptyProfile();
+    var profile = emptyProfile();
 
     return (
       <div>
-        <h1>Register</h1>
+        <h3>Register</h3>
         <ProfileForm profile={profile} ref="profileForm" />
-        <p>
-          <button className="btn waves-effect waves-light" onClick={this.handleRegister}>Register</button>
-        </p>
+        <AuthActions onLogin={this.handleLogin} onRegister={this.handleRegister} />
       </div>
     );
   },
 
-  emptyProfile: function() {
-    return Q.fcall(function() {
-      return {
-        email: '',
-        name: '',
-        password: '',
-        birth: '',
-        gender: 'MALE'
-      };
-    });
+  handleLogin: function() {
+    this.transitionTo('login');
   },
 
   handleRegister: function() {

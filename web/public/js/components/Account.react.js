@@ -1,4 +1,5 @@
 var React = require('react');
+var Router = require('react-router');
 
 var ProfileForm = require('./users/ProfileForm.react');
 var FavoritesList = require('./users/FavoritesList.react');
@@ -8,6 +9,8 @@ var API = require('../API');
 
 var Account = React.createClass({
 
+  mixins : [Router.Navigation],
+
   componentWillMount: function() {
     this.profile = API.getProfile();
     Actions.loadFavorites();
@@ -16,14 +19,15 @@ var Account = React.createClass({
   render: function() {
     return (
       <div>
-        <h1>Account</h1>
-        <h2>Profile</h2>
+        <h3>Account</h3>
+        <h4>Profile</h4>
         <ProfileForm profile={this.profile} ref="profileForm" edit="true" />
-        <h2>Favorite Vendors</h2>
+        <h4>Favorite Vendors</h4>
         <FavoritesList />
         <p>
-          <button onClick={this.handleUpdate}>Update</button>
-          <button onClick={this.handleLogout}>Logout</button>
+          <button className="waves-effect waves-light btn" onClick={this.handleUpdate}>Update</button>
+          {' '}
+          <button className="waves-effect waves-light btn" onClick={this.handleLogout}>Logout</button>
         </p>
       </div>
     );
@@ -34,13 +38,17 @@ var Account = React.createClass({
     var favorites = FavoritesStore.getSelected();
     API.updateAccount(profile, favorites)
       .then(function() {
-        alert('OK');
-      }, function() {
-        alert('NOT OK');
+        alert('Account updated');
+      }, function(error) {
+        alert(error);
       });
   },
 
   handleLogout: function() {
+    var that = this;
+    API.logout().then(function() {
+      that.transitionTo('login');
+    });
   }
 
 });

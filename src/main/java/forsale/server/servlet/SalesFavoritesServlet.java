@@ -4,6 +4,7 @@ import forsale.server.domain.JsonResult;
 import forsale.server.domain.Sale;
 import forsale.server.domain.User;
 import forsale.server.service.SalesService;
+import forsale.server.service.exception.SessionExpiredException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,6 +26,8 @@ public class SalesFavoritesServlet extends BaseServlet {
             User user = getUser(request.getSession());
             List<Sale> favorites = sales.getFavorites(user);
             result.success(favorites);
+        } catch (SessionExpiredException e) {
+            result.fail(e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }

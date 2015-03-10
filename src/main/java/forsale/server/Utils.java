@@ -53,8 +53,10 @@ public class Utils {
 
     public static List<Integer> convertIds(String[] ids) {
         List<Integer> newIds = new ArrayList<>();
-        for (String id : ids) {
-            newIds.add(Integer.valueOf(id));
+        if (ids != null) {
+            for (String id : ids) {
+                newIds.add(Integer.valueOf(id));
+            }
         }
         return newIds;
     }

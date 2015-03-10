@@ -1,25 +1,28 @@
 var React = require('react');
 
+var SalesStore = require('../../stores/Sales');
 var SalesListItem = require('./SalesListItem.react');
 var Loading = require('../Loading.react');
+
+function getState() {
+  return {
+    loading: SalesStore.isLoading(),
+    sales: SalesStore.getSales()
+  };
+}
 
 var SalesList = React.createClass({
 
   getInitialState: function() {
-    return {
-      loading: true,
-      sales: []
-    };
+    return getState();
   },
 
-  componentDidMount: function() {
-    var that = this;
-    this.props.sales.then(function(sales) {
-      that.setState({
-        loading: false,
-        sales: sales
-      });
-    });
+  componentWillMount: function() {
+    SalesStore.addChangeListener(this.salesChanged);
+  },
+
+  componentWillUnmount: function() {
+    SalesStore.removeChangeListener(this.salesChanged);
   },
 
   render: function() {
@@ -31,11 +34,19 @@ var SalesList = React.createClass({
   },
 
   renderSales: function() {
-    var sales = this.state.sales.map(function(sale) {
-      return <SalesListItem key={sale.id} sale={sale} />
-    });
+    var sales = this.state.sales;
+    if (sales.length) {
+      var items = sales.map(function(sale) {
+        return <SalesListItem key={sale.id} sale={sale} />
+      });
+      return <ul className="collection">{items}</ul>;
+    } else {
+      return null;
+    }
+  },
 
-    return <ul className="collection">{sales}</ul>;
+  salesChanged: function() {
+    this.setState(getState());
   }
 
 });

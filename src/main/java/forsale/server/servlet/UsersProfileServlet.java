@@ -1,12 +1,15 @@
 package forsale.server.servlet;
 
 import forsale.server.domain.*;
+import forsale.server.service.AuthService;
 import forsale.server.service.UsersService;
+import forsale.server.service.exception.SessionExpiredException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(name = "UsersProfileServlet", urlPatterns = "/users/profile")
@@ -42,6 +45,8 @@ public class UsersProfileServlet extends BaseServlet {
         try {
             User user = getUser(request.getSession());
             result.success(user);
+        } catch (SessionExpiredException e) {
+            result.fail(e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }
@@ -51,6 +56,8 @@ public class UsersProfileServlet extends BaseServlet {
 
     private void editProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UsersService users = (UsersService) get("service.users");
+        AuthService auth = (AuthService) get("service.auth");
+        HttpSession session = request.getSession();
         JsonResult result = new JsonResult();
 
         try {
@@ -64,7 +71,10 @@ public class UsersProfileServlet extends BaseServlet {
 
             // Save
             users.edit(user);
+            auth.login(user, session);
             result.success(user); // can be anything and not necessary user as the success object...
+        } catch (SessionExpiredException e) {
+            result.fail(e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }

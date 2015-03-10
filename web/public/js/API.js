@@ -1,44 +1,25 @@
 var Q = require('q');
 var Qajax = require('qajax');
 
-var STATUS_OK = 'OK';
-var SESSION_EXPIRED = 'Session expired';
+var Utils = require('./Utils');
 
-function toFormData(obj) {
-  var encode = encodeURIComponent;
-  var params = [];
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key) && obj[key] !== undefined) {
-      var encodedKey = encode(key);
-      var value = obj[key];
-      if (value instanceof Array) {
-        for (var i = 0, l = value.length; i < l; i++) {
-          params.push(encodedKey + '=' + encode(value[i]));
-        }
-      } else {
-        params.push(encodedKey + '=' + encode(value));
-      }
-    }
-  }
-  return params.join('&');
-}
+var STATUS_OK = 200;
+var STATUS_UNAUTHORIZED = 401;
 
 function checkStatus(result) {
   result = result || {};
-  if (result.response_code == STATUS_OK) {
+  if (result.status == STATUS_OK) {
     return result.data;
   } else {
-    var errorMessage = result.error || 'Unknown error';
-    if (errorMessage == SESSION_EXPIRED) {
+    if (result.status == STATUS_UNAUTHORIZED) {
       require('./Actions').sessionExpired();
     }
-    throw new Error(errorMessage);
+    throw new Error(result.error || 'Unknown error');
   }
 }
 
 function request(options) {
   return Qajax(options)
-    .then(Qajax.filterSuccess)
     .then(Qajax.toJSON)
     .then(checkStatus);
 }
@@ -55,10 +36,8 @@ function doPost(path, data) {
   return request({
     method: 'POST',
     url: path,
-    data: toFormData(data),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
+    data: Utils.toFormData(data),
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
   });
 }
 
@@ -76,6 +55,10 @@ var API = {
 
   login: function(email, password) {
     return doPost('/auth/login', {email: email, password: password});
+  },
+
+  logout: function() {
+    return doGet('/auth/logout');
   },
 
   register: function(user) {
@@ -117,6 +100,10 @@ var API = {
 
   getSale: function(saleId) {
     return doGet('/sales/show', {sale_id: saleId}).then(convertSale);
+  },
+
+  search: function(query) {
+    return doGet('/search', {query: query}).then(convertSales);
   }
 
 };

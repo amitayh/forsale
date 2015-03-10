@@ -5,6 +5,7 @@ import forsale.server.domain.Sale;
 import forsale.server.events.Dispatcher;
 import forsale.server.service.SalesService;
 import forsale.server.service.event.SaleViewEvent;
+import forsale.server.service.exception.MissingSaleException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,6 +28,8 @@ public class SalesShowServlet extends BaseServlet {
             Sale sale = sales.get(saleId);
             dispatcher.dispatch(new SaleViewEvent(sale));
             result.success(sale);
+        } catch (MissingSaleException e) {
+            result.fail(e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
         } catch (Exception e) {
             result.fail(e.getMessage());
         }

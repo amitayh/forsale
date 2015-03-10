@@ -1,6 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 
+var AuthActions = require('./Actions.react');
 var FormMixin = require('../../FormMixin');
 var Actions = require('../../Actions');
 var AuthStore = require('../../stores/Auth');
@@ -28,15 +29,11 @@ var Login = React.createClass({
 
     return (
       <div>
-        <h1>Login</h1>
+        <h3>Login</h3>
         {error}
         <p><input type="email" placeholder="Email" ref="email" /></p>
         <p><input type="password" placeholder="Password" ref="password" /></p>
-        <p>
-          <button className="btn waves-effect waves-light" onClick={this.handleLogin}>Login</button>
-          {' '}
-          <button className="btn waves-effect waves-light" onClick={this.handleRegister}>Register</button>
-        </p>
+        <AuthActions onLogin={this.handleLogin} onRegister={this.handleRegister} />
       </div>
     );
   },
