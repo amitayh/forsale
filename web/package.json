@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "watchify -o public/js/bundle.js -v -d public/js/app.js",
-    "build": "NODE_ENV=production browserify public/js/app.js | uglifyjs > public/js/bundle.min.js"
+    "build": "NODE_ENV=production browserify public/js/app.js | uglifyjs -c -mt > public/js/bundle.min.js"
   },
   "browserify": {
     "transform": [

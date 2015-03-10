@@ -5,6 +5,7 @@ var Utils = require('./Utils');
 
 var STATUS_OK = 200;
 var STATUS_UNAUTHORIZED = 401;
+var BASE_URL = '/forsale';
 
 function checkStatus(result) {
   result = result || {};
@@ -27,7 +28,7 @@ function request(options) {
 function doGet(path, params) {
   return request({
     method: 'GET',
-    url: path,
+    url: BASE_URL + path,
     params: params
   });
 }
@@ -35,7 +36,7 @@ function doGet(path, params) {
 function doPost(path, data) {
   return request({
     method: 'POST',
-    url: path,
+    url: BASE_URL + path,
     data: Utils.toFormData(data),
     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
   });
