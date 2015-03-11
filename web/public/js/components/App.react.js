@@ -1,6 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 var AuthStore = require('../stores/Auth');
+var MessagesStore = require('../stores/Messages');
 
 var Link = Router.Link;
 var RouteHandler = Router.RouteHandler;
@@ -11,10 +12,12 @@ var App = React.createClass({
 
   componentWillMount: function() {
     AuthStore.addChangeListener(this.authChanged);
+    MessagesStore.addChangeListener(this.messagesChanged);
   },
 
   componentWillUnmount: function() {
     AuthStore.removeChangeListener(this.authChanged);
+    MessagesStore.removeChangeListener(this.messagesChanged);
   },
 
   render: function() {
@@ -49,6 +52,11 @@ var App = React.createClass({
 
   authChanged: function() {
     this.replaceWith(AuthStore.isLoggedIn() ? 'app' : 'login');
+  },
+
+  messagesChanged: function() {
+    var message = MessagesStore.getMessage();
+    alert(message.text);
   }
 
 });

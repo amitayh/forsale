@@ -1,9 +1,9 @@
 var React = require('react');
 var Router = require('react-router');
 
-var AuthActions = require('./Actions.react');
+var AuthButtons = require('./Buttons.react');
 var FormMixin = require('../../FormMixin');
-var Actions = require('../../Actions');
+var AuthActions = require('../../actions/Auth');
 var AuthStore = require('../../stores/Auth');
 
 var Login = React.createClass({
@@ -33,7 +33,7 @@ var Login = React.createClass({
         {error}
         <p><input type="email" placeholder="Email" ref="email" /></p>
         <p><input type="password" placeholder="Password" ref="password" /></p>
-        <AuthActions onLogin={this.handleLogin} onRegister={this.handleRegister} />
+        <AuthButtons onLogin={this.handleLogin} onRegister={this.handleRegister} />
       </div>
     );
   },
@@ -43,7 +43,7 @@ var Login = React.createClass({
   },
 
   handleLogin: function() {
-    Actions.login(this.getValue('email'), this.getValue('password'));
+    AuthActions.login(this.getValue('email'), this.getValue('password'));
   },
 
   handleRegister: function() {

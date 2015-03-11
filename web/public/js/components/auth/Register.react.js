@@ -1,17 +1,18 @@
 var React = require('react');
 var Router = require('react-router');
 
-var AuthActions = require('./Actions.react');
+var AuthButtons = require('./Buttons.react');
 var ProfileForm = require('../users/ProfileForm.react');
 var Utils = require('../../Utils');
-var Actions = require('../../Actions');
+var AuthActions = require('../../actions/Auth');
+var UsersActions = require('../../actions/Users');
 
 var Register = React.createClass({
 
   mixins : [Router.Navigation],
 
   componentDidMount: function() {
-    Actions.loadProfile({
+    UsersActions.loadProfile({
       email: '',
       name: '',
       password: '',
@@ -25,7 +26,7 @@ var Register = React.createClass({
       <div>
         <h3>Register</h3>
         <ProfileForm ref="profileForm" />
-        <AuthActions onLogin={this.handleLogin} onRegister={this.handleRegister} />
+        <AuthButtons onLogin={this.handleLogin} onRegister={this.handleRegister} />
       </div>
     );
   },
@@ -36,7 +37,7 @@ var Register = React.createClass({
 
   handleRegister: function() {
     var profile = this.refs.profileForm.getProfile();
-    Actions.register(profile);
+    AuthActions.register(profile);
   }
 
 });

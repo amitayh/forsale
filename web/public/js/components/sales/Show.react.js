@@ -1,29 +1,32 @@
 var React = require('react');
 var Router = require('react-router');
 
-var API = require('../../API');
-var Loading = require('../Loading.react');
+var SalesActions = require('../../actions/Sales');
+var SalesStore = require('../../stores/Sales');
+var Loading = require('../utils/Loading.react');
+
+function getState() {
+  return {
+    loading: SalesStore.isLoading(),
+    sale: SalesStore.getSales()
+  };
+}
 
 var Show = React.createClass({
 
   mixins: [Router.State],
 
   getInitialState: function() {
-    return {
-      loading: true,
-      sale: {}
-    };
+    return getState();
   },
 
   componentWillMount: function() {
-    var that = this;
-    this.sale = API.getSale(this.getParams().id)
-      .then(function(sale) {
-        that.setState({
-          loading: false,
-          sale: sale
-        });
-      });
+    SalesStore.addChangeListener(this.salesChanged);
+    SalesActions.show(this.getParams().id);
+  },
+
+  componentWillUnmount: function() {
+    SalesStore.removeChangeListener(this.salesChanged);
   },
 
   render: function() {
@@ -47,6 +50,10 @@ var Show = React.createClass({
         </div>
       </div>
     );
+  },
+
+  salesChanged: function() {
+    this.setState(getState());
   }
 
 });

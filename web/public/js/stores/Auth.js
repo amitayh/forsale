@@ -44,6 +44,10 @@ Dispatcher.register(function(action) {
       logout(action.error);
       break;
 
+    case Constants.LOGOUT:
+      logout(null);
+      break;
+
     case Constants.SESSION_EXPIRED:
       logout('Session expired');
       break;

@@ -1,7 +1,7 @@
 var React = require('react');
 var RadioGroup = require('react-radio-group');
 
-var Loading = require('../Loading.react');
+var Loading = require('../utils/Loading.react');
 var FormMixin = require('../../FormMixin');
 var ProfileStore = require('../../stores/Profile');
 

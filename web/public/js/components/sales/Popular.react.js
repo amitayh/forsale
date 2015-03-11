@@ -1,13 +1,12 @@
 var React = require('react');
 
 var SalesList = require('./SalesList.react');
-var Actions = require('../../Actions');
-var API = require('../../API');
+var SalesActions = require('../../actions/Sales');
 
 var Popular = React.createClass({
 
   componentWillMount: function() {
-    Actions.loadSales(API.getPopularSales());
+    SalesActions.loadPopular();
   },
 
   render: function() {

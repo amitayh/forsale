@@ -1,13 +1,12 @@
 var React = require('react');
 
 var SalesList = require('./SalesList.react');
-var Actions = require('../../Actions');
-var API = require('../../API');
+var SalesActions = require('../../actions/Sales');
 
 var Favorites = React.createClass({
 
   componentWillMount: function() {
-    Actions.loadSales(API.getFavoritesSales());
+    SalesActions.loadFavorites();
   },
 
   render: function() {

@@ -2,7 +2,7 @@ var React = require('react');
 
 var SalesStore = require('../../stores/Sales');
 var SalesListItem = require('./SalesListItem.react');
-var Loading = require('../Loading.react');
+var Loading = require('../utils/Loading.react');
 
 function getState() {
   return {

@@ -1,14 +1,7 @@
-var Q = require('q');
 var React = require('react');
 
 var SalesList = require('./SalesList.react');
-var Utils = require('../../Utils');
-var Actions = require('../../Actions');
-var API = require('../../API');
-
-function emptyList() {
-  return Q([]);
-}
+var SalesActions = require('../../actions/Sales');
 
 var Search = React.createClass({
 
@@ -17,12 +10,7 @@ var Search = React.createClass({
   },
 
   componentDidMount: function() {
-    Actions.loadSales(emptyList());
-
-    this.search = Utils.throttle(function(query) {
-      var promise = (query === '') ? emptyList() : API.search(query);
-      Actions.loadSales(promise);
-    }, 350);
+    SalesActions.load([]);
   },
 
   render: function() {
@@ -38,7 +26,7 @@ var Search = React.createClass({
   handleChange: function(event) {
     var query = event.target.value;
     this.setState({query: query});
-    this.search(query);
+    SalesActions.search(query);
   }
 
 });

@@ -1,7 +1,7 @@
 var React = require('react');
 
 var FavoritesStore = require('../../stores/Favorites');
-var Actions = require('../../Actions');
+var UsersActions = require('../../actions/Users');
 
 function getState() {
   var remaining = FavoritesStore.getRemaining();
@@ -53,7 +53,7 @@ var FavoritesListAdd = React.createClass({
   },
 
   handleAdd: function() {
-    Actions.addFavorite(this.state.value);
+    UsersActions.addFavorite(this.state.value);
   },
 
   favoritesChanged: function() {

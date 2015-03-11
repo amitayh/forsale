@@ -1,7 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 
-var FormattedDate = require('../FormattedDate.react');
+var FormattedDate = require('../utils/FormattedDate.react');
 var Link = Router.Link;
 
 var SalesListItem = React.createClass({

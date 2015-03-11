@@ -2,7 +2,7 @@ var Q = require('q');
 var React = require('react');
 
 var FavoritesStore = require('../../stores/Favorites');
-var Loading = require('../Loading.react');
+var Loading = require('../utils/Loading.react');
 var FavoritesListItem = require('./FavoritesListItem.react');
 var FavoritesListAdd = require('./FavoritesListAdd.react');
 

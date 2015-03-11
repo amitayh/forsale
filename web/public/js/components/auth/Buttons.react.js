@@ -1,6 +1,6 @@
 var React = require('react');
 
-var Actions = React.createClass({
+var Buttons = React.createClass({
 
   render: function() {
     return (
@@ -14,4 +14,4 @@ var Actions = React.createClass({
 
 });
 
-module.exports = Actions;
+module.exports = Buttons;

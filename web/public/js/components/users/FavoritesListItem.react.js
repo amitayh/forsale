@@ -1,6 +1,6 @@
 var React = require('react');
 
-var Actions = require('../../Actions');
+var UsersActions = require('../../actions/Users');
 
 var FavoritesListItem = React.createClass({
 
@@ -16,7 +16,7 @@ var FavoritesListItem = React.createClass({
   },
 
   handleRemove: function() {
-    Actions.removeFavorite(this.props.vendor.id);
+    UsersActions.removeFavorite(this.props.vendor.id);
   }
 
 });

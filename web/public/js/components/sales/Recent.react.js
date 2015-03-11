@@ -1,13 +1,12 @@
 var React = require('react');
 
 var SalesList = require('./SalesList.react');
-var Actions = require('../../Actions');
-var API = require('../../API');
+var SalesActions = require('../../actions/Sales');
 
 var Recent = React.createClass({
 
   componentWillMount: function() {
-    Actions.loadSales(API.getRecentSales());
+    SalesActions.loadRecent();
   },
 
   render: function() {

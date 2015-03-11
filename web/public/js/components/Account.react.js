@@ -1,19 +1,16 @@
 var React = require('react');
-var Router = require('react-router');
 
 var ProfileForm = require('./users/ProfileForm.react');
 var FavoritesList = require('./users/FavoritesList.react');
 var FavoritesStore = require('../stores/Favorites');
-var Actions = require('../Actions');
-var API = require('../API');
+var UsersActions = require('../actions/Users');
+var AuthActions = require('../actions/Auth');
 
 var Account = React.createClass({
 
-  mixins : [Router.Navigation],
-
   componentWillMount: function() {
-    Actions.loadProfileFromServer();
-    Actions.loadFavorites();
+    UsersActions.loadProfileFromServer();
+    UsersActions.loadFavorites();
   },
 
   render: function() {
@@ -36,19 +33,11 @@ var Account = React.createClass({
   handleUpdate: function() {
     var profile = this.refs.profileForm.getProfile();
     var favorites = FavoritesStore.getSelected();
-    API.updateAccount(profile, favorites)
-      .then(function() {
-        alert('Account updated');
-      }, function(error) {
-        alert(error);
-      });
+    UsersActions.updateAccount(profile, favorites);
   },
 
   handleLogout: function() {
-    var that = this;
-    API.logout().then(function() {
-      that.transitionTo('login');
-    });
+    AuthActions.logout();
   }
 
 });
