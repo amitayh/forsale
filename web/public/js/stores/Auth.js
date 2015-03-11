@@ -1,5 +1,6 @@
 var assign = require('object-assign');
-var EventEmitter = require('events').EventEmitter;
+
+var BaseStore = require('./Base');
 var Dispatcher = require('../Dispatcher');
 var Constants = require('../Constants');
 
@@ -8,7 +9,7 @@ var state = {
   error: null
 };
 
-var Auth = assign({}, EventEmitter.prototype, {
+var Auth = assign({}, BaseStore, {
 
   isLoggedIn: function() {
     return state.loggedIn;
@@ -16,18 +17,6 @@ var Auth = assign({}, EventEmitter.prototype, {
 
   getError: function() {
     return state.error;
-  },
-
-  addChangeListener: function(callback) {
-    this.on(Constants.CHANGE_EVENT, callback);
-  },
-
-  removeChangeListener: function(callback) {
-    this.removeListener(Constants.CHANGE_EVENT, callback);
-  },
-
-  emitChange: function() {
-    this.emit(Constants.CHANGE_EVENT);
   }
 
 });

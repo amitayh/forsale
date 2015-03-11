@@ -1,5 +1,6 @@
 var assign = require('object-assign');
-var EventEmitter = require('events').EventEmitter;
+
+var BaseStore = require('./Base');
 var Dispatcher = require('../Dispatcher');
 var Constants = require('../Constants');
 
@@ -9,7 +10,7 @@ var state = {
   allVendors: []
 };
 
-var Favorites = assign({}, EventEmitter.prototype, {
+var Favorites = assign({}, BaseStore, {
 
   isLoading: function() {
     return state.loading;
@@ -27,18 +28,6 @@ var Favorites = assign({}, EventEmitter.prototype, {
     return state.allVendors.filter(function(vendor) {
       return !selected[vendor.id];
     });
-  },
-
-  addChangeListener: function(callback) {
-    this.on(Constants.CHANGE_EVENT, callback);
-  },
-
-  removeChangeListener: function(callback) {
-    this.removeListener(Constants.CHANGE_EVENT, callback);
-  },
-
-  emitChange: function() {
-    this.emit(Constants.CHANGE_EVENT);
   }
 
 });

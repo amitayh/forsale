@@ -6,10 +6,8 @@ var estimatedSize = 65536;
 var DB = openDatabase(name, version, displayName, estimatedSize);
 
 DB.transaction(function(transaction) {
-  // Create our students table if it doesn't exist. IF NOT EXISTS
-  //transaction.executeSql("drop table students");
-  transaction.executeSql("CREATE TABLE sales");
-  console.log("db created");
+  transaction.executeSql("DROP TABLE sales;");
+  transaction.executeSql("CREATE TABLE sales (\n  id INTEGER PRIMARY KEY ASC,\n  title TEXT,\n  extra TEXT,\n  start TEXT,\n  end TEXT,\n  vendor TEXT\n);");
 });
 
 module.exports = DB;

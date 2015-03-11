@@ -12,7 +12,7 @@ var Account = React.createClass({
   mixins : [Router.Navigation],
 
   componentWillMount: function() {
-    this.profile = API.getProfile();
+    Actions.loadProfileFromServer();
     Actions.loadFavorites();
   },
 
@@ -21,7 +21,7 @@ var Account = React.createClass({
       <div>
         <h3>Account</h3>
         <h4>Profile</h4>
-        <ProfileForm profile={this.profile} ref="profileForm" edit="true" />
+        <ProfileForm ref="profileForm" edit="true" />
         <h4>Favorite Vendors</h4>
         <FavoritesList />
         <p>

@@ -49,6 +49,18 @@ var Actions = {
     });
   },
 
+  loadProfileFromServer: function() {
+    Dispatcher.dispatch({actionType: Constants.PROFILE_LOADING});
+    API.getProfile().then(Actions.loadProfile);
+  },
+
+  loadProfile: function(profile) {
+    Dispatcher.dispatch({
+      actionType: Constants.PROFILE_LOADED,
+      profile: profile
+    });
+  },
+
   loadFavorites: function() {
     Dispatcher.dispatch({actionType: Constants.FAVORITES_LOADING});
 

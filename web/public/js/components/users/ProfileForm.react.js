@@ -3,20 +3,26 @@ var RadioGroup = require('react-radio-group');
 
 var Loading = require('../Loading.react');
 var FormMixin = require('../../FormMixin');
+var ProfileStore = require('../../stores/Profile');
+
+function getState() {
+  return ProfileStore.getProfile();
+}
 
 var ProfileForm = React.createClass({
 
   mixins: [FormMixin],
 
   getInitialState: function() {
-    return {};
+    return getState();
   },
 
-  componentDidMount: function() {
-    var that = this;
-    this.props.profile.then(function(profile) {
-      that.setState(profile);
-    });
+  componentWillMount: function() {
+    ProfileStore.addChangeListener(this.profileChanged);
+  },
+
+  componentWillUnmount: function() {
+    ProfileStore.removeChangeListener(this.profileChanged);
   },
 
   render: function() {
@@ -60,6 +66,10 @@ var ProfileForm = React.createClass({
 
   getProfile: function() {
     return this.state;
+  },
+
+  profileChanged: function() {
+    this.setState(getState());
   }
 
 });
