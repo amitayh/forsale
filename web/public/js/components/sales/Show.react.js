@@ -8,7 +8,7 @@ var Loading = require('../utils/Loading.react');
 function getState() {
   return {
     loading: SalesStore.isLoading(),
-    sale: SalesStore.getSales()
+    sales: SalesStore.getSales()
   };
 }
 
@@ -38,7 +38,7 @@ var Show = React.createClass({
   },
 
   renderSale: function() {
-    var sale = this.state.sale;
+    var sale = this.state.sales[0];
 
     return (
       <div className="row">

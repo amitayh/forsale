@@ -7,7 +7,8 @@ var Constants = require('../Constants');
 var DB = require('../DB');
 
 var state = {
-  loading: false
+  loading: false,
+  sales: []
 };
 
 var Sales = assign({}, BaseStore, {
@@ -17,16 +18,7 @@ var Sales = assign({}, BaseStore, {
   },
 
   getSales: function() {
-    var deferred = Q.defer();
-    DB.transaction(function(tx) {
-      var sql = 'SELECT * FROM sales';
-      tx.executeSql(sql, [], function(tx, resultSet) {
-        deferred.resolve(resultSet.rows);
-      }, function(error) {
-        deferred.reject(error);
-      });
-    });
-    return deferred.promise;
+    return state.sales;
   },
 
   getRemaining: function() {
@@ -44,15 +36,37 @@ function salesLoading() {
   Sales.emitChange();
 }
 
-function salesLoaded(sales) {
-  DB.transaction(function(tx) {
-    var sql = 'INSERT INTO sales (id, title, start, end, vendor) values (?, ?, ?, ?, ?)';
-    sales.forEach(function(sale) {
-      tx.executeSql(sql, [sale.id, sale.title, sale.start, sale.end, sale.vendor]);
-    });
-    state.loading = false;
-    Sales.emitChange();
+function clearSales() {
+  return DB.executeSql('DELETE FROM sales');
+}
+
+function insertSales(sales) {
+  sales = Array.isArray(sales) ? sales : [sales];
+  var sql = 'INSERT INTO sales (id, title, start, end, vendor) values (?, ?, ?, ?, ?)';
+  var paramsList = sales.map(function(sale) {
+    return [sale.id, sale.title, sale.start, sale.end, sale.vendor];
   });
+  return DB.executeMulti(sql, paramsList);
+}
+
+function selectSales(orderBy) {
+  orderBy = orderBy || Constants.DEFAULT_ORDERING;
+  var sql = 'SELECT * FROM sales ORDER BY ' + orderBy;
+  return DB.executeSql(sql)
+    .then(function(resultSet) {
+      state.loading = false;
+      state.sales = DB.toArray(resultSet.rows);
+      Sales.emitChange();
+    });
+}
+
+function salesLoaded(sales) {
+  return clearSales()
+    .then(function() {
+      return insertSales(sales);
+    }).then(function() {
+      return selectSales();
+    });
 }
 
 Dispatcher.register(function(action) {
@@ -64,6 +78,10 @@ Dispatcher.register(function(action) {
 
     case Constants.SALES_LOADED:
       salesLoaded(action.sales);
+      break;
+
+    case Constants.SALES_ORDER:
+      selectSales(action.field);
       break;
   }
 

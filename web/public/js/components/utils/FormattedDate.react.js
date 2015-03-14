@@ -8,7 +8,7 @@ var MONTHS = [
 var FormattedDate = React.createClass({
 
   render: function() {
-    var date = this.props.value;
+    var date = new Date(this.props.value);
     var month = MONTHS[date.getMonth()];
     var day = date.getDate();
     var year = date.getFullYear();

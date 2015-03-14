@@ -5,16 +5,6 @@ var API = require('../API');
 
 var searchDelay = 350;
 
-function convertSale(sale) {
-  sale.start = new Date(sale.start);
-  sale.end = new Date(sale.end);
-  return sale;
-}
-
-function convertSales(sales) {
-  return sales.map(convertSale);
-}
-
 function loadPromise(promise) {
   Dispatcher.dispatch({actionType: Constants.SALES_LOADING});
   promise.then(Sales.load);
@@ -29,23 +19,30 @@ var Sales = {
     });
   },
 
+  orderBy: function(field) {
+    Dispatcher.dispatch({
+      actionType: Constants.SALES_ORDER,
+      field: field
+    });
+  },
+
   loadFavorites: function() {
-    var promise = API.doGet('/sales/favorites').then(convertSales);
+    var promise = API.doGet('/sales/favorites');
     loadPromise(promise);
   },
 
   loadPopular: function() {
-    var promise = API.doGet('/sales/popular').then(convertSales);
+    var promise = API.doGet('/sales/popular');
     loadPromise(promise);
   },
 
   loadRecent: function() {
-    var promise = API.doGet('/sales/recent').then(convertSales);
+    var promise = API.doGet('/sales/recent');
     loadPromise(promise);
   },
 
   show: function(id) {
-    var promise = API.doGet('/sales/show', {sale_id: id}).then(convertSale);
+    var promise = API.doGet('/sales/show', {sale_id: id});
     loadPromise(promise);
   },
 
@@ -53,7 +50,7 @@ var Sales = {
     if (query === '') {
       Sales.load([]);
     } else {
-      var promise = API.doGet('/search', {query: query}).then(convertSales);
+      var promise = API.doGet('/search', {query: query});
       loadPromise(promise);
     }
   }, searchDelay)
