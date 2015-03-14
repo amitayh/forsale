@@ -1,5 +1,5 @@
 .idea
 target
 web/node_modules
-web/public/js/bundle.*
+web/public/js/build
 *.iml

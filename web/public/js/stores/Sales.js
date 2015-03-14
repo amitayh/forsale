@@ -1,12 +1,13 @@
+var Q = require('q');
 var assign = require('object-assign');
 
 var BaseStore = require('./Base');
 var Dispatcher = require('../Dispatcher');
 var Constants = require('../Constants');
+var DB = require('../DB');
 
 var state = {
-  loading: false,
-  sales: []
+  loading: false
 };
 
 var Sales = assign({}, BaseStore, {
@@ -16,7 +17,16 @@ var Sales = assign({}, BaseStore, {
   },
 
   getSales: function() {
-    return state.sales;
+    var deferred = Q.defer();
+    DB.transaction(function(tx) {
+      var sql = 'SELECT * FROM sales';
+      tx.executeSql(sql, [], function(tx, resultSet) {
+        deferred.resolve(resultSet.rows);
+      }, function(error) {
+        deferred.reject(error);
+      });
+    });
+    return deferred.promise;
   },
 
   getRemaining: function() {
@@ -35,9 +45,14 @@ function salesLoading() {
 }
 
 function salesLoaded(sales) {
-  state.loading = false;
-  state.sales = sales;
-  Sales.emitChange();
+  DB.transaction(function(tx) {
+    var sql = 'INSERT INTO sales (id, title, start, end, vendor) values (?, ?, ?, ?, ?)';
+    sales.forEach(function(sale) {
+      tx.executeSql(sql, [sale.id, sale.title, sale.start, sale.end, sale.vendor]);
+    });
+    state.loading = false;
+    Sales.emitChange();
+  });
 }
 
 Dispatcher.register(function(action) {

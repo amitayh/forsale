@@ -7,7 +7,7 @@ var DB = openDatabase(name, version, displayName, estimatedSize);
 
 DB.transaction(function(transaction) {
   transaction.executeSql("DROP TABLE sales;");
-  transaction.executeSql("CREATE TABLE sales (\n  id INTEGER PRIMARY KEY ASC,\n  title TEXT,\n  extra TEXT,\n  start TEXT,\n  end TEXT,\n  vendor TEXT\n);");
+  transaction.executeSql("CREATE TABLE sales (\n  id INTEGER PRIMARY KEY ASC,\n  title TEXT,\n  start TEXT,\n  end TEXT,\n  vendor TEXT\n);");
 });
 
 module.exports = DB;

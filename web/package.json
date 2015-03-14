@@ -19,8 +19,8 @@
     "watchify": "~2.4.0"
   },
   "scripts": {
-    "start": "watchify -o public/js/bundle.js -v -d public/js/app.js",
-    "build": "NODE_ENV=production browserify public/js/app.js | uglifyjs -cm > public/js/bundle.min.js"
+    "start": "watchify -o public/js/build/bundle.js -v -d public/js/app.js",
+    "build": "NODE_ENV=production browserify public/js/app.js | uglifyjs -cm > public/js/build/bundle.min.js"
   },
   "browserify": {
     "transform": [

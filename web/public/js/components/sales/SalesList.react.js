@@ -4,17 +4,17 @@ var SalesStore = require('../../stores/Sales');
 var SalesListItem = require('./SalesListItem.react');
 var Loading = require('../utils/Loading.react');
 
-function getState() {
-  return {
-    loading: SalesStore.isLoading(),
-    sales: SalesStore.getSales()
-  };
-}
+//function getState() {
+//  return {
+//    loading: SalesStore.isLoading(),
+//    sales: []
+//  };
+//}
 
 var SalesList = React.createClass({
 
   getInitialState: function() {
-    return getState();
+    return {loading: true};
   },
 
   componentWillMount: function() {
@@ -36,9 +36,11 @@ var SalesList = React.createClass({
   renderSales: function() {
     var sales = this.state.sales;
     if (sales.length) {
-      var items = sales.map(function(sale) {
-        return <SalesListItem key={sale.id} sale={sale} />
-      });
+      var items = [], sale;
+      for (var i = 0, l = sales.length; i < l; i++) {
+        sale = sales.item(i);
+        items.push(<SalesListItem key={sale.id} sale={sale} />);
+      }
       return <ul className="collection">{items}</ul>;
     } else {
       return null;
@@ -46,7 +48,14 @@ var SalesList = React.createClass({
   },
 
   salesChanged: function() {
-    this.setState(getState());
+    if (SalesStore.isLoading()) {
+      this.setState({loading: true});
+    } else {
+      var that = this;
+      SalesStore.getSales().then(function(sales) {
+        that.setState({loading: false, sales: sales});
+      });
+    }
   }
 
 });
