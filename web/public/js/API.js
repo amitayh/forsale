@@ -4,7 +4,7 @@ var Utils = require('./Utils');
 
 var STATUS_OK = 200;
 var STATUS_UNAUTHORIZED = 401;
-var BASE_URL = '';
+var BASE_URL = '/forsale';
 
 function checkStatus(result) {
   result = result || {};

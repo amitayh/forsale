@@ -1,5 +1,3 @@
-var Q = require('q');
-
 function toFormData(obj) {
   var encode = encodeURIComponent;
   var params = [];
